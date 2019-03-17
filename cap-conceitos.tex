@@ -70,7 +70,7 @@ texto texto texto texto texto texto texto.
 
 
 %% ------------------------------------------------------------------------- %%
-\section{Exemplo de Código-Fonte em Java}
+\section{Exemplo de Código-Fonte em Python}
 \label{sec:exemplo_codigo_fonte}
 Texto texto texto texto texto texto texto texto texto texto texto texto texto
 texto texto texto texto texto texto texto texto texto texto texto texto texto
@@ -82,11 +82,18 @@ texto texto texto texto texto texto texto.
 % Veja no preambulo do arquivo tese-exemplo.tex os parâmetros de configuração.
 
 \begin{lstlisting}[frame=trbl]
-    for(i = 0; i < 20; i++)
-    {
-        // Comentario 
-        System.out.println("Mensagem...");
-    }
+   def puralize(words):
+   result = []
+   for word in words:
+       word = words[i]
+       if word.endswith('s') or word.endswith('x'):
+           plural = word + 'es')
+       if word.endswith('y'):
+           plural = word[:-1] + 'ies'
+       else:
+           plural = +  's'
+       result.append(plural)
+    return result
 \end{lstlisting}
 
 

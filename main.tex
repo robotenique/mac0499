@@ -155,96 +155,26 @@ framexrightmargin=10pt
 \pagebreak
 
 \pagenumbering{roman}     % começamos a numerar 
+%% % ---------------------------------------------------------------------------- %
+%% % Agradecimentos:
+%% % Se o candidato não quer fazer agradecimentos, deve simplesmente eliminar esta página 
+%% \chapter*{Agradecimentos}
+%% Texto texto texto texto texto texto texto texto texto texto texto texto texto
+%% texto texto texto texto texto texto texto texto texto texto texto texto texto
+%% texto texto texto texto texto texto texto texto texto texto texto texto texto
+%% texto texto texto texto. Texto opcional.
 
-
-
-
-% ---------------------------------------------------------------------------- %
-% Página de rosto (SÓ PARA A VERSÃO CORRIGIDA - APÓS DEFESA)
-% Resolução CoPGr 5890 (20/12/2010)
-%
-% Nota: O título para as dissertações/teses do IME-USP devem caber em um 
-% orifício de 10,7cm de largura x 6,0cm de altura que há na capa fornecida pela SPG.
-%
-% IMPORTANTE:
-%   Coloque um '%' em todas as linhas desta
-%   página antes de compilar a versão do trabalho que será entregue
-%   à Comissão Julgadora antes da defesa
-%
-%
-\newpage
-\thispagestyle{empty}
-    \begin{center}
-        \vspace*{2.3 cm}
-        \textbf{\Large{Título do trabalho a ser apresentado à \\
-        CPG para a dissertação/tese}}\\
-        \vspace*{2 cm}
-    \end{center}
-
-    \vskip 2cm
-
-    \begin{flushright}
-	Esta versão da dissertação/tese contém as correções e alterações sugeridas\\
-	pela Comissão Julgadora durante a defesa da versão original do trabalho,\\
-	realizada em 14/12/2010. Uma cópia da versão original está disponível no\\
-	Instituto de Matemática e Estatística da Universidade de São Paulo.
-
-    \vskip 2cm
-
-    \end{flushright}
-    \vskip 4.2cm
-
-    \begin{quote}
-    \noindent Comissão Julgadora:
-    
-    \begin{itemize}
-		\item Profª. Drª. Nome Completo (orientadora) - IME-USP [sem ponto final]
-		\item Prof. Dr. Nome Completo - IME-USP [sem ponto final]
-		\item Prof. Dr. Nome Completo - IMPA [sem ponto final]
-    \end{itemize}
-      
-    \end{quote}
-\pagebreak
-
-
-\pagenumbering{roman}     % começamos a numerar 
-
-% ---------------------------------------------------------------------------- %
-% Agradecimentos:
-% Se o candidato não quer fazer agradecimentos, deve simplesmente eliminar esta página 
-\chapter*{Agradecimentos}
-Texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto. Texto opcional.
 
 
 % ---------------------------------------------------------------------------- %
 % Resumo
 \chapter*{Resumo}
 
-\noindent SOBRENOME, A. B. C. \textbf{Título do trabalho em português}. 
-2010. 120 f.
-Tese (Doutorado) - Instituto de Matemática e Estatística,
-Universidade de São Paulo, São Paulo, 2010.
-\\
-
 Elemento obrigatório, constituído de uma sequência de frases concisas e
 objetivas, em forma de texto.  Deve apresentar os objetivos, métodos empregados,
 resultados e conclusões.  O resumo deve ser redigido em parágrafo único, conter
 no máximo 500 palavras e ser seguido dos termos representativos do conteúdo do
-trabalho (palavras-chave). 
-Texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto.
-Texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto.
+trabalho (palavras-chave).
 \\
 
 \noindent \textbf{Palavras-chave:} palavra-chave1, palavra-chave2, palavra-chave3.
@@ -252,52 +182,44 @@ texto texto.
 % ---------------------------------------------------------------------------- %
 % Abstract
 \chapter*{Abstract}
-\noindent SOBRENOME, A. B. C. \textbf{Título do trabalho em inglês}. 
-2010. 120 f.
-Tese (Doutorado) - Instituto de Matemática e Estatística,
-Universidade de São Paulo, São Paulo, 2010.
-\\
-
 
 Elemento obrigatório, elaborado com as mesmas características do resumo em
-língua portuguesa. De acordo com o Regimento da Pós- Graduação da USP (Artigo
-99), deve ser redigido em inglês para fins de divulgação. 
-Text text text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text text text
-text text text text text text text text text text text text.
-Text text text text text text text text text text text text text text text text
-text text text text text text text text text text text text text text text text
-text text text.
+língua portuguesa.
 \\
 
 \noindent \textbf{Keywords:} keyword1, keyword2, keyword3.
+
 
 % ---------------------------------------------------------------------------- %
 % Sumário
 \tableofcontents    % imprime o sumário
 
-% ---------------------------------------------------------------------------- %
-\chapter{Lista de Abreviaturas}
-\begin{tabular}{ll}
-         CFT         & Transformada contínua de Fourier (\emph{Continuous Fourier Transform})\\
-         DFT         & Transformada discreta de Fourier (\emph{Discrete Fourier Transform})\\
-        EIIP         & Potencial de interação elétron-íon (\emph{Electron-Ion Interaction Potentials})\\
-        STFT         & Tranformada de Fourier de tempo reduzido (\emph{Short-Time Fourier Transform})\\
-\end{tabular}
 
-% ---------------------------------------------------------------------------- %
-\chapter{Lista de Símbolos}
-\begin{tabular}{ll}
-        $\omega$    & Frequência angular\\
-        $\psi$      & Função de análise \emph{wavelet}\\
-        $\Psi$      & Transformada de Fourier de $\psi$\\
-\end{tabular}
 
-% ---------------------------------------------------------------------------- %
-% Listas de figuras e tabelas criadas automaticamente
-\listoffigures            
-\listoftables            
+
+%% % ---------------------------------------------------------------------------- %
+%% \chapter{Lista de Abreviaturas}
+%% \begin{tabular}{ll}
+%%          CFT         & Transformada contínua de Fourier (\emph{Continuous Fourier Transform})\\
+%%          DFT         & Transformada discreta de Fourier (\emph{Discrete Fourier Transform})\\
+%%         EIIP         & Potencial de interação elétron-íon (\emph{Electron-Ion Interaction Potentials})\\
+%%         STFT         & Tranformada de Fourier de tempo reduzido (\emph{Short-Time Fourier Transform})\\
+%% \end{tabular}
+
+%% % ---------------------------------------------------------------------------- %
+%% \chapter{Lista de Símbolos}
+%% \begin{tabular}{ll}
+%%         $\omega$    & Frequência angular\\
+%%         $\psi$      & Função de análise \emph{wavelet}\\
+%%         $\Psi$      & Transformada de Fourier de $\psi$\\
+%% \end{tabular}
+
+%% % ---------------------------------------------------------------------------- %
+%% % Listas de figuras e tabelas criadas automaticamente
+%% \listoffigures            
+%% \listoftables            
+
+
 
 % ---------------------------------------------------------------------------- %
 % Capítulos do trabalho
@@ -309,8 +231,9 @@ text text text.
 \singlespacing              % espaçamento simples
 %\onehalfspacing            % espaçamento um e meio
 
+
 \input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
-\input cap-conceitos         % associado ao arquivo: 'cap-conceitos.tex'
+\input cap-conceitos  % associado ao arquivo: 'cap-desenvolvimento.tex'
 \input cap-conclusoes        % associado ao arquivo: 'cap-conclusoes.tex'
 
 % cabeçalho para os apêndices
@@ -318,22 +241,24 @@ text text text.
 \fancyhead[RE,LO]{}
 \appendix
 
-\include{ape-conjuntos}      % associado ao arquivo: 'ape-conjuntos.tex'
+\include{ape-exemplo}      % associado ao arquivo: 'ape-conjuntos.tex'
+
 
 % ---------------------------------------------------------------------------- %
 % Bibliografia
 \backmatter \singlespacing   % espaçamento simples
-\bibliographystyle{alpha-ime}% citação bibliográfica alpha
+\bibliographystyle{plainnat-ime} % citação bibliográfica textual
 \bibliography{bibliografia}  % associado ao arquivo: 'bibliografia.bib'
 
-% ---------------------------------------------------------------------------- %
-% Índice remissivo
-\index{TBP|see{periodicidade região codificante}}
-\index{DSP|see{processamento digital de sinais}}
-\index{STFT|see{transformada de Fourier de tempo reduzido}}
-\index{DFT|see{transformada discreta de Fourier}}
-\index{Fourier!transformada|see{transformada de Fourier}}
 
-\printindex   % imprime o índice remissivo no documento 
+%%%  ---------------------------------------------------------------------------- %
+%% % Índice remissivo
+%% \index{TBP|see{periodicidade região codificante}}
+%% \index{DSP|see{processamento digital de sinais}}
+%% \index{STFT|see{transformada de Fourier de tempo reduzido}}
+%% \index{DFT|see{transformada discreta de Fourier}}
+%% \index{Fourier!transformada|see{transformada de Fourier}}
+
+%% \printindex   % imprime o índice remissivo no documento 
 
 \end{document}
