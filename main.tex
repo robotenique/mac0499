@@ -12,7 +12,7 @@
 % ---------------------------------------------------------------------------- %
 % Pacotes 
 \usepackage[T1]{fontenc}
-\usepackage[brazil]{babel}
+\usepackage[USenglish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[pdftex]{graphicx}           % usamos arquivos pdf/png como figuras
 \usepackage{setspace}                   % espaçamento flexível
@@ -101,9 +101,9 @@ framexrightmargin=10pt
 \thispagestyle{empty}
 \begin{center}
     \vspace*{2.3cm}
-    Universidade de São Paulo\\
-    Instituto de Matemática e Estatística\\
-    Bacharelado em Ciência da Computação
+    University of São Paulo\\
+    Institute of Mathematics and Statistics\\
+    Bachelor of Computer Science
 
 
     \vspace*{3cm}
@@ -118,7 +118,7 @@ framexrightmargin=10pt
     \vskip 5cm
     \normalsize{São Paulo}
 
-    \normalsize{Dezembro de 2019}
+    \normalsize{December of 2019}
 \end{center}
 
 
@@ -165,19 +165,6 @@ framexrightmargin=10pt
 %% texto texto texto texto. Texto opcional.
 
 
-
-% ---------------------------------------------------------------------------- %
-% Resumo
-\chapter*{Resumo}
-
-Elemento obrigatório, constituído de uma sequência de frases concisas e
-objetivas, em forma de texto.  Deve apresentar os objetivos, métodos empregados,
-resultados e conclusões.  O resumo deve ser redigido em parágrafo único, conter
-no máximo 500 palavras e ser seguido dos termos representativos do conteúdo do
-trabalho (palavras-chave).
-\\
-
-\noindent \textbf{Palavras-chave:} palavra-chave1, palavra-chave2, palavra-chave3.
 
 % ---------------------------------------------------------------------------- %
 % Abstract
@@ -232,22 +219,23 @@ língua portuguesa.
 %\onehalfspacing            % espaçamento um e meio
 
 
-\input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
-\input cap-conceitos  % associado ao arquivo: 'cap-desenvolvimento.tex'
-\input cap-conclusoes        % associado ao arquivo: 'cap-conclusoes.tex'
+%\input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
+\input cap-boosting-intro % what is gradient boosting
+%\input cap-conceitos  % associado ao arquivo: 'cap-desenvolvimento.tex'
+%\input cap-conclusoes        % associado ao arquivo: 'cap-conclusoes.tex'
 
 % cabeçalho para os apêndices
 \renewcommand{\chaptermark}[1]{\markboth{\MakeUppercase{\appendixname\ \thechapter}} {\MakeUppercase{#1}} }
 \fancyhead[RE,LO]{}
 \appendix
 
-\include{ape-exemplo}      % associado ao arquivo: 'ape-conjuntos.tex'
+%\include{ape-exemplo}      % associado ao arquivo: 'ape-conjuntos.tex'
 
 
 % ---------------------------------------------------------------------------- %
 % Bibliografia
 \backmatter \singlespacing   % espaçamento simples
-\bibliographystyle{plainnat-ime} % citação bibliográfica textual
+\bibliographystyle{chicago} % citação bibliográfica textual
 \bibliography{bibliografia}  % associado ao arquivo: 'bibliografia.bib'
 
 

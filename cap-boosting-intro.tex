@@ -1,0 +1,100 @@
+%% ------------------------------------------------------------------------- %%
+\chapter{Gradient Boosting Machines}
+\label{cap:boosting-intro}
+
+\textit{Gradient Boosting} is a machine learning technique, based on the idea of additive models from statistics. An additive model is a  regression technique suggested by \sloppy{\cite{doi:10.1080/01621459.1981.10477729}}, where the basic idea is to approximate a dataset using a sum of \textbf{smooth functions} of the individual features of the observed data, instead of a complex general regression surface.
+
+\section{Additive Model}\index{additive!model}\index{regression}
+
+A supervised dataset is a set of pairs $(x^{(i)}, y^{(i)})$, where $x^{(i)}$ denotes the $p$-dimensional vector of the $i$-th observation ($p$ is the number of features), and $y^{(i)}$ is the true outcome of the $i$-th observation. An additive model is then described as:
+$$E[y^{(i)}\mid x^{(i)}] = \beta_0 + \sum_{j=1}^pf_j(x^{(i)}_j)$$
+
+The $\beta_0$ is the intercept term, and each function $f_j$ is learned from the respective $j$-th feature over all the observations in the dataset. Each of those functions can be estimated using any nonparametric regression technique, such as Gaussian Process Regression, smoothing splines, kernel regression, k-nearest-neighbors, etc.
+
+\section{Gradient Boosting}\index{gradient!boosting}\index{boosting}
+
+The Gradient Boosting algorithm
+
+
+
+Para a escrita de textos em Ciência da Computação, o livro de Justin Zobel, 
+\emph{Writing for Computer Science} \cite{zobel:04} é uma leitura obrigatória. 
+O livro \emph{Metodologia de Pesquisa para Ciência da Computação} de 
+Raul Sidnei Wazlawick \cite{waz:09} também merece uma boa lida.
+Já para a área de Matemática, dois livros recomendados são o de Nicholas Higham,
+\emph{Handbook of Writing for Mathematical Sciences} \cite{Higham:98} e o do criador
+do \TeX, Donald Knuth, juntamente com Tracy Larrabee e Paul Roberts, 
+\emph{Mathematical Writing} \cite{Knuth:96}.
+
+O uso desnecessário de termos em lingua estrangeira deve ser evitado. No entanto,
+quando isso for necessário, os termos devem aparecer \emph{em itálico}.
+
+\begin{small}
+\begin{verbatim}
+Modos de citação:
+indesejável: [AF83] introduziu o algoritmo ótimo.
+indesejável: (Andrew e Foster, 1983) introduziram o algoritmo ótimo.
+certo : Andrew e Foster introduziram o algoritmo ótimo [AF83].
+certo : Andrew e Foster introduziram o algoritmo ótimo (Andrew e Foster, 1983).
+certo : Andrew e Foster (1983) introduziram o algoritmo ótimo.
+\end{verbatim}
+\end{small}
+
+Uma prática recomendável na escrita de textos é descrever as legendas das
+figuras e tabelas em forma auto-contida: as legendas devem ser razoavelmente
+completas, de modo que o leitor possa entender a figura sem ler o texto onde a
+figura ou tabela é citada.  
+
+Apresentar os resultados de forma simples, clara e completa é uma tarefa que
+requer inspiração. Nesse sentido, o livro de Edward Tufte \cite{tufte01:visualDisplay},
+\emph{The Visual Display of Quantitative Information}, serve de ajuda na 
+criação de figuras que permitam entender e interpretar dados/resultados de forma
+eficiente.
+
+% \emph{Thesis are random access. Do NOT feel obliged to read a thesis from beginning to end.}
+
+
+
+%% ------------------------------------------------------------------------- %%
+\section{Considerações Preliminares}
+\label{sec:consideracoes_preliminares}
+
+Considerações preliminares\footnote{Nota de rodapé (não abuse).}\index{genoma!projetos}.
+% index permite acrescentar um item no indice remissivo
+Texto texto texto texto texto texto texto texto texto texto texto texto texto
+texto texto texto texto texto texto texto texto texto texto texto texto texto
+texto texto texto texto texto texto texto.
+ 
+
+%% ------------------------------------------------------------------------- %%
+\section{Objetivos}
+\label{sec:objetivo}
+
+Texto texto texto texto texto texto texto texto texto texto texto texto texto
+texto texto texto texto texto texto texto texto texto texto texto texto texto
+texto texto texto texto texto texto.
+
+%% ------------------------------------------------------------------------- %%
+\section{Contribuições}
+\label{sec:contribucoes}
+
+As principais contribuições deste trabalho são as seguintes:
+
+\begin{itemize}
+  \item Item 1. Texto texto texto texto texto texto texto texto texto texto
+  texto texto texto texto texto texto texto texto texto texto.
+
+  \item Item 2. Texto texto texto texto texto texto texto texto texto texto
+  texto texto texto texto texto texto texto texto texto texto.
+
+\end{itemize}
+
+%% ------------------------------------------------------------------------- %%
+\section{Organização do Trabalho}
+\label{sec:organizacao_trabalho}
+
+No Capítulo~\ref{cap:boosting-intro}, apresentamos os conceitos ... Finalmente, no
+Capítulo~\ref{cap:boosting-intro} discutimos algumas conclusões obtidas neste
+trabalho. Analisamos as vantagens e desvantagens do método proposto ... 
+
+As sequências testadas no trabalho estão disponíveis no Apêndice \ref{ape:sequencias}.
