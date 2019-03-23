@@ -2,8 +2,7 @@
 \chapter{Gradient Boosting Machines}
 \label{cap:boosting-intro}
 
-\textit{Gradient Boosting Machines}(GBM) is a machine learning algorithm, based on the idea of additive models from statistics and gradient descent. GBM works by building a forward stagewise additive model 
-by performing gradient descent in function space, as proposed by \cite{gbmdef}.
+\textit{Gradient Boosting Machines}(GBM) is a machine learning algorithm, based on the idea of additive models from statistics and gradient descent. GBM works by building a forward stagewise additive model by performing gradient descent in function space, as proposed by \cite{gbmdef}. The \textit{Additive Modelling} technique and the \textit{Gradient Descent} algorithm are key ideas to GBMs, and will be briefly introduced below.
 
 \section{Additive Model}\index{additive!model}\index{regression}
 An additive model is a  regression technique suggested by \sloppy{\cite{doi:10.1080/01621459.1981.10477729}}, where the basic idea is to approximate a dataset using a sum of \textbf{smooth functions} of the individual features of the observed data, instead of a complex general regression surface.
@@ -15,21 +14,42 @@ The $\beta_0$ is the intercept term, and each function $f_j$ is learned from the
 
 \section{Gradient Descent}\index{gradient!descent}\index{descent}
 
-Gradient Descent is an iterative optimization algorithm. As explained by \cite{Ruder2016AnOO}, the basic version of the algorithm is used to minimize an objective function $J(X;\theta)$, parameterized by a model's parameters $\theta \in \mathbb{R}^p$, by using the information gradient vector w.r.t to the parameters $\theta$ of the function at a specific point to update the parameters in the opposite direction of this vector. 
+Gradient Descent is an iterative optimization algorithm. As explained by \cite{Ruder2016AnOO}, the basic version of the algorithm is used to \textbf{minimize} an objective function $J(\xmat;\theta)$, parameterized by a model's parameters $\theta \in \mathbb{R}^p$, by using the information gradient vector w.r.t the parameters $\theta$ of the function at a specific point to update the parameters in the opposite direction of this vector. Usually the parameters $\theta$ are updated until a fixed number of iterations is reached, or a convergence is reached. This algorithm uses the learning rate $\eta$ to control how much the coefficients of $\theta$ can change on each iteration.
 
-\begin{codebox}
-\Procname{$\proc{Cascading-Cut}(H,y)$}
-\li $z \gets \attrib{y}{p}$
-\li \If $z \neq \const{nil}$
-\li \Then
-\If $\attrib{y}{mark} \isequal \const{false}$
-\li \Then $\attrib{y}{mark} \gets \const{true}$
-\li \Else
-$\proc{Cut}(H,y,z)$
-\li $\proc{Cascading-Cut}(H,z)$
-\End
-\End
-\end{codebox}
+The basic update rule of the original gradient descent algorithm is defined as
+
+$$\theta_t = \theta_{t-1} - \eta \cdot \nabla_{\theta_{t-1}} J(\xmat;\theta_{t-1})$$
+
+A gradient descent execution will run the above update $M$ times, and it can be interpreted as generating $M$ vectors $p_m$ of the form $p_m = -\eta\cdot\nabla_{\theta_{m-1}}J(\xmat;\theta_{m-1})$, and  This is a key idea which is important in the mathematical formulation of Gradient Boosting Machines. 
+Denoting $p_0 = \theta_0$ (the initial parameters values before optimization), the final optimal parameters $\theta^\star$ can be written as
+
+\begin{equation}
+    \theta^\star = \sum_{m=0}^{M}p_m
+\end{equation}
+
+\section{Boosting and \textit{AdaBoost}}\index{boosting}\index{AdaBoost}\index{boost}
+
+The boosting method is a general technique which attempts to "boost" the accuracy of a given machine learning algorithm, answering the following question: "Can a set of weak learners create a single strong learner?". A \textit{weak learner} is a model that performs just slightly better than random guessing. The purpose of boosting is to sequentially apply the \textit{weak learning algorithm} (i.e. an algorithm that produces \textit{weak learners}) to modified versions of the data, producing a sequence of weak classifiers $f_m(x), m = 1, 2, ..., M$, as described by \cite{hastie2009elements}. 
+
+In a superficial level, boosting is similar to another technique called \textit{bagging}, used in the famous \textit{Random Forest} learning algorithm, as both are trying to create a strong learner from an ensemble of weak learners. However, they are fundamentally different: In both bagging and boosting, the variance of the estimates are reduced when the ensemble of learners is created, however the boosting method reduces both the bias and the variance, which makes this technique prone to \textit{overfitting}.
+
+\cite{Schapire:1999:BIB:1624312.1624417} gives a brief overview of the boosting method and its applications, especially the famous \textbf{AdaBoost} algorithm, which was a major breakthrough in Machine Learning research. The original AdaBoost algorithm is designed for classification problems, where the output is either $-1$ or $1$, and the final prediction for a given instance is a weighted sum of each generated weak classifier:
+
+\begin{equation}
+    F_m(x) = sign(\sum_{m=1}^{M}\rho_m\cdot f_m(x))
+\end{equation}
+
+The weights $\rho_m$ in equation $(2.2)$ are computed by the boosting algorithm, and the idea is increase the influence of weak learners that are more accurate, while at the same time penalizing the ones that do not predict very well. 
+
+The data modifications done in each step of the boosting procedure is to assign weights $w_i$ for each $\xisup$ in the dataset, based if the instance $\xisup$ was correctly classified or not. The initial weight for all data points is $1/n$, and in the boosting process these weights are adjusted following an exponential function using $\rho_m$ and if the point being updated was correctly classified or not in the last update. One can refer to \cite{hastie2009elements} for a detailed explanation of the AdaBoost algorithm and its formal mathematical description. 
+
+\begin{figure}[!h]
+  \centering
+  \includegraphics[width=.80\textwidth]{adaboost_classifier.png} 
+  \caption{Training of an AdaBoost classifier, image from \cite{adaboost:brendan}}
+  \label{fig:humanbeta} 
+\end{figure}
+
 
 Para a escrita de textos em Ciência da Computação, o livro de Justin Zobel, 
 \emph{Writing for Computer Science} \cite{zobel:04} é uma leitura obrigatória. 
