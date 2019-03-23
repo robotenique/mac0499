@@ -1,6 +1,6 @@
 %% ------------------------------------------------------------------------- %%
-\chapter{Introdução}
-\label{cap:introducao}
+\chapter{Introduction}
+\label{cap:introduction}
 
 Escrever bem é uma arte que exige muita técnica e dedicação. Há vários bons livros
 sobre como escrever uma boa dissertação ou tese. Um dos trabalhos pioneiros e mais
@@ -20,16 +20,6 @@ do \TeX, Donald Knuth, juntamente com Tracy Larrabee e Paul Roberts,
 O uso desnecessário de termos em lingua estrangeira deve ser evitado. No entanto,
 quando isso for necessário, os termos devem aparecer \emph{em itálico}.
 
-\begin{small}
-\begin{verbatim}
-Modos de citação:
-indesejável: [AF83] introduziu o algoritmo ótimo.
-indesejável: (Andrew e Foster, 1983) introduziram o algoritmo ótimo.
-certo : Andrew e Foster introduziram o algoritmo ótimo [AF83].
-certo : Andrew e Foster introduziram o algoritmo ótimo (Andrew e Foster, 1983).
-certo : Andrew e Foster (1983) introduziram o algoritmo ótimo.
-\end{verbatim}
-\end{small}
 
 Uma prática recomendável na escrita de textos é descrever as legendas das
 figuras e tabelas em forma auto-contida: as legendas devem ser razoavelmente
@@ -47,15 +37,24 @@ eficiente.
 
 
 %% ------------------------------------------------------------------------- %%
-\section{Considerações Preliminares}
-\label{sec:consideracoes_preliminares}
+\section{Symbols and Notations}
+\label{sec:notation}
 
-Considerações preliminares\footnote{Nota de rodapé (não abuse).}\index{genoma!projetos}.
-% index permite acrescentar um item no indice remissivo
-Texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto.
- 
+The symbols and notations are based on \cite{Goodfellow-et-al-2016}, with slight modifications.
+
+\begin{center}
+%\textbf{\large{Datasets}}\\
+\begin{tabular}{l p{0.5\linewidth}}
+$\xisup$ & The $i$-th example from a dataset, vector or scalar\\
+$\yisup$ & The target associated with $\xisup$\\
+$\supervised$ & A supervised dataset pair\\
+$\xmat$ & A $n \times p$ matrix, with input example $\xisup$ in the $i$-th row\\
+$\xmat_{i,j}$ & Element $i, j$ of matrix $\xmat$ \\
+$\xmat_{i, :}$ & Row $i$ of matrix  $\xmat$ \\
+$\xmat_{:, i}$ & Column $i$ of matrix $\xmat$ \\
+\end{tabular}
+\end{center}
+
 
 %% ------------------------------------------------------------------------- %%
 \section{Objetivos}

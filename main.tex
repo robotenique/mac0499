@@ -19,6 +19,12 @@
 \usepackage{indentfirst}                % indentação do primeiro parágrafo
 \usepackage{makeidx}                    % índice remissivo
 \usepackage[nottoc]{tocbibind}          % acrescentamos a bibliografia/indice/conteudo no Table of Contents
+\usepackage{clrscode3e}                 % CLRS pseudocode
+\usepackage{amssymb}                    % Mathematical symbols from amssymb fonts
+\usepackage{bm}                         % Bold symbols
+
+
+
 \usepackage{courier}                    % usa o Adobe Courier no lugar de Computer Modern Typewriter
 \usepackage{type1cm}                    % fontes realmente escaláveis
 \usepackage{listings}                   % para formatar código-fonte (ex. em Java)
@@ -211,6 +217,12 @@ língua portuguesa.
 % ---------------------------------------------------------------------------- %
 % Capítulos do trabalho
 \mainmatter
+% Custom commands for mathematical notation
+\newcommand{\xisup}{\bm{x}^{(i)}}
+\newcommand{\yisup}{\bm{y}^{(i)}}
+\newcommand{\supervised}{(\xisup,\yisup)}
+\newcommand{\xmat}{\bm{X}}
+
 
 % cabeçalho para as páginas de todos os capítulos
 \fancyhead[RE,LO]{\thesection}
@@ -219,7 +231,7 @@ língua portuguesa.
 %\onehalfspacing            % espaçamento um e meio
 
 
-%\input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
+\input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
 \input cap-boosting-intro % what is gradient boosting
 %\input cap-conceitos  % associado ao arquivo: 'cap-desenvolvimento.tex'
 %\input cap-conclusoes        % associado ao arquivo: 'cap-conclusoes.tex'
