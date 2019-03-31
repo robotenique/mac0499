@@ -22,12 +22,14 @@ Gradient Descent is an iterative optimization algorithm. As explained by \cite{R
 
 The basic update rule of the original gradient descent algorithm is defined as
 
-$$\theta_t = \theta_{t-1} - \eta \cdot \nabla_{\theta_{t-1}} J(\xmat;\theta_{t-1})$$
+\begin{equation}\label{eq:gradientDescent-update}
+    \theta_t = \theta_{t-1} - \eta \cdot \nabla_{\theta_{t-1}} J(\xmat;\theta_{t-1})  
+\end{equation}
 
-A gradient descent execution will run the above update $M$ times, and it can be interpreted as generating $M$ vectors $p_m$ of the form $p_m = -\eta\cdot\nabla_{\theta_{m-1}}J(\xmat;\theta_{m-1})$, and  This is a key idea which is important in the mathematical formulation of Gradient Boosting Machines. 
+A gradient descent execution will run the above update $M$ times, and it can be interpreted as generating $M$ vectors $p_m$ of the form $p_m = -\eta\cdot\nabla_{\theta_{m-1}}J(\xmat;\theta_{m-1})$, and  this is a key idea which is important in the mathematical formulation of Gradient Boosting Machines. 
 Denoting $p_0 = \theta_0$ (the initial parameters values before optimization), the final optimal parameters $\theta^\star$ can be written as
 
-\begin{equation}
+\begin{equation}\label{eq:gradientDescent-params}
     \theta^\star = \sum_{m=0}^{M}p_m
 \end{equation}
 
@@ -56,7 +58,7 @@ The data modifications done in each step of the boosting procedure is to assign 
 
 \section{GBMs}\index{boosting}\index{gradient!boosting!machines}\index{boost}
 
-Gradient Boosting Machines were originally introduced by \cite{gbmdef}, in the paper titled "Greedy Function Approximation: A Gradient Boosting Machine". In this work, Friedman makes a connection between stagewise additive expansions (concept of an additive model) and gradient descent. The GBM algorithm works by optimizing any given differentiable loss function, using gradient descent. However, the optimization is not done in terms of a numeric optimization (i.e. of updating a vector of parameters $\theta$), as described in the \ref{Gradient Descent} section, but by "boosting" functions in the direction of the gradient of the loss function.
+Gradient Boosting Machines were originally introduced by \cite{gbmdef}, in the paper titled "Greedy Function Approximation: A Gradient Boosting Machine". In this work, Friedman makes a connection between stagewise additive expansions (the concept of an additive model) and gradient descent. The GBM algorithm works by optimizing any given differentiable loss function, using gradient descent. However, the optimization is not done in terms of a numeric optimization (i.e. of updating a vector of parameters $\theta$), as described in the \ref{Gradient Descent} section, but by "boosting" functions in the direction of the gradient of the loss function.
 
 Since GBMs deal with finite data, they optimize the functions in terms of the supervised dataset $\supervised$ inputs, not w.r.t all values of $x$, as they're (usually) infinite. The final model of the GBM will be similar to equations \ref{eq:additive} and \ref{eq:boosting}:
 
@@ -64,7 +66,7 @@ Since GBMs deal with finite data, they optimize the functions in terms of the su
     F_M(x) = F_0(x) + \sum_{m=1}^M F_m(x)
 \end{equation}
 
-The $F_m(x)$ functions are boosted functions built in a stagewise fashion, just like the $\theta_t$ in gradient descent. The base functions are learners, and they can be paremeterized as $\beta_mh(x;a_m)$, where $\beta_m$ is a weight, and $a_m$ the learner parameters. Also, given a loss function $L(y_i, F_m(x_i))$, we would like to find all the optimal values of $a_m$ and $\beta_m$ that would minimize the loss function, ie., if we have $M$ functions:
+The $F_m(x)$ functions are boosted functions built in a stagewise fashion, just like the $\theta_t$ in gradient descent. The base functions are learners, and they can be paremeterized as $\beta_mh(x;a_m)$, where $\beta_m$ is a weight, and $a_m$ the learner parameters. In most implementations the base functions are tree-based learners, but they could be any learner where it's possible to assign weights. Also, given a loss function $L(y_i, F_m(x_i))$, we would like to find all the optimal values of $a_m$ and $\beta_m$ that would minimize the loss function, ie., if we have $M$ functions:
 
 \begin{equation*}
 \{\beta_m, a_m\}_1^M = \argmin_{\{\beta_m^\apsimple, a_m^\apsimple\}_1^M} \sum_{i=1}^n L\bigg(\yisup, \sum_{m=1}^M \beta_m^\apsimple h(\xisup;a_m^\apsimple)\bigg)
@@ -76,11 +78,43 @@ However in most situations the optimization above is infeasible, so the \say{gre
     (\beta_m, a_m) = \argmin_{\beta, a} \sum_{i=1}^n L(\yisup, F_{m-1}(\xisup) + \beta h(\xisup; a))
 \end{equation*}
 
-and the update rule of the $F_m$ functions described in \ref{eq:gbm-1} is
+using a vectorized notation and replacing $\Delta_m(X) =\rho_m h(\xmat; a_m)$,  the update rule of the $F_m$ functions described in \ref{eq:gbm-1} is
 
 \begin{equation}
-    F_m(x) = F_{m-1}(x) + \beta_m h(x; a_m)
+    F_m(\xmat) = F_{m-1}(\xmat) + \eta \Delta_m(X)
 \end{equation}
+
+The learning rate $\eta$ can also be called the \textit{shrinkage} parameter, as it \say{shrinks} the influence of the new learner. \cite{gbmdef} shows the function $\beta_mh(x; a_m)$ can be interpreted as the best greedy step towards the optimal estimate, which can be represented as $F^\star(x)$(similarly to \ref{eq:gradientDescent-params}). This can be seen as an update of the gradient descent method, as in \ref{eq:gradientDescent-update}. The analogue of $-\nabla_{\theta_{t}}$ in the numerical gradient descent from \ref{Gradient Descent} is the gradient of the loss function $L$ with relation to the last estimate $F_{m-1}(x)$, in the notation used by \cite{gbmdef}:
+
+\begin{equation*}
+    -g_m(\xisup) = -\bigg[\frac{\partial L(\yisup, F(\xisup))}{\partial F(\xisup)}\bigg]_{F(x)=F_{m-1}(x)}
+\end{equation*}
+
+In literature, this gradient of the loss function $L$ with respect to the last prediction $\ypred_{m-1}$ (i.e. $F_{m-1}(\xmat)$) is sometimes called \textbf{pseudo-residual}, and written as $\residual_{m-1}$. Using a vectorized notation, the \textit{pseudo-residual} can be written as
+
+\begin{equation*}
+    \residual_{m-1} = \nabla_{F_{m-1}(\xmat)}L(\ytarget, F_{m-1}(\xmat)) = \nabla_{\ypred_{m-1}}L(\ytarget,\ypred_{m-1})
+\end{equation*}
+
+
+The GBM algorithm fits a learner $h(x; a_m)$ with weight $\beta_m$ using the pseudo-residuals, not the original $\xmat$. The final version of the algorithm is formally defined as
+
+\begin{codebox}
+    \Procname{$\proc{gradient\_boost}(\xmat, \ytarget, M, \eta)$}
+    \li $F_0(\xmat) = \argmin_{\nu}\sum_{i=1}^n L(\yisup, \nu)$
+    \li \For $m \gets 1$ \To $M$
+    \li     \Do
+                $\residual_{m-1} \gets \nabla_{\ypred_{m-1}}L(\ytarget,\ypred_{m-1})$, where $\ypred_{m-1}=F_{m-1}(\xmat)$
+    \li         \Comment Train a base learner minimizing squared error
+    \li         $a_m \gets \argmin_{a, \beta}\sum_{i=1}^n\big(\residual_{m-1}^{(i)}-\beta h(\xisup;a)\big)^2$
+    \li         $\rho_m \gets \argmin_{\rho}\sum_{i=1}^n L(\yisup, F_{m-1}(\xisup) + \rho h(\xisup;a_m))$
+    \li         $\Delta_m(X) =\rho_m h(\xmat; a_m)$
+    \li         $F_m(\xmat) \gets F_{m-1}(\xmat) + \eta \Delta_m(X)$
+            \End
+    \li return $F_M$
+    \end{codebox}
+    
+
 
 Para a escrita de textos em Ciência da Computação, o livro de Justin Zobel, 
 \emph{Writing for Computer Science} \cite{zobel:04} é uma leitura obrigatória. 

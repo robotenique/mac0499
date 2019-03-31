@@ -47,11 +47,15 @@ The symbols and notations are based on \cite{Goodfellow-et-al-2016}, with slight
 \begin{tabular}{l p{0.5\linewidth}}
 $\xisup$ & The $i$-th example from a dataset, vector or scalar\\
 $\yisup$ & The target associated with $\xisup$\\
+$\yisupred$ & The prediction associated with $\xisup$ \\
 $\supervised$ & A supervised dataset pair\\
 $\xmat$ & A $n \times p$ matrix, with input example $\xisup$ in the $i$-th row\\
 $\xmat_{i,j}$ & Element $i, j$ of matrix $\xmat$ \\
 $\xmat_{i, :}$ & Row $i$ of matrix  $\xmat$ \\
 $\xmat_{:, i}$ & Column $i$ of matrix $\xmat$ \\
+$\ytarget$ & Vector of the actual targets of $\xmat$\\
+$\ypred$ & Vector of the predictions of the targets, where the $i$-th position is the prediction of $\xisup$\\
+
 \end{tabular}
 \end{center}
 

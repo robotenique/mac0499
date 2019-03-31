@@ -23,7 +23,6 @@
 \usepackage{amssymb}                    % Mathematical symbols from amssymb fonts
 \usepackage{bm}                         % Bold symbols
 \usepackage{dirtytalk}                  % The command \say for citing quotes
-
 \usepackage{amsmath}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -221,13 +220,19 @@ língua portuguesa.
 
 % ---------------------------------------------------------------------------- %
 % Capítulos do trabalho
-\mainmatter
+\mainmatter 
+\newcommand{\mathup}[1]{\text{\textup{#1}}} % upcase a letter
 % Custom commands for mathematical notation
 \newcommand{\xisup}{\bm{x}^{(i)}}
 \newcommand{\yisup}{\bm{y}^{(i)}}
+\newcommand{\yisupred}{\hat{\bm{y}}^{(i)}}
 \newcommand{\supervised}{(\xisup,\yisup)}
 \newcommand{\xmat}{\bm{X}}
 \newcommand{\apsimple}{\textsc{\char13}} % The char ' 
+\newcommand{\ytarget}{\textbf{\mathup{y}}}
+\newcommand{\ypred}{\hat{\textbf{{\mathup{y}}}}}
+\newcommand{\residual}{\textbf{{\mathup{r}}}}
+
 
 
 
