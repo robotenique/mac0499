@@ -2,7 +2,7 @@
 \chapter{Gradient Boosting Machines}
 \label{cap:boosting-intro}
 
-\textit{Gradient Boosting Machines}(GBM) is a machine learning algorithm, based on the idea of additive models from statistics and gradient descent. GBM works by building a forward stagewise additive model by performing gradient descent in function space, as proposed by \cite{gbmdef}. The \textit{Additive Modelling} technique and the \textit{Gradient Descent} algorithm are key ideas to GBMs, and will be briefly introduced below.
+\textit{Gradient Boosting Machines}(GBM) is a machine learning algorithm, based on the idea of additive models from statistics and gradient descent. GBM works by building a forward stagewise additive model by performing gradient descent in function space, as proposed by \cite{gbmdef}. The \textit{Additive Modeling} technique and the \textit{Gradient Descent} algorithm are key ideas to GBMs, and will be briefly introduced below.
 
 \section{Additive Model}\index{additive!model}\index{regression}
 An additive model is a  regression technique suggested by \sloppy{\cite{doi:10.1080/01621459.1981.10477729}}, where the basic idea is to approximate a dataset using a sum of \textbf{smooth functions} of the individual features of the observed data, instead of a complex general regression surface.
@@ -114,6 +114,7 @@ The GBM algorithm fits a learner $h(x; a_m)$ with weight $\beta_m$ using the pse
     \li return $F_M$
     \end{codebox}
     
+\section{\textit{XGBoost} and \textit{LightGBM}}\index{boosting}\index{boost}\index{lightGBM}
 
 
 Para a escrita de textos em Ciência da Computação, o livro de Justin Zobel, 

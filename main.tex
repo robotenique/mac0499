@@ -23,9 +23,13 @@
 \usepackage{amssymb}                    % Mathematical symbols from amssymb fonts
 \usepackage{bm}                         % Bold symbols
 \usepackage{dirtytalk}                  % The command \say for citing quotes
+\usepackage{csquotes}                   % To use \begin{displayquote} for citing longer quotes
+
 \usepackage{amsmath}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareUnicodeCharacter{2212}{-} % use the minus sign with no unicode problems..
+
 
 
 
@@ -239,11 +243,11 @@ língua portuguesa.
 % cabeçalho para as páginas de todos os capítulos
 \fancyhead[RE,LO]{\thesection}
 
-\singlespacing              % espaçamento simples
-%\onehalfspacing            % espaçamento um e meio
+\onehalfspacing            % espaçamento um e meio
 
 
 \input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
+\input cap-ml-fundamentals % what is machine learning; ml as optimization
 \input cap-boosting-intro % what is gradient boosting
 %\input cap-conceitos  % associado ao arquivo: 'cap-desenvolvimento.tex'
 %\input cap-conclusoes        % associado ao arquivo: 'cap-conclusoes.tex'
@@ -258,7 +262,7 @@ língua portuguesa.
 
 % ---------------------------------------------------------------------------- %
 % Bibliografia
-\backmatter \singlespacing   % espaçamento simples
+\backmatter \onehalfspacing   % espaçamento simples
 \bibliographystyle{chicago} % citação bibliográfica textual
 \bibliography{bibliografia}  % associado ao arquivo: 'bibliografia.bib'
 
