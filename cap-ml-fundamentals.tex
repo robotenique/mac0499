@@ -73,3 +73,20 @@ Besides the traditional separation into train, validation and test set, resampli
 Model tuning is critical part of the workflow when building machine learning models, and there's vast literature exploring different approaches to quantify more sensitive hyperparameters given an algorithm (in \cite{probst2018tunability}), automatic tuning approaches using Bayesian Optimization (\cite{bergstra2013hyperopt}), etc. In this study, the focus is on the hyperparameters of gradient boosting algorithms, specifically gradient boosting with decision trees, explained on chapter \ref{cap:boosting-intro}.
 
 %% ------------------------------------------------------------------------- %%
+\section{Decision Trees}
+
+Most of the current gradient boosting algorithms use decision trees as the base learners. Decision trees, or specifically \textit{classification trees} in the case of classification problems, consists of multiple nested conditional statements in its internal nodes, with the predictions in the leafs.
+
+The actual learning process of a decision tree is called an \textit{induction} of the decision tree. The idea of the algorithm is to choose internal tree splits that best explain the data and is as small as possible, as described in \cite{aima:2010}. Figure \ref{fig:decision-tree-example} contains an example of a classification tree for deciding wether to wait for a table.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.8\textwidth]{decision-tree-example.png} 
+    \caption{Example of a trained decision tree, from \cite{aima:2010}}
+    \label{fig:decision-tree-example}
+\end{figure}
+
+The learning process of classification trees consists in multiple iterations to choose optimal splits given the training data provided, according to some criteria. Common optimization criteria are usually derived from Information Theory, like the Gini Index, Cross-Entropy and misclassification error. In practical usages and because of numeric properties (see \cite{hastie2009elements}), Gini Index and Cross-Entropy are favored over the misclassification error.
+
+Typical hyperparameters of classifications trees refer to the actual structure of the tree. The \textit{maximum depth} hyperparameter controls how deep the tree can grow, i.e. how many splits will it have, \textit{minimum leaf samples} controls the minimum number of samples each leaf must have, etc. For an extensive empirical study of decision tree hyperparameter tuning, one can refer to \cite{mantovani2018empirical}.
+%% ------------------------------------------------------------------------- %%
