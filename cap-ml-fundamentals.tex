@@ -18,7 +18,7 @@ The $x$ and $y$ can be any value(...). The function $h$ is a \textbf{hypothesis}
 Some classical examples of supervised learning tasks include: Email Spam detection, where $\xisup$ is the text of an email, and the label $\yisup$ is a boolean indicator of wether the $i$-th email is a spam or not; Classification of handwritten digits, where $\xisup$ is an image of a handwritten number and $\yisup$ the corresponding number; Predicting house prices, where $\xisup$ is a set of different characteristics of a house and $\yisup$ is its price.
 
 %% ------------------------------------------------------------------------- %%
-\section{Function Approximation and Optimization}
+\section{Function Approximation and Optimization}\index{optimization}
 
 A supervised learning task can be understood as an optimization problem. As explained in \cite{hastie2009elements}, this function-fitting paradigm basically
 
@@ -30,7 +30,7 @@ A supervised learning task can be understood as an optimization problem. As expl
 The functions can be estimated using a range of different \textbf{models}, i.e. specific hypothesis chosen to approximate the true underlying function $f$. Examples of commonly used approximators are \textit{linear basis expansions}, the sigmoid transformation, \textit{maximum likelihood estimation}, etc. To estimate the parameters of these approximations that best fit the data, learning algorithms usually perform an optimization over a specific \textit{loss function} which depends on the chosen approximator.
 
 %% ------------------------------------------------------------------------- %%
-\section{Validation and Evaluation}
+\section{Validation and Evaluation}\index{machine!learning}
 \label{sec:validation-evaluation}
 
 The basic supervised learning problem usually consists of two sets of data: \textbf{training set} and the \textbf{test set}. A model is trained using data from the training set, resulting in a model $\hat{f}(x)$. This model then predicts the data in the test set, and with the predicted $\yisupred$ the model generalization error (prediction error) can be estimated.
@@ -39,7 +39,7 @@ The \textbf{Bias-Variance Tradeoff} in predictive modeling impacts in the abilit
 
 
 %% ------------------------------------------------------------------------- %%
-\section{Classification Task}
+\section{Classification Task}\index{classifier}
 
 When the codomain of $f(x)$ is finite, i.e. $\ytarget$ can assume a finite set of values, the learning problem is called \textbf{classification}. Specifically, when the cardinality of the codomain can assume only two values the problem is called \textbf{binary classification}. An example of the decision boundary of a binary classifier can be seen on figure  \ref{fig:binaryclassifier}.
 
@@ -53,7 +53,7 @@ When the codomain of $f(x)$ is finite, i.e. $\ytarget$ can assume a finite set o
 The Email Spam detection problem described in the last section is a binary classification problem, since the output is binary, either is spam, or isn't. In this work, the focus will be on \textbf{binary classification} problems and its specific metrics.
 
 %% ------------------------------------------------------------------------- %%
-\section{Model Tuning}
+\section{Model Tuning}\index{tuning}\index{hyperparameter}\index{machine!learning}
 
 Many models in supervised learning have parameters that cannot be directly from the available data. For example, in a decision tree algorithm the max depth or the criterion to measure the quality of a split needs to be chosen before the algorithm learning process. According to \cite{kuhn2013applied} this type of parameter is called a \textit{tuning parameter} because there's no analytical formula available to calculate an appropriate value. This parameter is also called a \textbf{hyperparameter}. 
 
@@ -73,7 +73,7 @@ Besides the traditional separation into train, validation and test set, resampli
 Model tuning is critical part of the workflow when building machine learning models, and there's vast literature exploring different approaches to quantify more sensitive hyperparameters given an algorithm (in \cite{probst2018tunability}), automatic tuning approaches using Bayesian Optimization (\cite{bergstra2013hyperopt}), etc. In this study, the focus is on the hyperparameters of gradient boosting algorithms, specifically gradient boosting with decision trees, explained on chapter \ref{cap:boosting-intro}.
 
 %% ------------------------------------------------------------------------- %%
-\section{Decision Trees}
+\section{Decision Trees}\index{tree}\index{classifier}
 
 Most of the current gradient boosting algorithms use decision trees as the base learners. Decision trees, or specifically \textit{classification trees} in the case of classification problems, consists of multiple nested conditional statements in its internal nodes, with the predictions in the leafs.
 
