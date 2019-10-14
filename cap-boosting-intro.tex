@@ -2,7 +2,9 @@
 \chapter{Gradient Boosting Machines}
 \label{cap:boosting-intro}
 
-\textit{Gradient Boosting Machines}(GBM) is a machine learning algorithm, based on the idea of additive models from statistics and gradient descent. GBM works by building a forward stagewise additive model by performing gradient descent in function space, as proposed by \cite{gbmdef}. The \textit{Additive Modeling} technique and the \textit{Gradient Descent} algorithm are key ideas to GBMs, and will be briefly introduced below.
+\textit{Gradient Boosting Machines}(GBM) is a machine learning algorithm, based on the idea of additive models from statistics and gradient descent. GBM works by building a forward stagewise additive model by performing gradient descent in function space, as proposed by \cite{gbmdef}. 
+
+Gradient Boosting, especially tree based gradient boosting, has been achieving state-of-the-art results in many datasets (\cite{li2012robust}), especially with tabular data. It's a widely-used machine learning algorithm due to its efficiency, accuracy, and interpretability, according to \cite{ke2017lightgbm}. The \textit{Additive Modeling} technique and the \textit{Gradient Descent} algorithm are key ideas to GBMs, and are briefly introduced below.
 
 \section{Additive Model}\index{additive!model}\index{regression}
 An additive model is a  regression technique suggested by \sloppy{\cite{doi:10.1080/01621459.1981.10477729}}, where the basic idea is to approximate a dataset using a sum of \textbf{smooth functions} of the individual features of the observed data, instead of a complex general regression surface.
@@ -115,6 +117,28 @@ The GBM algorithm fits a learner $h(x; a_m)$ with weight $\beta_m$ using the pse
     \end{codebox}
     
 \section{\textit{XGBoost} and \textit{LightGBM}}\index{boosting}\index{boost}\index{lightGBM}
+
+Even though Gradient Boosting was a known technique used in machine learning, it became widespread with the development of XGBoost, a scalable end-to-end tree boosting system, by \cite{chen2016xgboost}. The main improvements brought by XGBoost was the development of a sparsity-aware algorithm for sparse data and a ``weighted quantile sketch for approximate tree learning''. In general terms, the basic greedy algorithm to find the best split at a given tree node in the boosting process is very computationally demanding, especially when finding splits for continuous variables. In XGBoost an \textit{approximate algorithm} is used for split finding, using quantiles of the feature distribution as split points for continuous variables. 
+
+These improvements and a parallel tree learning architecture are the main reasons of the recent spread of gradient boosting techniques. According to \cite{chen2015xgboost}, ``(XGBoost) has been widely adopted by data scientists and machine learning practitioners. XGBoost has been used as a major system in winner solutions of more than ten machine learning challenges in the past year (2015), most of which are highly competitive. These include highly impactful ones in the field, such as KDDCup. It has also been widely adopted by industry users, including Google, Alibaba and Tencent, and various startup companies.''
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.80\textwidth]{xgboost_tree_structure.png} 
+    \caption{Example of structure score calculation for a single tree, from \cite{chen2015xgboost}}
+    \label{fig:xgboost-tree} 
+  \end{figure}
+  
+
+However, the algorithm used in this study is the novel \textbf{LightGBM}, created in 2017 by Microsoft Research in \cite{ke2017lightgbm}. There are two main ideas behind LightGBM, both trying to improve the scalability of the gradient boosting process for highly dimensional data.
+
+First, they propose a new technique for estimation of information gain called \textit{Gradient-based One-Side Sampling} (GOSS). Since one of the most time consuming tasks in the learning process in gradient boosting is to find the split for the trees, usually some sort of sampling is done in this step for efficiency purposes. The researchers noticed that the gradient for each data point in the boosting process has useful information for a smarter data sampling strategy. In the paper \cite{ke2017lightgbm} explains that ``(...) if an instance is associated with a small gradient, the training error for this instance is small and it is already well-trained''. A data sampling strategy is then built based on the rank of the absolute value of the gradient for each instance, sampling instances with higher gradient and subsampling instances with small gradients. The idea is to put more focus on the under-trained instances but keeping the data distribution closer to the original. GOSS has a theoretical proof that its estimation power and generalization performance is close to using the full data, and better than random sampling.
+
+
+
+
+
+
 
 
 Para a escrita de textos em Ciência da Computação, o livro de Justin Zobel, 
