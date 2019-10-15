@@ -53,6 +53,60 @@ When the codomain of $f(x)$ is finite, i.e. $\ytarget$ can assume a finite set o
 The Email Spam detection problem described in the last section is a binary classification problem, since the output is binary, either is spam, or isn't. In this work, the focus will be on \textbf{binary classification} problems and its specific metrics.
 
 %% ------------------------------------------------------------------------- %%
+\section{Classification Metrics}\index{tree}\index{classifier}\index{metrics}\index{AUC}
+
+There are many metrics for model performance and evaluation of classification models. In this study, the metrics evaluated are: the \textit{AUC} (or AUROC), which stands for Area Under the Receiver Operating Characteristic Curve; The logarithmic loss or \textit{Logloss}, which is a commonly used loss function for classification problems; \textit{Brier score}, a score function which measures the accuracy of probabilistic predictions.
+
+In a binary classifier, each prediction of the model is a number between 0 and 1, in the case of LightGBM's binary classification model. For simplicity, assuming that the binary labels are $0$ and $1$, the $\ypred\in [0, 1]$ can be interpreted as the predicted probability of a given instance being of class $1$. In applications where the expected usage is the class itself instead of a probability, a \textbf{threshold} needs to be set, i.e by setting a threshold $\tau$, the predicted labels will be equal to $1$ if $\ypred \geq \tau$, and $0$ otherwise.
+
+The intuition behind choosing these specific metrics are:
+
+\begin{itemize}
+    \item AUC is widely used in research, and it's a good metric insensitive to \textit{class imbalance}, having a bounded value between 0 and 1;
+    \item Logloss is the direct function optimized in the experiments, i.e. the gradient boosting steps are trying to reduce the logarithmic loss in each step. The logloss takes into account the uncertainty of the prediction and how much the actual label differ from it;
+    \item Brier score has good statistical properties, according to \cite{rufibach2010use} it also addresses simultaneously probability calibration, consistency between predicted probabilities and the observation as well as \textit{sharpness}, which is related to the concentration of the predictive distribution;
+\end{itemize}
+
+Below an overview about each metric is given, for more information on specific characteristics and mathematical formulation of each evaluation metric one can refer to \cite{BROWN200624}, \cite{rufibach2010use}, \cite{kuhn2013applied} and \cite{hastie2009elements}.
+
+\subsection{AUC}
+
+The Receiver Operating Characteristic curve is probability curve which measures the power of prediction of a binary classifier given a threshold. This curve is done by plotting the \textit{True Positive Rate} (TPR) against the \textit{False Positive Rate}, as seen in figure \ref{fig:auroc}. They're defined as
+
+$$Roc_x(\tau) = TPR_{\tau} = \frac{TP_{\tau}}{TP_{\tau} + FN_{\tau}}$$
+$$Roc_y(\tau) = FPR_{\tau} = \frac{FP_{\tau}}{FP_{\tau} + TN_{\tau}}$$
+
+where TP, FP, TN and FN stands for \textit{True Positives}, \textit{False Positives}, \textit{True Negatives} and \textit{False Negatives}, respectively. All of these metrics depend on the threshold $\tau$. The \textbf{AUC} is defined as the area under this curve, and provides an aggregate measure of the classifier performance against all possible thresholds. It ranges from $0$ (worst performance) to $1$ (perfect classifier).
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.50\textwidth]{roc_curve.png} 
+    \caption{ROC curve of a logistic regression classifier, from \cite{kuhn2013applied}}
+    \label{fig:auroc}
+\end{figure}
+
+\subsection{Brier Score}
+
+The \textbf{brier score} is the mean squared difference between the predicted probabilities and the actual labels. Similar to the AUC, brier score is a bounded measure from 0 to 1, but it's interpretation and ordering is different: 0 is the best possible brier score, while 1 is the worst. The actual equation is shown in \ref{eq:brier-score}.
+
+Brier score can sum up different components related to forecasting, especially taking into account the calibration of the predicted probabilities. In \cite{murphy1973new} there's an insightful partition of the Brier Score in three components, according to the article: ``a measure of the uncertainty inherent in the events, or states, on the occasions of concern (...); a measure of the reliability of the forecasts; and  a new measure of the resolution of the forecasts''.
+
+\begin{equation}\label{eq:brier-score}
+    Brier=\frac{1}{n}\sum_{i=1}^{n}(\yisupred - \yisup)^2
+\end{equation}
+
+\subsection{Logloss}
+
+Logarithmic Loss or \textbf{Logloss} measure the accuracy of a classifier by penalizing mistakes depending on how uncertain a prediction is from the actual label. Basically, this encapsulates the intuition that giving a highly confident prediction (e.g. $\ypred = 0.95$) but being very far from the actual label $\ytarget = 0$ is worse then being uncertain about it (e.g.  $\ypred = 0.5$). The logloss equation for binary classifiers is shown in \ref{eq:logloss}
+
+\begin{equation}\label{eq:logloss}
+    Logloss = -\frac{1}{N}\sum_{i=1}^{n}[\yisup \log \yisupred + (1 - \yisup)\log(1 - \yisupred)]
+\end{equation}
+
+
+
+
+%% ------------------------------------------------------------------------- %%
 \section{Model Tuning}\index{tuning}\index{hyperparameter}\index{machine!learning}
 
 Many models in supervised learning have parameters that cannot be directly from the available data. For example, in a decision tree algorithm the max depth or the criterion to measure the quality of a split needs to be chosen before the algorithm learning process. According to \cite{kuhn2013applied} this type of parameter is called a \textit{tuning parameter} because there's no analytical formula available to calculate an appropriate value. This parameter is also called a \textbf{hyperparameter}. 
