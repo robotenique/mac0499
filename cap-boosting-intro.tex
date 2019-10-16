@@ -122,6 +122,7 @@ The GBM algorithm fits a learner $h(x; a_m)$ with weight $\beta_m$ using the pse
     
 %% ------------------------------------------------------------------------- %%
 \section{\textit{XGBoost} and \textit{LightGBM}}\index{boosting}\index{boost}\index{lightGBM}
+\label{lightgbm-explanation}
 
 Even though Gradient Boosting was a known technique used in machine learning, it became widespread with the development of XGBoost, a scalable end-to-end tree boosting system, by \cite{chen2016xgboost}. The main improvements brought by XGBoost was the development of a sparsity-aware algorithm for sparse data and a ``weighted quantile sketch for approximate tree learning''. In general terms, the basic greedy algorithm to find the best split at a given tree node in the boosting process is very computationally demanding, especially when finding splits for continuous variables. In XGBoost an \textit{approximate algorithm} is used for split finding, using quantiles of the feature distribution as split points for continuous variables. 
 
@@ -145,6 +146,7 @@ Since in this work the impact of \textbf{hyperparameters} from LightGBM is studi
 
 %% ------------------------------------------------------------------------- %%
 \section{Hyperparameters}\index{boosting}\index{gradient!boosting!machines}\index{hyperparameter}
+\label{gbm-hyperparams}
 
 One main difference in optimization from other GBM tools is that LightGBM grow trees \textit{leaf-wise} (see figure \ref{fig:lightgbm-grow}), while most decision tree learning algorithms use a depth-wise approach. This impacts on how each hyperparameter value should be chosen, and which values to optimize. 
 
@@ -181,4 +183,4 @@ In the documentation from \cite{lightgbmparams}, there are a list of more than 2
 
 \end{itemize}
 
-There are many other parameters in LightGBM, but a model tuning using the models described above usually provide a strong baseline for further tuning.
+There are many other parameters in LightGBM, but in practice a model tuning using the models described above usually provide a strong baseline for further tuning.
