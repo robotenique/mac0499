@@ -47,7 +47,7 @@ OpenML provides a python API package for automatically retrieving datasets, task
     \label{fig:openml-eda1}
 \end{figure}
 
-After all these filters, the number of valid datasets for the experiment would be close to 400 (figure \ref{fig:openml-eda1}), in theory. However, a lot of datasets could not be opened by the python API due to a variety of errors, mostly related to Attribute-Relation File Format (ARFF) in python. This brought the number of possible datasets to experiment close to $200$, but since each hyperparameter experiment takes a long time to run (favoring more hyperparameter space covered over the number of datasets, check \ref{}), the final number of datasets analyzed in this study is 70.
+After all these filters, the number of valid datasets for the experiment would be close to 400 (figure \ref{fig:openml-eda1}), in theory. However, a lot of datasets could not be opened by the python API due to a variety of errors, mostly related to Attribute-Relation File Format (ARFF) in python. This brought the number of possible datasets to experiment close to $200$, but since each hyperparameter experiment takes a long time to run (favoring more hyperparameter space covered over the number of datasets, check \ref{subsec:hp-tree}), the final number of datasets analyzed in this study is 70.
 
 
 Each dataset retrieved by the OpenML API has a dataset id (\code{did}) related to it, along with very useful metadata related to it, as it can be seen in figure \ref{fig:openml-eda3}. With a simple exploratory analysis of the datasets it was observed a great portion of biology related datasets, usually with high number of categorical variables. Datasets with only textual data as features were also removed from the study, along with features not explicitly indicated as a categorical feature by the API.
@@ -55,7 +55,7 @@ Each dataset retrieved by the OpenML API has a dataset id (\code{did}) related t
 \begin{figure}[!h]
     \centering
     \includegraphics[width=1\textwidth]{openml_eda3.png} 
-    \caption{Number of data points distribution}
+    \caption{Example of dataset information from OpenML}
     \label{fig:openml-eda3}
 \end{figure}
 
@@ -103,4 +103,147 @@ The pipeline also calculates other useful statistics for each feature, like the 
 %% ------------------------------------------------------------------------- %%
 \section{Hyperparameter space}
 
-In section \ref{gbm-hyperparams} it's explained the basic hyperparameter used in LightGBM's gradient boosting algorithm. In this section the \textit{hyperparameter space} of the study is explained, along with a simple overview of the hypothesis behind each distribution choice related to LightGBM default hyperparameters.
+In section \ref{gbm-hyperparams} it's explained the basic hyperparameters used in LightGBM's gradient boosting algorithm. In this section the \textit{hyperparameter space}\footnote{In model tuning, the \textit{hyperparameter space} is the set of all the values each hyperparameter can assume in the tuning process.} of this study is explained, along with a simple overview of the hypothesis behind each distribution choice, related to LightGBM default hyperparameters and dataset size.  Let $D_i$ denote the number of instances of the $i$-th dataset, i.e. the total number of $\supervised$ pairs for the $i$-th dataset. 
+
+\subsection{Hyperparameters tree}
+\label{subsec:hp-tree}
+
+The intention is to train multiple models changing the hyperparameters values, and calculate the metrics (explained in section \ref{classification-metrics}) for each combination of hyperparameter. In this study three hyperparameters are studied: \textbf{\code{max\_depth}}, \textbf{\code{learning\_rate}} and \textbf{\code{num\_estimators}}.
+
+In this study, the  \textit{hyperparameter space} also represents all valid hyperparameters values to run for the datasets, and is a function of $D_i$. The hyperparameter space is represented as a special tree, where each new leaf of the tree takes its parent node and generate new leafs based on a new hyperparameters. Let $LR_i$, $NE_i$ and $MD_i$ denote the sets of possible hyperparameter values for learning rate, number of estimators and maximum depth, respectively. Let $S_i$ be the set of all hyperparameter sets, i.e. $S_i = \{LR_i, NE_i, MD_i\}$, and $\mathcal{P}(s_i)$ the \textit{power set} of $S_i$. The number of values to test for each hyperparameter is denoted with the numbers $N_{LR}$, $N_{NE}$, $N_{MD}$: e.g. if $N_{LR} = 4$ it means $4$ values of learning rate will be generated (equivalent to say $|LR_i| = 4$).
+
+For a given tree depth $k$, the hyperparameter set to be explored at that depth is defined using the rule in equation \ref{eq:hyperparam-tree}, where $\prod$ is the cartesian product operator.
+
+\begin{equation}\label{eq:hyperparam-tree}
+    C_k = \Big\{\prod_{X \in Q} X : Q \in \mathcal{P}(s_i), |Q| = k\Big\}
+\end{equation}
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=.3\textwidth]{hp_tree.png} 
+    \caption{Hyperparameter tree}
+    \label{fig:hp-tree}
+\end{figure}
+
+The hyperparameter tree of this study, represented in figure \ref{fig:hp-tree}, is then defined as different cartesian products of all valid $k$ combinations. Since there are three hyperparameters being changed, the maximum is $k=3$, and the final space is the union of all cartesian products combinations:
+
+$$Hspace_i = C_1 \cup C_2 \cup C_3$$
+
+This structure is generalizable for any number of hyperparameters, and it was designed this way to measure hyperparameter impact depending on the number of combinations. E.g. it is expected that changing multiple hyperparameters at the same time has a bigger impact on the model performance than changing just one. Each level of the hyperparameter tree represents a "combination effect", i.e. the experiment can measure, for multiple combinations of hyperparameters, which combination effect provides the biggest impact on the metrics (for better or worse) compared with the other combinations.
+
+As an example, consider the three sets of hyperparameters below:
+
+$$LR = \{0.1, 0.2\}$$
+$$NE = \{1, 2\}$$
+$$MD = \{10, 20\}$$
+
+Then each leaf of the hyperparameter tree will be:
+
+$$C_1 = \Big\{\{0.1, 0.2\}, \{1, 2\}, \{10, 20\}\Big\}$$
+
+\begin{align*}
+    C_2 = \Big\{\{(0.1, 1), (0.1, 2), (0.2, 1), (0.2, 2)\}, \\
+            \{(0.1, 10), (0.1, 20), (0.2, 10), (0.2, 20)\}, \\
+            \{(1, 10), (1, 20), (2, 10), (2, 20)\}\Big\}
+\end{align*}
+
+\begin{align*}
+    C_3 = \Big\{\{(0.1, 1, 10), (0.1, 1, 20), (0.1, 2, 10), (0.1, 2, 20), \\
+    (0.2, 1, 10), (0.2, 1, 20), (0.2, 2, 10), (0.2, 2, 20)\}\Big\}
+\end{align*}
+
+It can be observed that the number of hyperparameters in each tree node increase multiplicatively with the number of initial hyperparameters and the number of layers $k$ in the hyperparameter tree, and it's one of the reasons why the experiment may take a long time to run depending on the dataset. This was the chosen configuration of the experiment since the objective is not to perform a model tuning, but rather to measure the "magnitude" of the effects in performance metrics. Better strategies could be used for model tuning like Grid Search, Random Search or Bayesian Optimization, as it's stated in \cite{probst2018tunability}.
+
+\subsection{Maximum Depth}
+
+The maximum depth is the hyperparameter that controls the maximum possible depth each boosting tree can have. As explained in section \ref{gbm-hyperparams}, LightGBM default behavior is to grow the trees leaf-wise, having an unbound maximum depth, but the structure being controlled by the number of leaves in the tree. Max depth is a way to apply a constraint on the function space, i.e. the possible hypothesis the learning algorithm can use, and is commonly optimized in class`ical decision trees for pruning. 
+
+Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree isn't as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constraint the model, one can overfit in the data given a high enough number of boosting iterations. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there's isn't a clear rule to follow.
+
+In this study, the maximum depth values are always the same, independent on the dataset size:
+
+$$MD_i = \{3, 4, ..., N_{MD} + 3\}$$
+
+In the experiments $N_{MD} = 20$, so each dataset is run using max depth from $3$ to $22$ in this case. The idea of these values is to not test with very big depth values, nor very small depth for a weak learner in gradient boosting.
+
+\subsection{Learning rate}
+
+The learning rate distribution is simple, and it depends only on the dataset size $D_i$. In XGBoost the default value of learning rate (also called \textit{eta}) is $0.3$ and in LightGBM it's $0.1$, which is also the default learning rate for \textit{scikit-learn} implementation of gradient boosting. Since in the OpenML datasets the dataset sizes aren't too similar (see figure \ref{fig:openml-eda2}), the distribution of learning rate values to generate is a simple function starting from $0.01$ for small datasets, changing based on the dataset size.
+
+\textbf{Premise:} Start with a learning rate value between $0.01$ for small datasets, and a multiple of $0.1$ for bigger datasets (a rule was defined by dividing $D_i$ by $10000$). Then, experiment with bigger and smaller values of learning rate around the "middle" value.
+
+First it is defined a "middle" learning rate value $\psi_i$ (defined in equation \ref{eq:lr-eq1}). Then the values are generated as a list using $N_{LR}$, with the intention to generate a symmetric pattern of learning rates (the total length of each "side" of the learning rate list is described in \ref{eq:lr-eq2}).
+
+\begin{equation}
+    \psi_i = \max\Big(0.01, 0.1 \times \max(1, \frac{D_i}{10000})\Big)
+    \label{eq:lr-eq1}
+\end{equation}
+
+\begin{equation}
+    \kappa_i = \cdot \max\left(\lfloor\frac{N_{LR}}{2}\rfloor, 2\right)
+    \label{eq:lr-eq2}
+\end{equation}
+
+The symmetric pattern and the final $LR_i$ are generated following the rule described in equation \ref{eq:lr-eq3}. By changing the maximum length $N_{LR}$ and the dataset size $D_i$, one can see the learning rate distribution behavior: In figure \ref{fig:hyperparam-lr1} all the $D_i$ from the study are categorized in percentiles, and depending on the length ($N_{LR}$) a given distribution of learning rate values $LR_i$ is shown.
+
+\begin{equation}
+    LR_i = \Big\{\frac{\psi_i}{\kappa_i}, \frac{\psi_i}{\kappa_i - 1}, \frac{\psi_i}{\kappa_i - 2}, ..., \text{\Large $\psi_i$}, ..., (\kappa_i - 2)\cdot\psi_i, (\kappa_i - 1)\cdot\psi_i, \kappa_i\cdot\psi_i\Big\}
+    \label{eq:lr-eq3}
+\end{equation}
+
+In this study, we generate $5$ unique learning rates.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{learning_rate_binary.png} 
+    \caption{Learning rate distribution, changing $D_i$ and $N_{LR}$. Bigger dataset sizes generate higher learning rates.}
+    \label{fig:hyperparam-lr1}
+\end{figure}
+
+\subsection{Number of Estimators}
+
+Both in XGBoost (\code{XGBClassifier}) and LightGBM the default value for the number of estimators is set to $100$. The optimal number of boosting iterations can be influenced by the dataset size: by fixing other hyperparameters, a model of a dataset with very few data points can converge much faster (i.e. in few boosting iterations) than a dataset with 10 times its size. Since in the study we want to test different boosting iterations, and the actual distribution ideally depends on $D_i$, we first define the maximum value of estimators a given dataset can have, and then generate multiple values of \code{num\_estimators} for it. 
+
+The definition of this function is a little arbitrary, but the objective is to cover different values and tie together the $D_i$ of the dataset. Using maximum values of $400$ estimators for small datasets and $1700$ for big datasets, along with the definitions of \textit{small} and \textit{big} datasets being $D_i\leq10000$ and $D_i>300000$ respectively, a linear function is then defined to calculate the maximum value to be assigned. After defining the constants in equation \ref{eq:num-est-1} the rule for the max value of \code{num\_estimators} is defined in equation \ref{eq:num-est-2}.
+
+\begin{equation}
+    a = \frac{1700 - 400}{300000 - 10000}, \text{ }b = 400 - a
+    \label{eq:num-est-1}
+\end{equation}
+\begin{equation}
+    max_{ne}(D_i) = \begin{cases}
+        400 \text{ if } D_i \leq 10000 \\
+        1700 \text{ if } D_i > 300000 \\
+        a \cdot D_i + b
+    \end{cases}
+    \label{eq:num-est-2}
+\end{equation}
+
+The final list of number of estimators generated is then a linear interpolation starting at $\min(\frac{D_i}{4}, 50)$ to $max_{ne}(D_i)$, and an example of multiple $NE_i$ distributions is shown in figure \ref{fig:hyperparam-ne1} for different $D_i$ values, but with a fixed length $N_{NE} = 20$.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{num_estimators_binary.png} 
+    \caption{Number of estimators distribution - changing $D_i$, for a fixed $N_{NE} = 20$. Bigger dataset sizes generate higher \textit{num\_estimators} values.}
+    \label{fig:hyperparam-ne1}
+\end{figure}
+
+\section{Final experiment pipeline}
+
+For each dataset considered in this study a pipeline is built for it, following the sequence:
+
+\begin{enumerate}
+    \item Calculate the descriptive statistics for the dataset (see \ref{dataset-aggregated-statistics});
+    \item Build the hyperparameter space $Hspace_i$;
+    \item Split the dataset into train and test set;
+    \item Build evaluators for each studied metric;
+    \item Train a LightGBM model for each hyperparameter value $\in Hspace_i$, and evaluate it on the train and test set;
+    \item Save logs.
+\end{enumerate}
+
+The train test split strategy chosen for all datasets is a random split with train size being 70\% of the data points and 30\% for test (\textbf{70/30}). Given a dataset, the split is fixed, i.e. the train and test is the same in all trained models.
+
+\subsection{Label Encoding}
+
+As stated in LightGBM's documentation, the library has a built-in support for categorical features, which uses a specific method from \cite{fisher1958grouping}. However, in order to make the study more general, it was decided to not use this specific feature of LightGBM. When categorical features are detected, a \textbf{label encoding} technique is used on the categorical values of the dataset. 
