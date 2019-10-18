@@ -102,6 +102,7 @@ The pipeline also calculates other useful statistics for each feature, like the 
 
 %% ------------------------------------------------------------------------- %%
 \section{Hyperparameter space}
+\label{sec:hyperparam-space}
 
 In section \ref{gbm-hyperparams} it's explained the basic hyperparameters used in LightGBM's gradient boosting algorithm. In this section the \textit{hyperparameter space}\footnote{In model tuning, the \textit{hyperparameter space} is the set of all the values each hyperparameter can assume in the tuning process.} of this study is explained, along with a simple overview of the hypothesis behind each distribution choice, related to LightGBM default hyperparameters and dataset size.  Let $D_i$ denote the number of instances of the $i$-th dataset, i.e. the total number of $\supervised$ pairs for the $i$-th dataset. 
 
@@ -156,16 +157,16 @@ $$C_1 = \Big\{\{0.1, 0.2\}, \{1, 2\}, \{10, 20\}\Big\}$$
 It can be observed that the number of hyperparameters in each tree node increase multiplicatively with the number of initial hyperparameters and the number of layers $k$ in the hyperparameter tree, and it's one of the reasons why the experiment may take a long time to run depending on the dataset. This was the chosen configuration of the experiment since the objective is not to perform a model tuning, but rather to measure the "magnitude" of the effects in performance metrics. Better strategies could be used for model tuning like Grid Search, Random Search or Bayesian Optimization, as it's stated in \cite{probst2018tunability}.
 
 \subsection{Maximum Depth}
+\label{subsec:max-depth}
+The maximum depth is the hyperparameter that controls the maximum possible depth each boosting tree can have. As explained in section \ref{gbm-hyperparams}, LightGBM default behavior is to grow the trees leaf-wise, having an unbound maximum depth, but the structure being controlled by the number of leaves in the tree. Max depth is a way to apply a constraint on the function space, i.e. the possible hypothesis the learning algorithm can use, and is commonly optimized in classical decision trees for pruning. 
 
-The maximum depth is the hyperparameter that controls the maximum possible depth each boosting tree can have. As explained in section \ref{gbm-hyperparams}, LightGBM default behavior is to grow the trees leaf-wise, having an unbound maximum depth, but the structure being controlled by the number of leaves in the tree. Max depth is a way to apply a constraint on the function space, i.e. the possible hypothesis the learning algorithm can use, and is commonly optimized in class`ical decision trees for pruning. 
+Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree isn't as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constraint the model, one can overfit in the data given a high enough number of boosting iterations : this can be seen as an ``overfit relationship'' between \code{max\_depth} and \code{num\_estimators}. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there's isn't a clear rule to choose an optimal value. 
 
-Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree isn't as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constraint the model, one can overfit in the data given a high enough number of boosting iterations. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there's isn't a clear rule to follow.
-
-In this study, the maximum depth values are always the same, independent on the dataset size:
+In this study, the tested maximum depth values are always the same, independent on the dataset size:
 
 $$MD_i = \{3, 4, ..., N_{MD} + 3\}$$
 
-In the experiments $N_{MD} = 20$, so each dataset is run using max depth from $3$ to $22$ in this case. The idea of these values is to not test with very big depth values, nor very small depth for a weak learner in gradient boosting.
+In the experiments $N_{MD} = 20$, so each dataset is run using max depth from $3$ to $22$. The intuition behind these values is to neither test with very big depth values, nor very small depth for a weak learner in gradient boosting. The \code{num\_leaves} parameter is automatically set to be $\min(2^{max\_depth} - 1, 2^{15})$, because this way the number of leaves will not influence too much the results when changing the maximum depth and at the same time the number of nodes in each boosting tree will not grow unbound when training with \code{max\_depth} $\geq 16$.
 
 \subsection{Learning rate}
 
@@ -192,7 +193,7 @@ The symmetric pattern and the final $LR_i$ are generated following the rule desc
     \label{eq:lr-eq3}
 \end{equation}
 
-In this study, we generate $5$ unique learning rates.
+In this study $5$ unique learning rates are generated.
 
 \begin{figure}[!h]
     \centering
@@ -203,7 +204,7 @@ In this study, we generate $5$ unique learning rates.
 
 \subsection{Number of Estimators}
 
-Both in XGBoost (\code{XGBClassifier}) and LightGBM the default value for the number of estimators is set to $100$. The optimal number of boosting iterations can be influenced by the dataset size: by fixing other hyperparameters, a model of a dataset with very few data points can converge much faster (i.e. in few boosting iterations) than a dataset with 10 times its size. Since in the study we want to test different boosting iterations, and the actual distribution ideally depends on $D_i$, we first define the maximum value of estimators a given dataset can have, and then generate multiple values of \code{num\_estimators} for it. 
+Both in XGBoost (\code{XGBClassifier}) and LightGBM the default value for the number of estimators is set to $100$. The optimal number of boosting iterations can be influenced by the dataset size: by fixing other hyperparameters, a model of a dataset with very few data points can converge much faster (i.e. in few boosting iterations) than a dataset with 10 times its size. Since in the study the intention is to test different boosting iterations, and the actual distribution ideally depends on $D_i$, first the maximum value of estimators a given dataset can have is defined, and then  multiple values of \code{num\_estimators} are generated. 
 
 The definition of this function is a little arbitrary, but the objective is to cover different values and tie together the $D_i$ of the dataset. Using maximum values of $400$ estimators for small datasets and $1700$ for big datasets, along with the definitions of \textit{small} and \textit{big} datasets being $D_i\leq10000$ and $D_i>300000$ respectively, a linear function is then defined to calculate the maximum value to be assigned. After defining the constants in equation \ref{eq:num-est-1} the rule for the max value of \code{num\_estimators} is defined in equation \ref{eq:num-est-2}.
 
@@ -253,4 +254,4 @@ The train test split strategy chosen for all datasets is a random split with tra
 
 \subsection{Label Encoding}
 
-As stated in LightGBM's documentation, the library has a built-in support for categorical features, which uses a specific method from \cite{fisher1958grouping}. However, in order to make the study more general, it was decided to not use this specific feature of LightGBM. When categorical features are detected, a \textbf{label encoding} technique is used on the categorical values of the dataset. 
+As stated in LightGBM's documentation, the library has a built-in support for categorical features, which uses a specific method from \cite{fisher1958grouping}. However, in order to make the study more general, it was decided to not use this specific feature of LightGBM. When categorical features are detected, a \textbf{label encoding} technique is used on the categorical values of the dataset. The label encoding is just a numeric encoding of the categorical features, i.e. each categorical value is mapped to an integer number. 
