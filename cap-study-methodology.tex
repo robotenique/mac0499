@@ -220,7 +220,13 @@ The definition of this function is a little arbitrary, but the objective is to c
     \label{eq:num-est-2}
 \end{equation}
 
-The final list of number of estimators generated is then a linear interpolation starting at $\min(\frac{D_i}{4}, 50)$ to $max_{ne}(D_i)$, and an example of multiple $NE_i$ distributions is shown in figure \ref{fig:hyperparam-ne1} for different $D_i$ values, but with a fixed length $N_{NE} = 20$.
+The final list of number of estimators generated is then a linear interpolation starting at $min_{ne}(D_i) = \min(\frac{D_i}{4}, 50)$ to $max_{ne}(D_i)$, in evenly spaced steps (equation \ref{eq:hyperparam-ne-step}). An example of multiple $NE_i$ distributions is shown in figure \ref{fig:hyperparam-ne1} for different $D_i$ values, but with a fixed length $N_{NE} = 20$.
+
+$$step = \frac{\Big(max_{ne}(D_i) - min_{ne}(D_i)\Big)}{N_{NE} - 1}$$
+\begin{equation}
+    NE_i = \Big\{\lfloor min_{ne}(D_i) \rfloor,\lfloor min_{ne}(D_i) + step \rfloor,\lfloor min_{ne}(D_i) + 2\cdot step \rfloor, ... ,\lfloor max_{ne}(D_i)\rfloor\Big\}
+    \label{eq:hyperparam-ne-step}
+\end{equation}
 
 \begin{figure}[!h]
     \centering
@@ -229,6 +235,7 @@ The final list of number of estimators generated is then a linear interpolation 
     \label{fig:hyperparam-ne1}
 \end{figure}
 
+\newpage
 \section{Final experiment pipeline}
 
 For each dataset considered in this study a pipeline is built for it, following the sequence:
