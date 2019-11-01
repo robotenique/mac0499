@@ -2,9 +2,9 @@
 \chapter{Results and Analysis}
 \label{cap:results}
 
-Each dataset pipeline result has all evaluted metrics (AUC, Brier and Logloss), the dataset statistics (described in \ref{dataset-aggregated-statistics}) and the generated hyperparameter space according to section \ref{sec:hyperparam-space} of chapter \ref{cap:study-methodology}.
+Each dataset pipeline result has all evaluted metrics (AUC, Brier and Logloss), the dataset statistics (described in \ref{dataset-aggregated-statistics}) and the generated hyperparameter space according to Section \ref{sec:hyperparam-space} of Chapter \ref{cap:study-methodology}.
 
-The focus of this chapter is to give an overview of the main results, how the datasets were clustered, a basic explanation of the statistical theory necessary for the experimental analysis,  some insights about each hyperparameter effect and how sensitive the clustered datasets are to them.
+The focus of this Chapter is to give an overview of the main results, how the datasets were clustered, a basic explanation of the statistical theory necessary for the experimental analysis,  some insights about each hyperparameter effect and how sensitive the clustered datasets are to them.
 
 
 %% ------------------------------------------------------------------------- %%
@@ -43,7 +43,7 @@ Since each dataset has multiple results assigned to it, one can do an \textbf{in
 
 \subsection{Individual Hyperparameter Impact}
 
-The first node of the hyperparameter tree only defines single hyperparameters values. By keeping the default LightGBM values for the remaining hyperparameters one can observe the impact of changing a single hyperparameter on each metric of interest. The plot of these values is the classical learning curve used in model tuning to assess hyperparameter effect on model performance. In the figure \ref{fig:res-ind2} impact of max depth is shown and in \ref{fig:res-ind1} the number of estimators, for the \textit{BNG(kr-vs-kp)} dataset.
+The first node of the hyperparameter tree only defines single hyperparameters values. By keeping the default LightGBM values for the remaining hyperparameters one can observe the impact of changing a single hyperparameter on each metric of interest. The plot of these values is the classical learning curve used in model tuning to assess hyperparameter effect on model performance. In the Figure \ref{fig:res-ind2} impact of max depth is shown and in \ref{fig:res-ind1} the number of estimators, for the \textit{BNG(kr-vs-kp)} dataset.
 
 \begin{figure}[!h]
     \centering
@@ -61,11 +61,11 @@ The first node of the hyperparameter tree only defines single hyperparameters va
 
 \subsection{Hyperparameter Pairs Impact}
 
-The second node of the hyperparameter tree defines all pairs of possible combinations of hyperparameters. In this study, these combinations are $MD_i \times LR_i$, $MD_i \times NE_i$ and $LR_i \times NE_i$. For example, in figure \ref{fig:res-mult1} one can see at the same time that a high \textbf{\code{num\_estimators}} combined with lower \textbf{\code{max\_depth}} have higher AUC on the test set (on this specific dataset), but at the same time low \textbf{\code{num\_estimators}} combined with high \textbf{\code{max\_depth}} also achieve high AUC. This is an interesting behavior that repeats in different hyperparameters combinations, and are easily detectable in the final general analysis looking at the treatment effect of each hyperparameter combination.
+The second node of the hyperparameter tree defines all pairs of possible combinations of hyperparameters. In this study, these combinations are $MD_i \times LR_i$, $MD_i \times NE_i$ and $LR_i \times NE_i$. For example, in Figure \ref{fig:res-mult1} one can see at the same time that a high \textbf{\code{num\_estimators}} combined with lower \textbf{\code{max\_depth}} have higher AUC on the test set (on this specific dataset), but at the same time low \textbf{\code{num\_estimators}} combined with high \textbf{\code{max\_depth}} also achieve high AUC. This is an interesting behavior that repeats in different hyperparameters combinations, and are easily detectable in the final general analysis looking at the treatment effect of each hyperparameter combination.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{res-mult1.png} 
+    \includegraphics[width=0.8\textwidth]{res-mult1.png} 
     \caption{Pair impact of $MD_i \times NE_i$  on the \textit{BNG(kr-vs-kp)} dataset}
     \label{fig:res-mult1}
 \end{figure}
@@ -74,14 +74,14 @@ On the other hand, when analyzing \ref{fig:res-mult2} the pair $MD_i \times LR_i
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{res-mult2.png} 
+    \includegraphics[width=0.8\textwidth]{res-mult2.png}
     \caption{Pair impact of $MD_i \times LR_i$  on the \textit{BNG(kr-vs-kp)} dataset}
     \label{fig:res-mult2}
 \end{figure}
 
 \subsection{Hyperparameter Triples Impact}
 
-Finally, each dataset is also run using all possible combinations of the studied hyperparameters, i.e. a classical Grid Search run using \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate}. Results of AUC of the triple impact for  \textit{BNG(kr-vs-kp)} can be seen on figure \ref{fig:res-all1}.
+Finally, each dataset is also run using all possible combinations of the studied hyperparameters, i.e. a classical Grid Search run using \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate}. Results of AUC of the triple impact for  \textit{BNG(kr-vs-kp)} can be seen on Figure \ref{fig:res-all1}.
 
 \begin{figure}[!h]
     \centering
@@ -90,12 +90,12 @@ Finally, each dataset is also run using all possible combinations of the studied
     \label{fig:res-all1}
 \end{figure}
 
-One of the inherent difficulties when analyzing these results is due to the high dimensionality of the results: Each experiment has at least the three hyperparameter values, plus three different metrics for each run. In section \ref{} this problem will be tackled, with an overview of the statistical techniques and analysis performed to compare and obtain insights into the impact on performance metrics.
+One of the inherent difficulties when analyzing these results is due to the high dimensionality of the results: Each experiment has at least the three hyperparameter values, plus three different metrics for each run. In Section \ref{} this problem will be tackled, with an overview of the statistical techniques and analysis performed to compare and obtain insights into the impact on performance metrics.
 
 %% ------------------------------------------------------------------------- %%
 \section{Dataset aggregation and clustering}
 
-To tie dataset characteristics to hyperparameters effect in the subsequent analysis, a variety of different measures were calculated in the dataset analysis process, explained in details in section \ref{dataset-aggregated-statistics} of chapter \ref{cap:study-methodology}. When analyzing all datasets's features characteristics, useful insights into the data can be found on it. First, a clear conclusion is that proportion of categorical features in the dataset is much higher than  other types (numeric, boolean or constants), as shown in figure \ref{fig:dset-pre1}, and that the most common cardinality is two categories for the categorical features\footnote{These categorical features could be encoded as the \textit{boolean} feature type, or vice-versa. In the study it was decided that boolean features are columns which had explicitly True and False as values.}, while few features have high cardinality (figure \ref{fig:dset-pre2}).
+To tie dataset characteristics to hyperparameters effect in the subsequent analysis, a variety of different measures were calculated in the dataset analysis process, explained in details in Section \ref{dataset-aggregated-statistics} of Chapter \ref{cap:study-methodology}. When analyzing all datasets's features characteristics, useful insights into the data can be found on it. First, a clear conclusion is that proportion of categorical features in the dataset is much higher than  other types (numeric, Boolean or constants), as shown in Figure \ref{fig:dset-pre1}, and that the most common cardinality is two categories for the categorical features\footnote{These categorical features could be encoded as the \textit{Boolean} feature type, or vice-versa. In the study it was decided that Boolean features are columns which had explicitly \textbf{True} and \textbf{False} as values.}, while few features have high cardinality (Figure \ref{fig:dset-pre2}).
 
 \begin{figure}[!h]
     \centering
@@ -111,4 +111,56 @@ To tie dataset characteristics to hyperparameters effect in the subsequent analy
     \label{fig:dset-pre2}
 \end{figure}
 
-Since the granularity of the statistics are feature-wise, all datasets were subjected to an aggregation process which combines the feature-wise statistics into \textit{dataset aggregated statistics}.
+With relation to the skewness of the numeric features, most of them have low skewness, with the majority of them having $0$ skewness. This can indicate either that the features themselves do not have innate skewness, or they've been processed different techniques to normalize and remove skewness, like a logarithmic transformation, cubic root transformation, etc. The distribution can be seen on Figure \ref{fig:dset-pre3}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.7\textwidth]{dset-pre3.png}
+    \caption{Skewness distribution of the numeric features in the dataset}
+    \label{fig:dset-pre3}
+\end{figure}
+
+\subsection{Aggregation}
+
+Since the granularity of the statistics are feature-wise, all datasets were subjected to an aggregation process which combines the feature-wise statistics into \textit{dataset aggregated characteristics}. The objective of this aggregation is to represent each dataset considered in the study into a point in a high dimensional space, which gives power to perform a multitude of transformations and comparisons, and in the case of this study, a clustering by the similarity of the datasets according to these aggregated values. For each dataset, the following aggregations are made:
+
+\begin{itemize}
+    \item \textbf{\code{num\_rows}}: Number of rows in the dataset, i.e. the number of instances of $D_i$;
+    \item \textbf{\code{num\_features}}: Number of features in the dataset;
+    \item \textbf{\code{mean\_skewness}}: $0$ if there's no numeric features in the dataset, otherwise the mean of the skewness of the numeric features;
+    \item \textbf{\code{mean\_variance}}: The mean of the \textit{variance} of categorical features, where the variance concept is the one described at Section \ref{dataset-aggregated-statistics};
+    \item \textbf{\code{num\_categorical}}: How many categorical features the dataset has;
+    \item \textbf{\code{sum\_cardinality\_over\_categorical}}: Let $K$ be the set of categorical features of the dataset, and $Cardinality_K$ the sum of the cardinality of all $k\in K$. Then, this aggregation is defined as $\frac{Cardinality_K}{|K| + 1}$, which is simply the "\textit{mean}" of cardinality in the dataset. The $+1$ is to avoid error with datasets which do not have categorical features;
+    \item \textbf{\code{categorical\_ratio}}: Proportion of categorical features in the dataset;
+    \item \textbf{\code{numeric\_ratio}}: Proportion of numeric features;
+    \item \textbf{\code{boolean\_ratio}}: Proportion of Boolean features;
+    \item \textbf{\code{constant\_ratio}}: Proportion of constant features.
+\end{itemize}
+
+
+After this transformation each dataset $D_i$ is now represented by a $\mathcal{P}_i \in \mathbb{R}^{10}$ where each component of the multidimensional point represents one of the aggregated characteristics calculated above. To visualize these multidimensional points, a t-SNE projection (dimensionality reduction technique, more details in \cite{maaten2008visualizing}) on two dimensions is shown in Figure \ref{fig:tsne-1}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{tsne1.png}
+    \caption{t-SNE projection of all $\mathcal{P}_i$}
+    \label{fig:tsne-1}
+\end{figure}
+
+The aggregated characteristics were designed in a way to encompass both the proportion of feature types in the dataset and the absolute size of the dataset. The \code{*ratio} aggregations are done to compare multiple datasets regardless on the absolute numeric value of features it has, but on the ratio of the feature types. On the other hand, the absolute features like \code{num\_rows} captures the absolute size of the data. For example, a simple analysis using \code{num\_rows}, \code{num\_features} and \code{categorical\_ratio} could yield interesting insights and a way to bundle similar datasets together based on the proportion of categorical features, controlling for both the number of data points and the number of features. 
+
+Finally, there's also explicit emphasis on characteristics regarding numeric and categorical features, which are of interest in this study (more information about the premisses about it on Section \ref{dataset-aggregated-statistics} of Chapter \ref{cap:study-methodology}). The mean of skewness aggregation can be used to control (in the experimental design sense) for datasets with similar distribution of skewed or not numerical features, while the mean of variance, the number of categorical features and the "\textit{mean}" of cardinality describes important information regarding the categorical aspect of the dataset.  
+
+\subsection{Clustering Strategy}
+
+To analyze all experiments based on similar dataset characteristics, the decided approach was to perform a simple clustering technique, instead of manually selecting which datasets are similar by looking at the aggregated characteristics by hand. Using the aggregated characteristics explained on the last section, a clustering approach on the points $\mathcal{P}_i$ generates clusters based on those characteristics.
+
+The chosen clustering approach was hierarchical clustering, which creates clusters from the \textit{bottom-up}, i.e. the algorithm starts with each point considered as a single cluster. Using a distance metric and a linkage strategy, in each iteration the most similar pairs are combined into a new cluster, until there's only one cluster left with all the points (more details about the implementation in \cite{mullner2011modern}). The advantage of this approach is that it generates the complete tree structure of the clusters in a \textit{dendrogram}, making it easy to choose where to stop the clustering. Also, in this study the time complexity of the algorithm isn't a problem because the total number of points $\mathcal{P}_i$ is relatively small.
+
+In more technical terms, the clustering used \textit{euclidean distance} as the distance metric, and \textit{complete linkage} to compare pairs of clusters (shown in equation \ref{eq:complete-linkage}, where $\mathcal{X}$ and $\mathcal{Y}$ are two different clusters). All components of $\mathcal{P}_i$ were normalized before running the algorithm to avoid one component dominating in the clustering procedure. It's important to note that the linkage and distance metric chosen here can highly impact the subsequent analysis of the experiment results. The objective is not to create a generic analysis that could work with any possible dataset, but to actually measure the impact of hyperparameters into specific clusters which follow a similar distribution of the aggregated characteristics.
+
+
+\begin{equation}
+    \max\{\underbrace{d(x, y)}_{\text{Euclidean distance}}: x \in \mathcal{X}, y \in \mathcal{Y}\}
+    \label{eq:complete-linkage}
+\end{equation}

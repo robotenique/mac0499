@@ -64,7 +64,7 @@ The data modifications done in each step of the boosting procedure is to assign 
 %% ------------------------------------------------------------------------- %%
 \section{GBMs}\index{boosting}\index{gradient!boosting!machines}\index{boost}
 
-Gradient Boosting Machines were originally introduced by \cite{gbmdef}, in the paper titled "Greedy Function Approximation: A Gradient Boosting Machine". In this work, Friedman makes a connection between stagewise additive expansions (the concept of an additive model) and gradient descent. The GBM algorithm works by optimizing any given differentiable loss function, using gradient descent. However, the optimization is not done in terms of a numeric optimization (i.e. of updating a vector of parameters $\theta$), as described in the \ref{Gradient Descent} section, but by "boosting" functions in the direction of the gradient of the loss function.
+Gradient Boosting Machines were originally introduced by \cite{gbmdef}, in the paper titled "Greedy Function Approximation: A Gradient Boosting Machine". In this work, Friedman makes a connection between stagewise additive expansions (the concept of an additive model) and gradient descent. The GBM algorithm works by optimizing any given differentiable loss function, using gradient descent. However, the optimization is not done in terms of a numeric optimization (i.e. of updating a vector of parameters $\theta$), as described in Section \ref{Gradient Descent}, but by "boosting" functions in the direction of the gradient of the loss function.
 
 Since GBMs deal with finite data, they optimize the functions in terms of the supervised dataset $\supervised$ inputs, not w.r.t all values of $x$, as they're (usually) infinite. The final model of the GBM will be similar to equations \ref{eq:additive} and \ref{eq:boosting}:
 
@@ -148,7 +148,7 @@ Since in this work the impact of \textbf{hyperparameters} from LightGBM is studi
 \section{Hyperparameters}\index{boosting}\index{gradient!boosting!machines}\index{hyperparameter}
 \label{gbm-hyperparams}
 
-One main difference in optimization from other GBM tools is that LightGBM grow trees \textit{leaf-wise} (see figure \ref{fig:lightgbm-grow}), while most decision tree learning algorithms use a depth-wise approach. This impacts on how each hyperparameter value should be chosen, and which values to optimize. 
+One main difference in optimization from other GBM tools is that LightGBM grow trees \textit{leaf-wise} (see Figure \ref{fig:lightgbm-grow}), while most decision tree learning algorithms use a depth-wise approach. This impacts on how each hyperparameter value should be chosen, and which values to optimize. 
 
 \begin{figure}[!h]
     \centering
