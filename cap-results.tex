@@ -81,7 +81,7 @@ On the other hand, when analyzing \ref{fig:res-mult2} the pair $MD_i \times LR_i
 
 \subsection{Hyperparameter Triples Impact}
 
-Finally, each dataset is also run using all possible combinations of the studied hyperparameters, i.e. a classical Grid Search run using \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate}. Results of AUC of the triple impact for  \textit{BNG(kr-vs-kp)} can be seen on Figure \ref{fig:res-all1}.
+Finally, each dataset is also run using all possible combinations of the studied hyperparameters, i.e. a classical Grid Search run using \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate}. Results of AUC of the triple impact for  \textit{BNG(kr-vs-kp)} can be seen in Figure \ref{fig:res-all1}.
 
 \begin{figure}[!h]
     \centering
@@ -111,7 +111,7 @@ To tie dataset characteristics to hyperparameters effect in the subsequent analy
     \label{fig:dset-pre2}
 \end{figure}
 
-With relation to the skewness of the numeric features, most of them have low skewness, with the majority of them having $0$ skewness. This can indicate either that the features themselves do not have innate skewness, or they've been processed different techniques to normalize and remove skewness, like a logarithmic transformation, cubic root transformation, etc. The distribution can be seen on Figure \ref{fig:dset-pre3}.
+With relation to the skewness of the numeric features, most of them have low skewness, with the majority of them having $0$ skewness. This can indicate either that the features themselves do not have innate skewness, or they've been processed different techniques to normalize and remove skewness, like a logarithmic transformation, cubic root transformation, etc. The distribution can be seen in Figure \ref{fig:dset-pre3}.
 
 \begin{figure}[!h]
     \centering
@@ -140,6 +140,7 @@ Since the granularity of the statistics are feature-wise, all datasets were subj
 
 After this transformation each dataset $D_i$ is now represented by a $\mathcal{P}_i \in \mathbb{R}^{10}$ where each component of the multidimensional point represents one of the aggregated characteristics calculated above. To visualize these multidimensional points, a t-SNE projection (dimensionality reduction technique, more details in \cite{maaten2008visualizing}) on two dimensions is shown in Figure \ref{fig:tsne-1}.
 
+\ref{} % TODo: update t-SNE projection
 \begin{figure}[!h]
     \centering
     \includegraphics[width=1\textwidth]{tsne1.png}
@@ -164,3 +165,40 @@ In more technical terms, the clustering used \textit{euclidean distance} as the 
     \max\{\underbrace{d(x, y)}_{\text{Euclidean distance}}: x \in \mathcal{X}, y \in \mathcal{Y}\}
     \label{eq:complete-linkage}
 \end{equation}
+
+\ref{} % TODo: change dendrogram
+The final dendrogram of the study is shown in Figure \ref{fig:dendrogram}. 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{dendrogram.png}
+    \caption{Complete Dendrogram}
+    \label{fig:dendrogram}
+\end{figure}
+
+Using the dendrogram as base along with the t-SNE projection of the dataset's characteristics, the \textit{lifetime} cutoff was decided, generating \ref{addnumclustershere} distinct clusters. Besides manually visualizing the final assignment of the clusters after the cutoff (check Figure \ref{fig:cluster-cutoff}), the distribution of the characteristics on each cluster were analyzed to get a sense about how each cluster differ from each other. These distributions can be visualized using different ridgeline plot for each characteristic, e.g. in the distribution of \ref{add-metric-here}, shown in Figure \ref{fig:cluster-joyplot}, one can observe that \ref{add-observation-here}.
+
+
+%% ------------------------------------------------------------------------- %%
+\section{Experiment analysis}
+
+The experimental analysis is performed on each cluster, therefore a common metric must be used when comparing multiple dataset's results. In fact, one of the objectives is to analyze the impact of changing selected hyperparameters on the specified performance metrics of classification tasks. For this part of the analysis, instead of looking directly into the performance metrics of AUC, Logloss and Brier Score, a \textit{delta} from the baseline metric $\delta$ is defined.
+
+\subsection{\texorpdfstring{$\delta_{metric}$}{delta} definition}
+
+The reason to not directly use the performance metrics when comparing different models under the same hyperparameters changes is that the objective of the study doesn't takes into account the actual performance of a given dataset, but actually how much each hyperparameter affects the performance metrics (for better or worse). For example, it doesn't matter in this case if dataset $A$ has a higher AUC than dataset $B$ under a new hyperparameter value $h$, but actually if the increase or decrease in performance of both datasets $A$ and $B$ are significant for hyperparameter value $h$. 
+
+Another problem that can be avoided by the following definition of a $\delta_{metric}$ is the fact that it captures relative changes, instead of the absolute value of the metric; e.g. a dataset with almost constant $0.9$ AUC value will have a $\delta_{AUC}$ equal to $0$ most of the time, and will be treated as equal as a dataset with constant low AUC (e.g. $0.55$): the actual absolute value of the AUC doesn't matter.
+
+LightGBM has a default set of values for its hyperparameters and the ones analyzed in this study  are defined below. As an observation, the correct default value for \code{max\_depth} is $-1$ because it's unlimited on LightGBM, as mentioned in Section \ref{gbm-hyperparams}; However, because the \code{num\_leaves} default is 31 and this approximately results in a balanced tree with depth 5.
+
+\begin{itemize}
+    \item LR = \{0.1\}
+    \item NE = \{100\}
+    \item MD = \{5\}
+\end{itemize}
+
+The baseline metrics are defined, for each dataset $D_i$, as the performance metrics (\textit{AUC, Logloss} and \textit{Brier Score}, more details in Section \ref{classification-metrics}) obtained on the test set using the LightGBM model trained with the parameters as close as possible to the default hyperparameter values above. The $\delta_{metric}$ is then just the difference between a given new metric and the baseline metric. It's interpretation depends on the performance metric being analized: in the case of AUC, a positive $\delta_{AUC}$ means a higher AUC than baseline (a better result), a negative one means a lower AUC than baseline (worse result), and $0$ an equal performance in terms of AUC.
+
+
+% \\\CONCERNS about this, and how multiple points for a given $h$, using a robust statistical test can give us more guarantee about the actual result; The study will capture mostly changes in the AUC, not if the models are already good
+%thsi measure will capture the dataset sensitivity as well
