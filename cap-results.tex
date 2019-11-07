@@ -200,5 +200,9 @@ LightGBM has a default set of values for its hyperparameters and the ones analyz
 The baseline metrics are defined, for each dataset $D_i$, as the performance metrics (\textit{AUC, Logloss} and \textit{Brier Score}, more details in Section \ref{classification-metrics}) obtained on the test set using the LightGBM model trained with the parameters as close as possible to the default hyperparameter values above. The $\delta_{metric}$ is then just the difference between a given new metric and the baseline metric. It's interpretation depends on the performance metric being analized: in the case of AUC, a positive $\delta_{AUC}$ means a higher AUC than baseline (a better result), a negative one means a lower AUC than baseline (worse result), and $0$ an equal performance in terms of AUC.
 
 
-% \\\CONCERNS about this, and how multiple points for a given $h$, using a robust statistical test can give us more guarantee about the actual result; The study will capture mostly changes in the AUC, not if the models are already good
-%thsi measure will capture the dataset sensitivity as well
+\\\CONCERNS about this, and how multiple points for a given $h$, using a robust statistical test can give us more guarantee about the actual result; The study will capture mostly changes in the AUC, not if the models are already good
+thsi measure will capture the dataset sensitivity as well
+
+
+\ref{plot of a single delta metric - AUC}
+\ref{plot of a single delta metric - Brier Score}
