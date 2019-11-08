@@ -140,7 +140,6 @@ Since the granularity of the statistics are feature-wise, all datasets were subj
 
 After this transformation each dataset $D_i$ is now represented by a $\mathcal{P}_i \in \mathbb{R}^{10}$ where each component of the multidimensional point represents one of the aggregated characteristics calculated above. To visualize these multidimensional points, a t-SNE projection (dimensionality reduction technique, more details in \cite{maaten2008visualizing}) on two dimensions is shown in Figure \ref{fig:tsne-1}.
 
-\ref{} % TODo: update t-SNE projection
 \begin{figure}[!h]
     \centering
     \includegraphics[width=1\textwidth]{tsne1.png}
@@ -156,26 +155,63 @@ Finally, there's also explicit emphasis on characteristics regarding numeric and
 
 To analyze all experiments based on similar dataset characteristics, the decided approach was to perform a simple clustering technique, instead of manually selecting which datasets are similar by looking at the aggregated characteristics by hand. Using the aggregated characteristics explained on the last section, a clustering approach on the points $\mathcal{P}_i$ generates clusters based on those characteristics.
 
-The chosen clustering approach was hierarchical clustering, which creates clusters from the \textit{bottom-up}, i.e. the algorithm starts with each point considered as a single cluster. Using a distance metric and a linkage strategy, in each iteration the most similar pairs are combined into a new cluster, until there's only one cluster left with all the points (more details about the implementation in \cite{mullner2011modern}). The advantage of this approach is that it generates the complete tree structure of the clusters in a \textit{dendrogram}, making it easy to choose where to stop the clustering. Also, in this study the time complexity of the algorithm isn't a problem because the total number of points $\mathcal{P}_i$ is relatively small.
-
-In more technical terms, the clustering used \textit{euclidean distance} as the distance metric, and \textit{complete linkage} to compare pairs of clusters (shown in equation \ref{eq:complete-linkage}, where $\mathcal{X}$ and $\mathcal{Y}$ are two different clusters). All components of $\mathcal{P}_i$ were normalized before running the algorithm to avoid one component dominating in the clustering procedure. It's important to note that the linkage and distance metric chosen here can highly impact the subsequent analysis of the experiment results. The objective is not to create a generic analysis that could work with any possible dataset, but to actually measure the impact of hyperparameters into specific clusters which follow a similar distribution of the aggregated characteristics.
-
-
-\begin{equation}
-    \max\{\underbrace{d(x, y)}_{\text{Euclidean distance}}: x \in \mathcal{X}, y \in \mathcal{Y}\}
-    \label{eq:complete-linkage}
-\end{equation}
-
-\ref{} % TODo: change dendrogram
-The final dendrogram of the study is shown in Figure \ref{fig:dendrogram}. 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=1\textwidth]{dendrogram.png}
-    \caption{Complete Dendrogram}
+    \caption{Dendrogram of the old clustering method}
     \label{fig:dendrogram}
 \end{figure}
 
-Using the dendrogram as base along with the t-SNE projection of the dataset's characteristics, the \textit{lifetime} cutoff was decided, generating \ref{addnumclustershere} distinct clusters. Besides manually visualizing the final assignment of the clusters after the cutoff (check Figure \ref{fig:cluster-cutoff}), the distribution of the characteristics on each cluster were analyzed to get a sense about how each cluster differ from each other. These distributions can be visualized using different ridgeline plot for each characteristic, e.g. in the distribution of \ref{add-metric-here}, shown in Figure \ref{fig:cluster-joyplot}, one can observe that \ref{add-observation-here}.
+After some initial experimentation, the chosen clustering approach was to use the well known K-means algorithm, with $k=6$ clusters. K-means is a very simple algorithm which reduces the data to \textit{centroids}, and resulted in reasonable clusters for this study. The other tested technique was to use agglomerative hierarchical clustering, and choose the number of clusters by analyzing the resulting dendrogram (the dendrogram for the hierarchical clustering is shown in Figure \ref{fig:dendrogram}). However, this technique generated an uneven number of datasets in each cluster, more than K-means, so the K-means was chosen. It's important to note that the algorithms and the number of clusters chosen here can highly impact the subsequent analysis of the experiment results. The objective is not to create a generic analysis that could work with any possible dataset, but to actually measure the impact of hyperparameters into specific clusters which follow a similar distribution of the aggregated characteristics.
+
+After the K-means procedure, the assigned clusters can be seen in the t-SNE projection in Figure \ref{fig:tsne-2}, where each color represents a different cluster. Even though the number of $\mathcal{P}_i$ in each cluster isn't uniform, the clustering assignment is more intuitive, albeit in reduced dimensionality. As an observation note, the two t-SNE projections (Figure \ref{fig:tsne-1} and  \ref{fig:tsne-2}) are different because the embeddings in low dimension change when new data is introduced. In this case, the centroids were also added to the dataset before using t-SNE.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{tsne2.png}
+    \caption{t-SNE projection with the assigned clusters and the centroids}
+    \label{fig:tsne-2}
+\end{figure}
+
+To understand better the behavior and semantic of each dataset of clusters, manual analysis of the datasets in each one was performed. As an example, the datasets names of Cluster 2 and 3 are in Table \ref{table:1}. From a superficial analysis on the content of each dataset, one can see that most of the datasets in Cluster 2 have a high number of categorical features, while datasets in Cluster 3 are all synthetically augmented, i.e. Bayesian Network Generated (\textit{BNG}) and have a very high number of rows.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{||c c||} 
+     \hline
+     Cluster 2 & Cluster 3 \\ [0.5ex] 
+     \hline\hline
+     \textit{kr-vs-kp} & \textit{BNG(kr-vs-kp)} \\
+     \textit{splice} & \textit{BNG(labor,nominal,1000000)} \\
+     \textit{mfeat-pixel} & \textit{BNG(breast-cancer,nominal,1000000)} \\
+     \textit{PhishingWebsites} & \textit{BNG(mushroom)} \\
+     \textit{20\_newsgroups.drift} & \textit{BNG(colic.ORIG,nominal,1000000)} \\
+     \textit{Internet-Advertisements} & \textit{BNG(credit-a,nominal,1000000)} \\
+     & \textit{BNG(credit-g,nominal,1000000)} \\
+     & \textit{BNG(credit-g)} \\[1ex] 
+     \hline
+    \end{tabular}
+    \caption{Datasets from Cluster 2 and Cluster 3}
+    \label{table:1}
+\end{table}
+
+Using ridgeline plots is another way to understand the meaning of each cluster. By calculating the distribution of the aggregated characteristics over each cluster and plotting them in the same scale against each other, it's possible to evaluate if the clustering makes sense. In total there are $10$ ridgeline plots, one for each aggregated characteristic. Here two of them are shown: In Figure \ref{fig:joyplot-1} and Figure \ref{fig:joyplot-2} the ridgeline plots for \code{categorical\_ratio} and \code{mean\_skewness} can be seen. It's easy to see that Cluster 2 datasets have a very high categorical ratio with very little variance, i.e. almost all of the datasets in this cluster contains a high proportion of categorical features. Clusters 1 and 6 have the lowest proportion of categorical features amongst all Clusters. Another conclusion is that Cluster 6 contains more skewed features, as its distribution is skewed towards high \code{mean\_skewness} values.
+
+All the remaining ridgeline plots are available on the appendix \ref{}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.7\textwidth, height=.7\textwidth]{joyplot1.png}
+    \caption{Ridgeline plot of \code{categorical\_ratio}. Clusters are represented by different colors}
+    \label{fig:joyplot-1}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.7\textwidth, height=.7\textwidth]{joyplot2.png}
+    \caption{Ridgeline plot of \code{mean\_skewness}. Clusters are represented by different colors}
+    \label{fig:joyplot-2}
+\end{figure}
 
 
 %% ------------------------------------------------------------------------- %%
@@ -197,12 +233,20 @@ LightGBM has a default set of values for its hyperparameters and the ones analyz
     \item MD = \{5\}
 \end{itemize}
 
-The baseline metrics are defined, for each dataset $D_i$, as the performance metrics (\textit{AUC, Logloss} and \textit{Brier Score}, more details in Section \ref{classification-metrics}) obtained on the test set using the LightGBM model trained with the parameters as close as possible to the default hyperparameter values above. The $\delta_{metric}$ is then just the difference between a given new metric and the baseline metric. It's interpretation depends on the performance metric being analized: in the case of AUC, a positive $\delta_{AUC}$ means a higher AUC than baseline (a better result), a negative one means a lower AUC than baseline (worse result), and $0$ an equal performance in terms of AUC.
+The baseline metrics are defined, for each dataset $D_i$, as the performance metrics (\textit{AUC, Logloss} and \textit{Brier Score}, more details in Section \ref{classification-metrics}) obtained on the test set using the LightGBM model trained with the parameters as close as possible to the default hyperparameter values above. The $\delta_{metric}$ is then just the difference between a given new metric and the baseline metric. It's interpretation depends on the performance metric being analyzed: in the case of AUC, a positive $\delta_{AUC}$ means a higher AUC than baseline (a better result), a negative one means a lower AUC than baseline (worse result), and $0$ an equal performance in terms of AUC. For both the Brier Score and Logloss the interpretation is the opposite, as in these metrics the lower the better.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.7\textwidth, height=.7\textwidth]{delta_auc1.png}
+    \caption{$\delta_{AUC}$ for Cluster 3, changing only \code{max\_depth}}
+    \label{fig:delta-auc1}
+\end{figure}
 
 
-\\\CONCERNS about this, and how multiple points for a given $h$, using a robust statistical test can give us more guarantee about the actual result; The study will capture mostly changes in the AUC, not if the models are already good
-thsi measure will capture the dataset sensitivity as well
+
+% \\\CONCERNS about this, and how multiple points for a given $h$, using a robust statistical test can give us more guarantee about the actual result; The study will capture mostly changes in the AUC, not if the models are already good
+% thsi measure will capture the dataset sensitivity as well
 
 
-\ref{plot of a single delta metric - AUC}
-\ref{plot of a single delta metric - Brier Score}
+% \ref{plot of a single delta metric - AUC}
+% \ref{plot of a single delta metric - Brier Score}

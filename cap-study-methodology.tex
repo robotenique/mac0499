@@ -50,7 +50,7 @@ OpenML provides a python API package for automatically retrieving datasets, task
 After all these filters, the number of valid datasets for the experiment would be close to 400 (figure \ref{fig:openml-eda1}), in theory. However, a lot of datasets could not be opened by the python API due to a variety of errors, mostly related to Attribute-Relation File Format (ARFF) in python. This brought the number of possible datasets to experiment close to $200$, but since each hyperparameter experiment takes a long time to run (favoring more hyperparameter space covered over the number of datasets, check \ref{subsec:hp-tree}), the final number of datasets analyzed in this study is 70.
 
 
-Each dataset retrieved by the OpenML API has a dataset id (\code{did}) related to it, along with very useful metadata related to it, as it can be seen in Figure \ref{fig:openml-eda3}. With a simple exploratory analysis of the datasets it was observed a great portion of biology related datasets, usually with high number of categorical variables. Datasets with only textual data as features were also removed from the study, along with features not explicitly indicated as a categorical feature by the API.
+Each dataset retrieved by the OpenML API has a dataset id (\code{did}) related to it, along with very useful metadata related to it, as it can be seen in Figure \ref{fig:openml-eda3}. With a simple exploratory analysis of the datasets it was observed a great number of datasets with high number of categorical variables, and usually high number of features too. Datasets with only textual data as features were also removed from the study, along with features not explicitly indicated as a categorical feature by the API.
 
 \begin{figure}[!h]
     \centering
