@@ -351,14 +351,17 @@ $$\mathcal{E}_{ij} = y_{ij} - \hat{y}_{ij}$$
 
 where $\hat{y}_{ij}$ is an estimate of the respective observation $y_{ij}$, obtained as follows:
 
-% \begin{split}
-%     \hat{y}_{ij} & = \hat{\bm{\mu}} + \hat{\tau_i}\\
-%      & = \frac{1}{2} \pi r^2
-% \end{split}
+\begin{equation}    
+    \begin{split}
+        \hat{y}_{ij} & = \hat{\bm{\mu}} + \hat{\tau_i}\\
+        & = \text{\Large$\overline{\mathup{y}_\Sigma}$} + (\overline{\bm{y}^{(i)}} - \text{\Large$\overline{\mathup{y}_\Sigma}$})\\
+        & = \overline{\bm{y}^{(i)}}
+    \end{split}
+\end{equation}
+
+This just means that the estimate of any experimental scenario observation in the $i$th treatment is the corresponding treatment average $\overline{\bm{y}^{(i)}}$. In the terms of this study, the estimate of relative change in the performance metric $\delta$ for a given configuration of a value of hyperparameters is the mean of the $\delta$'s of all datasets in the corresponding cluster being analyzed. The analysis of the residuals is one of the ways to check for model adequacy, and can be analyzed using a \textit{normal probability plot} and using statistical tests to test for the normality and homoscedasticity assumptions.
     
-
-
-The test of assumptions is applied to every \textbf{experimental scenario} $\mathcal{S}$, using the following sequence of techniques:
+The test of assumptions is applied to every \textbf{experimental scenario} $\mathcal{S}$ in this study, using the following sequence of techniques:
 
 \begin{enumerate}
     \item 
