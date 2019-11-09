@@ -9,6 +9,7 @@ The focus of this Chapter is to give an overview of the main results, how the da
 
 %% ------------------------------------------------------------------------- %%
 \section{Single Dataset Experiment}
+\label{sec:single-dataset}
 
 Each dataset result in the study has the following files:
 
@@ -42,6 +43,7 @@ Each entry of \code{final\_result} contains the evaluators result for both train
 Since each dataset has multiple results assigned to it, one can do an \textbf{individual analysis} looking into a single dataset behavior. In this section, a summarized analysis of the \textbf{BNG(kr-vs-kp)} dataset is given as an example. The \textit{BNG(kr-vs-kp)} or "King+Rook versus King+Pawn" is one of the datasets available in the OpenML platform, where the objective is to classify if the white player can win or not (given the board positions determined by the feature values), and it's described in more details in \cite{shapiro1987structured}. The "BNG" means this is an artificially augmented/generated dataset.
 
 \subsection{Individual Hyperparameter Impact}
+\label{subsec:indv-impact}
 
 The first node of the hyperparameter tree only defines single hyperparameters values. By keeping the default LightGBM values for the remaining hyperparameters one can observe the impact of changing a single hyperparameter on each metric of interest. The plot of these values is the classical learning curve used in model tuning to assess hyperparameter effect on model performance. In the Figure \ref{fig:res-ind2} impact of max depth is shown and in \ref{fig:res-ind1} the number of estimators, for the \textit{BNG(kr-vs-kp)} dataset.
 
@@ -60,6 +62,7 @@ The first node of the hyperparameter tree only defines single hyperparameters va
 \end{figure}
 
 \subsection{Hyperparameter Pairs Impact}
+\label{subsec:double-impact}
 
 The second node of the hyperparameter tree defines all pairs of possible combinations of hyperparameters. In this study, these combinations are $MD_i \times LR_i$, $MD_i \times NE_i$ and $LR_i \times NE_i$. For example, in Figure \ref{fig:res-mult1} one can see at the same time that a high \textbf{\code{num\_estimators}} combined with lower \textbf{\code{max\_depth}} have higher AUC on the test set (on this specific dataset), but at the same time low \textbf{\code{num\_estimators}} combined with high \textbf{\code{max\_depth}} also achieve high AUC. This is an interesting behavior that repeats in different hyperparameters combinations, and are easily detectable in the final general analysis looking at the treatment effect of each hyperparameter combination.
 
@@ -80,6 +83,7 @@ On the other hand, when analyzing \ref{fig:res-mult2} the pair $MD_i \times LR_i
 \end{figure}
 
 \subsection{Hyperparameter Triples Impact}
+\label{subsec:triple-impact}
 
 Finally, each dataset is also run using all possible combinations of the studied hyperparameters, i.e. a classical Grid Search run using \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate}. Results of AUC of the triple impact for  \textit{BNG(kr-vs-kp)} can be seen in Figure \ref{fig:res-all1}.
 
@@ -175,7 +179,7 @@ After the K-means procedure, the assigned clusters can be seen in the t-SNE proj
 
 To understand better the behavior and semantic of each dataset of clusters, manual analysis of the datasets in each one was performed. As an example, the datasets names of Cluster 2 and 3 are in Table \ref{table:1}. From a superficial analysis on the content of each dataset, one can see that most of the datasets in Cluster 2 have a high number of categorical features, while datasets in Cluster 3 are all synthetically augmented, i.e. Bayesian Network Generated (\textit{BNG}) and have a very high number of rows.
 
-\begin{table}[h!]
+\begin{table}[h!] 
     \centering
     \begin{tabular}{||c c||} 
      \hline
@@ -215,13 +219,13 @@ All the remaining ridgeline plots are available on the appendix \ref{}.
 
 
 %% ------------------------------------------------------------------------- %%
-\section{Experiment analysis}
+\section{Experiment Definitions}
 
 The experimental analysis is performed on each cluster, therefore a common metric must be used when comparing multiple dataset's results. In fact, one of the objectives is to analyze the impact of changing selected hyperparameters on the specified performance metrics of classification tasks. For this part of the analysis, instead of looking directly into the performance metrics of AUC, Logloss and Brier Score, a \textit{delta} from the baseline metric $\delta$ is defined.
 
 \subsection{\texorpdfstring{$\delta_{metric}$}{delta} definition}
 
-The reason to not directly use the performance metrics when comparing different models under the same hyperparameters changes is that the objective of the study doesn't takes into account the actual performance of a given dataset, but actually how much each hyperparameter affects the performance metrics (for better or worse). For example, it doesn't matter in this case if dataset $A$ has a higher AUC than dataset $B$ under a new hyperparameter value $h$, but actually if the increase or decrease in performance of both datasets $A$ and $B$ are significant for hyperparameter value $h$. 
+The reason to not directly use the performance metrics when comparing different models under the same hyperparameters changes is that the objective of the study doesn't takes into account the actual performance of a given dataset, but actually how much each hyperparameter affects the performance metrics, i.e. the \textbf{sensitivity} of a dataset w.r.t a hyperparameter. For example, it doesn't matter in this case if dataset $A$ has a higher AUC than dataset $B$ under a new hyperparameter value $h$, but actually if the increase or decrease in performance of both datasets $A$ and $B$ are significant for hyperparameter value $h$. 
 
 Another problem that can be avoided by the following definition of a $\delta_{metric}$ is the fact that it captures relative changes, instead of the absolute value of the metric; e.g. a dataset with almost constant $0.9$ AUC value will have a $\delta_{AUC}$ equal to $0$ most of the time, and will be treated as equal as a dataset with constant low AUC (e.g. $0.55$): the actual absolute value of the AUC doesn't matter.
 
@@ -238,10 +242,127 @@ The baseline metrics are defined, for each dataset $D_i$, as the performance met
 \begin{figure}[!h]
     \centering
     \includegraphics[width=1\textwidth]{delta_auc1.png}
-    \caption{$\delta_{AUC}$ for Cluster 3, changing only \code{max\_depth}}
+    \caption{$\delta_{AUC}$ for Cluster 3, changing only \code{max\_depth}. The colors represent different datasets}
     \label{fig:delta-auc1}
 \end{figure}
 
+In Figure \ref{fig:delta-auc1} is displayed the $\delta_{AUC}$ w.r.t \code{max\_depth} changes for the datasets in Cluster 3, i.e. one example of a $\delta$ plot from the experiment result. The $\delta$ captures the relative increase or decrease in AUC considering $5$ the baseline for \code{max\_depth}. By manually analyzing the results of the $\delta{AUC}$ one can determine, for this Cluster, which values of \code{max\_depth} have the highest impact on the AUC metric, both positive and negative.
+
+\subsection{Ordering and Visualization}
+
+In Figure \ref{fig:delta-brier1} a different $\delta$ plot is displayed, where each point is the $\delta_{brier}$ w.r.t both \code{max\_depth} and \code{learning\_rate} changes summarized into a single dimension in the \textit{x axis}, for Cluster 2 experiments. The higher the number of hyperparameters being analyzed at the same time, the more difficult it is to visualize these $\delta$ plots due to the high dimensionality. For this reason, in the study the hyperparameter values were summarized into a single point which encompasses multiple hyperparameter changes.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{delta_brier1.png}
+    \caption{$\delta_{Brier}$ for Cluster 2, changing both \code{max\_depth} and \code{learning\_rate}. The colors represent different datasets}
+    \label{fig:delta-brier1}
+\end{figure}
+
+
+In the Subsections \ref{subsec:indv-impact}, \ref{subsec:double-impact} and \ref{subsec:triple-impact} it is shown the full results for individual hyperparameter impact, pairs of hyperparameters and finally all three hyperparameters, respectively. These plots are not possible in this part of the analysis because instead of one individual dataset experiment result being evaluated as in Section \ref{sec:single-dataset}, the final analysis is done with multiple datasets of a cluster.
+
+For visualization purposes, an ordering of the data points in the x axis was defined to facilitate the visualization and to maintain an order that makes sense, even when reducing the dimensionality. First, the ranking of each hyperparameter is calculated based on the sorted order within that individual hyperparameter distribution, and then the final ranking of these points is based on the average of the individual hyperparameter ranks. This custom ranking has two advantages:
+
+\begin{enumerate}
+    \item Retains the relative value of each hyperparameter into the final ordering. This means that the first points represent the lower values of all hyperparameters and the last points in the x axis represent the combinations with the highest hyperparameters values;
+    \item Is robust w.r.t the scale of the absolute values between the hyperparameters. The ordering takes first into account the rank of each hyperparameter to avoid dealing with values in uneven scales. For example, a learning rate of $1.5$ is considered to be a high value in practice, but its numeric value is much smaller than a maximum depth of $5$, which can be considered a small value of \code{max\_depth}.
+\end{enumerate}
+
+
+As an example of this ordering, if the points were $H = \{(3, 500), (20, 100), (5, 200), (10, 400)\}$, each tuple a 
+pair of maximum depth and number of estimators, the first step of the ordering is to get the ranking of each hyperparameter within it's distribution. This would generate a set of the individual ranks $r'(H) = \{(1, 4), (4, 1), (2, 2), (3, 3)\}$, and the final ranking order depends on the average ranks of each tuple, in this case $r_{avg}(H) = \{2.5, 2.5, 2, 3\}$. And using $r_{avg}(H)$ to order the original points $H$, the final ordering is $H^\star = \{(5, 200), (3, 500), (20, 100), (10, 400)\}$.
+
+It's important to note that, because of the statistical framework chosen in this study, the ranking strategy doesn't change the result of the analysis, but provides a way to visually understand its results.
+
+%% ------------------------------------------------------------------------- %%
+\section{Statistical Framework}
+
+With the objective to generalize the hyperparameter sensitivity analysis, an statistical framework is defined to analyze the $\delta_{metric}$ obtained on each cluster and different configurations of hyperparameters. The comparisons include changing different aspects of the experiment, such as: the performance metric chosen (AUC, Logloss, Brier Score), the hyperparameter(s) being changed and the clusters being analyzed.
+
+An important concept in this study related to the statistical framework is the definition of an \textbf{experimental scenario}. Given a cluster $C$, a set of hyperparameters $H$ and a performance metric $m$, the experimental scenario can be represented as:
+ $$\mathcal{S}(C, H, m)$$
+
+Which means the experiment outputs of $\delta_m$ observed when applying the treatments $H$ to all experimental units in the cluster $C$. For example,  Figure  \ref{fig:delta-auc1} represents an experimental scenario $\mathcal{S}(3, \eta^{(3)}_{max\_depth}, AUC)$ and Figure  \ref{fig:delta-brier1} is a visualization of $\mathcal{S}(2, \eta^{(2)}_{max\_depth,num\_estimators}, brier)$.
+
+The statistical framework is divided in two main parts: tests for the significance of the changes in the $\delta_{metric}$ obtained in the experiment, and the subsequent modelling of the sensitivity factors of the hyperparameters of each cluster. An overview of the statistical tools used in this study are defined in the following subsections, along with examples of real results obtained in the analysis of the experiments.
+
+
+\subsection{Analysis of Variance}
+
+The typical scenario of an analysis of variance, according to \cite{montgomery2017design}, is an experimental setting where there are $k$ {treatments} or different \textit{levels} of a factor that one wishes to compare. The response observed from each of the $k$ levels of treatment is a random variable. In general, there are $n$ observations under the same treatment, which can be seen in Table \ref{table:sfm}. In this study, the \textit{treatment} is the hyperparameter, and the different values of the hyperparameter are the different treatment levels in the analysis of variance. The experimental units are the datasets of a cluster, which receive a "treatment" of different hyperparameter values.
+
+\begin{table}[h!] 
+    \centering
+    \begin{tabular}{||c |c c c c| c c||} 
+     \hline
+     \textbf{Treatment} & & \textbf{Observations} & & & \textbf{Totals} & \textbf{Averages} \\ [0.5ex]
+     \hline
+     $1$ & $y_{11}$ & $y_{12}$ & $\cdots$ & $y_{1n}$ & $\bm{y}^{(1)}$ & $\overline{\bm{y}^{(1)}}$\\
+     $2$ & $y_{21}$ & $y_{22}$ & $\cdots$ & $y_{2n}$ & $\bm{y}^{(2)}$ & $\overline{\bm{y}^{(2)}}$\\
+     $\vdots$ & $\vdots$ & $\vdots$ & $\cdots$ & $\vdots$ & $\vdots$ & $\vdots$\\
+     $k$ & $y_{k1}$ & $y_{k2}$ & $\cdots$ & $y_{kn}$ & $\bm{y}^{(k)}$ & $\overline{\bm{y}^{(k)}}$\\[1ex]
+     & &  &  &  &\text{\Large$\mathup{y}_\Sigma$} & \text{\Large$\overline{\mathup{y}_\Sigma}$}\\[1ex] 
+     \hline
+    \end{tabular}
+    \caption{Table exemplifying a general Single-Factor Experiment, based on \cite{montgomery2017design}}
+    \label{table:sfm}
+\end{table}
+
+There are two main models in the literature when dealing with Single-Factor experiments, the \textbf{means model} and the \textbf{effects model}. Even though in this study the observations from the experiments are described using the \textit{effects model}, it's useful to comprehend the idea behind both models to understand why one was chosen over the other.
+
+In the \textit{means model} each observation (i.e. each point in the $\delta$ plot for example) is defined as a function of the mean \textit{within treatment} and a random error component that incorporates ``all other sources of variability in the experiment including measurement, variability arising from uncontrolled factors, differences between the experimental units to which the treatments are applied, and the general background noise in the process'' according to \cite{montgomery2017design}. The structure from the means model is described in Equation \ref{eq:means-model}.
+
+\begin{equation}\label{eq:means-model}
+    y_{ij} = \mu_i + \epsilon_{ij}
+    \begin{cases}
+        i = 1, 2, \cdots , k\\
+        j = 1, 2, \cdots, n
+    \end{cases}
+\end{equation}
+
+On the other hand, the \textbf{effects model} defines the treatment means $\mu_i$ as a deviation from the overall mean $\bm{\mu}$ of the experiment, i.e. $\mu_i = \bm{\mu}+ \tau_i \text{ where } i = 1, 2, \cdots, k$. Thus, the experimental results are described according to Equation \ref{eq:effects-model}. The parameter $\tau_i$ is called the \textbf{\textit{i}th treatment effect}, and it represents the deviation from the overall mean of the experiment.
+
+\begin{equation}\label{eq:effects-model}
+    y_{ij} = \bm{\mu} + \tau_i + \epsilon_{ij}
+    \begin{cases}
+        i = 1, 2, \cdots , k\\
+        j = 1, 2, \cdots, n
+    \end{cases}
+\end{equation}
+
+One of the reasons why the effects model was chosen to analyze the results of this study is because it has a more intuitive interpretation for the objective of this study. One can interpret the $\tau_i$ as the amount of effect a configuration of hyperparameter produces in the performance metrics, i.e. it's a measure of textit{sensitivity} from the overall case. Before modelling the experimental results and comparing the $\tau_i$ for different scenarios, it's important to test for equality of the output of the treatments (in this case, equality of $\delta_{metric}$ for different performance metrics) and testing the assumptions of the statistical tests.
+
+\subsection{ANOVA}
+
+The most widely used test in the analysis of variance is the \textbf{ANOVA} test, or \textit{single-factor analysis of variance}. In the assumptions of the ANOVA model there is a requirement that the experiments are performed in random order to keep the environment in which the experiments are applied as uniform as possible. According to \cite{montgomery2017design}, the objective is to test the appropriate hypothesis about the treatment means and to estimate them. However, there a very strong assumption that must be validated before applying the ANOVA test: the model errors $\epsilon_{ij}$ are assumed to be normally and independently distributed random variables with mean zero and variance $\sigma^2$; The data must also be \textit{homoscedastic}, i.e. the variance $\sigma^2$ is assumed to be constant for all levels of the factor.
+
+These assumptions imply that the observations must follow a normal distribution:
+
+$$y_{ij} \sim N(\bm{\mu} + \tau_i, \sigma^2)$$
+
+The ANOVA model has different flavors, and is highly used in the field of applied statistics. Different variations and extensions of the ANOVA model can be found throughout the literature of statistics and machine learning. In the study of hyperparameters, \cite{hoos201x4efficient} describes a method using the functional ANOVA framework (a variation of ANOVA) to quantify the importance of ``both single hyperparameters and of interactions between hyperparameters'' in a single dataset. In a more recent work, \cite{van2017empirical} also extend the functional ANOVA framework for multiple datasets, with an empirical experiment using OpenML datasets.
+
+\subsection{Testing of Assumptions}
+
+However, the ANOVA test \textbf{was not} used in this study, because its assumptions were not met in almost all scenarios. A different non parametric statistical test was used, and since some of the assumptions applies for both the parametric (ANOVA) and non parametric tests, it's important to understand the assumptions of them. Using \cite{montgomery2017design} definition of the \textbf{residuals} for observation $j$ in treatment $i$ as
+
+$$\mathcal{E}_{ij} = y_{ij} - \hat{y}_{ij}$$
+
+where $\hat{y}_{ij}$ is an estimate of the respective observation $y_{ij}$, obtained as follows:
+
+% \begin{split}
+%     \hat{y}_{ij} & = \hat{\bm{\mu}} + \hat{\tau_i}\\
+%      & = \frac{1}{2} \pi r^2
+% \end{split}
+    
+
+
+The test of assumptions is applied to every \textbf{experimental scenario} $\mathcal{S}$, using the following sequence of techniques:
+
+\begin{enumerate}
+    \item 
+\end{enumerate}
 
 // separar em 2 capitulos:
 
