@@ -17,7 +17,7 @@ Each dataset result in the study has the following files:
     \item \textbf{\code{shape}}: The number of data points $D_i$ and the number of features of both train and test set;
     \item \textbf{\code{analyzer\_info}}: A dictionary with information calculated by the \code{analyzer}. It contains the feature set, what is the target column, an indicator if the dataset contains any categorical variable, and all the categorical features if it has any;
     \item \textbf{\code{openml\_object}}: The original \textit{OpenML} object of the dataset, with its name, description (if it has one), basic attribute information, etc;
-    \item \textbf{\code{hp\_tree}}: The generate tree for the dataset, i.e. all nodes of $Hspace_i$;
+    \item \textbf{\code{hp\_tree}}: The generated hyperparameter tree for the dataset, i.e. all nodes of $Hspace_i$;
     \item \textbf{\code{final\_result}}: All the metric results for all combinations of hyperparameters in the hyperparameter tree; Contains the values used for the main analysis.
 \end{enumerate}
 
@@ -237,7 +237,7 @@ LightGBM has a default set of values for its hyperparameters and the ones analyz
     \item MD = \{5\}
 \end{itemize}
 
-The baseline metrics are defined, for each dataset $D_i$, as the performance metrics (\textit{AUC, Logloss} and \textit{Brier Score}, more details in Section \ref{classification-metrics}) obtained on the test set using the LightGBM model trained with the parameters as close as possible to the default hyperparameter values above. The $\delta_{metric}$ is then just the difference between a given new metric and the baseline metric. It's interpretation depends on the performance metric being analyzed: in the case of AUC, a positive $\delta_{AUC}$ means a higher AUC than baseline (a better result), a negative one means a lower AUC than baseline (worse result), and $0$ an equal performance in terms of AUC. For both the Brier Score and Logloss the interpretation is the opposite, as in these metrics the lower the better.
+The baseline metrics are defined, for each dataset $D_i$, as the performance metrics (\textit{AUC, Logloss} and \textit{Brier Score} as explained in Section \ref{classification-metrics}) obtained on the {\Large\textbf{test set}} using the LightGBM model trained with the parameters as close as possible to the default hyperparameter values above. The $\delta_{metric}$ is then just the difference between a given new metric and the baseline metric. It's interpretation depends on the performance metric being analyzed: in the case of AUC, a positive $\delta_{AUC}$ means a higher AUC than baseline (a better result), a negative one means a lower AUC than baseline (worse result), and $0$ an equal performance in terms of AUC. For both the Brier Score and Logloss the interpretation is the opposite, as in these metrics the lower the better.
 
 \begin{figure}[!h]
     \centering
@@ -280,17 +280,31 @@ It's important to note that, because of the statistical framework chosen in this
 
 With the objective to generalize the hyperparameter sensitivity analysis, an statistical framework is defined to analyze the $\delta_{metric}$ obtained on each cluster and different configurations of hyperparameters. The comparisons include changing different aspects of the experiment, such as: the performance metric chosen (AUC, Logloss, Brier Score), the hyperparameter(s) being changed and the clusters being analyzed.
 
-An important concept in this study related to the statistical framework is the definition of an \textbf{experimental scenario}. Given a cluster $C$, a set of hyperparameters $H$ and a performance metric $m$, the experimental scenario can be represented as:
- $$\mathcal{S}(C, H, m)$$
-
-Which means the experiment outputs of $\delta_m$ observed when applying the treatments $H$ to all experimental units in the cluster $C$. For example,  Figure  \ref{fig:delta-auc1} represents an experimental scenario $\mathcal{S}(3, \eta^{(3)}_{max\_depth}, AUC)$ and Figure  \ref{fig:delta-brier1} is a visualization of $\mathcal{S}(2, \eta^{(2)}_{max\_depth,num\_estimators}, brier)$.
-
 The statistical framework is divided in two main parts: tests for the significance of the changes in the $\delta_{metric}$ obtained in the experiment, and the subsequent modelling of the sensitivity factors of the hyperparameters of each cluster. An overview of the statistical tools used in this study are defined in the following subsections, along with examples of real results obtained in the analysis of the experiments.
+
+\subsection{Experimental Scenarios}
+
+An important concept in this study related to the statistical framework is the definition of an \textbf{experimental scenario}. In this study the experimental units are the datasets of a cluster, which receive a "treatment" of different hyperparameter values. First, $C_k$ is the set of experimental units (i.e. the datasets) of the $k$th cluster. The hyperparameters of a scenario are a partition $Q$ of the union of all hyperparameter spaces (as defined in Subsection \ref{subsec:hp-tree}) of the $k$th cluster ($\eta^{(k)}$, defined in Equation \ref{eq:exp-Hspace}) and is referred to as  $\eta^{(k)}_Q$. For example, the hyperparameters values of the experiment when changing both maximum depth and learning rate in Cluster 4 can be written as $\eta^{(4)}_{max\_depth, learning\_rate}$.
+
+\begin{equation}
+    \eta^{(k)} = \bigcup_{d \in C_k} Hspace_d
+    \label{eq:exp-Hspace}
+\end{equation}
+
+
+Given the $C_k$ experimental units, the hyperparameters configuration  $\eta^{(k)}_Q$ and a performance metric $m$, the experimental scenario can be represented as is Equation \ref{eq:exp-scenario}:
+
+\begin{equation}
+ \mathcal{S}(C_k, \eta^{(k)}_Q, m)
+ \label{eq:exp-scenario}
+\end{equation}
+
+Which means the experiment outputs of $\delta_m$ observed when applying the \textit{treatments} $\eta^{(k)}_Q$ to all experimental units in the $k$th cluster. For example,  Figure  \ref{fig:delta-auc1} represents the experimental scenario $\mathcal{S}(C_3, \eta^{(3)}_{max\_depth}, AUC)$ and Figure  \ref{fig:delta-brier1} is a visualization of $\mathcal{S}(C_2, \eta^{(2)}_{max\_depth,num\_estimators}, brier)$.
 
 
 \subsection{Analysis of Variance}
 
-The typical scenario of an analysis of variance, according to \cite{montgomery2017design}, is an experimental setting where there are $k$ {treatments} or different \textit{levels} of a factor that one wishes to compare. The response observed from each of the $k$ levels of treatment is a random variable. In general, there are $n$ observations under the same treatment, which can be seen in Table \ref{table:sfm}. In this study, the \textit{treatment} is the hyperparameter, and the different values of the hyperparameter are the different treatment levels in the analysis of variance. The experimental units are the datasets of a cluster, which receive a "treatment" of different hyperparameter values.
+The typical scenario of an analysis of variance, according to \cite{montgomery2017design}, is an experimental setting where there are $k$ {treatments} or different \textit{levels} of a factor that one wishes to compare. The response observed from each of the $k$ levels of treatment is a random variable. In general, there are $n$ observations under the same treatment, which can be seen in Table \ref{table:sfm}. In this study, the \textit{treatment} is the hyperparameter, and the different values of the hyperparameter are the different treatment levels in the analysis of variance.
 
 \begin{table}[h!] 
     \centering
@@ -323,6 +337,8 @@ In the \textit{means model} each observation (i.e. each point in the $\delta$ pl
 
 On the other hand, the \textbf{effects model} defines the treatment means $\mu_i$ as a deviation from the overall mean $\bm{\mu}$ of the experiment, i.e. $\mu_i = \bm{\mu}+ \tau_i \text{ where } i = 1, 2, \cdots, k$. Thus, the experimental results are described according to Equation \ref{eq:effects-model}. The parameter $\tau_i$ is called the \textbf{\textit{i}th treatment effect}, and it represents the deviation from the overall mean of the experiment.
 
+For simplicity, in the study all the scenarios were structured using a single-factor model, even the scenarios where the treatment is actually two or more values of different hyperparameters being changed. This means that the results and conclusions from pairs or triples of hyperparameters are interpreted as a single factor that can change the $\delta$ of the gradient boosting models, instead of decomposing the effects into multiple variables.
+
 \begin{equation}\label{eq:effects-model}
     y_{ij} = \bm{\mu} + \tau_i + \epsilon_{ij}
     \begin{cases}
@@ -339,7 +355,7 @@ The most widely used test in the analysis of variance is the \textbf{ANOVA} test
 
 These assumptions imply that the observations must follow a normal distribution:
 
-$$y_{ij} \sim N(\bm{\mu} + \tau_i, \sigma^2)$$
+$$y_{ij} \sim \mathcal{N}(\bm{\mu} + \tau_i, \sigma^2)$$
 
 The ANOVA model has different flavors, and is highly used in the field of applied statistics. Different variations and extensions of the ANOVA model can be found throughout the literature of statistics and machine learning. In the study of hyperparameters, \cite{hoos201x4efficient} describes a method using the functional ANOVA framework (a variation of ANOVA) to quantify the importance of ``both single hyperparameters and of interactions between hyperparameters'' in a single dataset. In a more recent work, \cite{van2017empirical} also extend the functional ANOVA framework for multiple datasets, with an empirical experiment using OpenML datasets.
 
@@ -347,7 +363,11 @@ The ANOVA model has different flavors, and is highly used in the field of applie
 
 However, the ANOVA test \textbf{was not} used in this study, because its assumptions were not met in almost all scenarios. A different non parametric statistical test was used, and since some of the assumptions applies for both the parametric (ANOVA) and non parametric tests, it's important to understand the assumptions of them. Using \cite{montgomery2017design} definition of the \textbf{residuals} for observation $j$ in treatment $i$ as
 
-$$\mathcal{E}_{ij} = y_{ij} - \hat{y}_{ij}$$
+\begin{equation}
+    \mathcal{E}_{ij} = y_{ij} - \hat{y}_{ij}    
+    \label{eq:sfm-residuals}
+\end{equation}
+
 
 where $\hat{y}_{ij}$ is an estimate of the respective observation $y_{ij}$, obtained as follows:
 
@@ -359,13 +379,141 @@ where $\hat{y}_{ij}$ is an estimate of the respective observation $y_{ij}$, obta
     \end{split}
 \end{equation}
 
-This just means that the estimate of any experimental scenario observation in the $i$th treatment is the corresponding treatment average $\overline{\bm{y}^{(i)}}$. In the terms of this study, the estimate of relative change in the performance metric $\delta$ for a given configuration of a value of hyperparameters is the mean of the $\delta$'s of all datasets in the corresponding cluster being analyzed. The analysis of the residuals is one of the ways to check for model adequacy, and can be analyzed using a \textit{normal probability plot} and using statistical tests to test for the normality and homoscedasticity assumptions.
-    
-The test of assumptions is applied to every \textbf{experimental scenario} $\mathcal{S}$ in this study, using the following sequence of techniques:
+This just means that the estimate of any experimental scenario observation in the $i$th treatment is the corresponding treatment average $\overline{\bm{y}^{(i)}}$. In the terms of this study, the estimate of relative change in the performance metric $\delta$ for a given configuration of a value of hyperparameters is the mean of the $\delta$'s of all datasets in the corresponding cluster being analyzed. The analysis of the residuals is one of the ways to check for model adequacy, and can be analyzed using a \textit{Normal Q-Q Plot} and using statistical tests to test for the normality and homoscedasticity assumptions.
 
+The test of assumptions is applied to every \textbf{experimental scenario} $\mathcal{S}$ in this study, in the following order:
+\newpage
 \begin{enumerate}
-    \item 
+    \item Fit a single-factor model (SFM) on $\mathcal{S}$, and calculate the residuals according to Equation \ref{eq:sfm-residuals}. In Table \ref{table:sfm-cluster1} the complete SFM model output for $S(C_1, \eta^{(1)}_{max\_depth}, Brier)$ is shown.
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{lrrr}
+            \toprule
+            {} &  $\overline{\bm{y}^{(i)}}$ &  $ \hat{\bm{\mu}}$ & $ \hat{\tau_i}$  \\
+            max\_depth &                 &          &             \\
+            \midrule
+            3         &        0.001872 & -0.00106 &    0.002932 \\
+            4         &        0.001275 & -0.00106 &    0.002335 \\
+            5         &        0.000000 & -0.00106 &    0.001060 \\
+            6         &       -0.000835 & -0.00106 &    0.000225 \\
+            7         &       -0.001350 & -0.00106 &   -0.000290 \\
+            8         &       -0.001588 & -0.00106 &   -0.000528 \\
+            9         &       -0.001548 & -0.00106 &   -0.000488 \\
+            10        &       -0.001575 & -0.00106 &   -0.000515 \\
+            11        &       -0.001558 & -0.00106 &   -0.000497 \\
+            12        &       -0.001646 & -0.00106 &   -0.000586 \\
+            13        &       -0.001451 & -0.00106 &   -0.000391 \\
+            14        &       -0.001456 & -0.00106 &   -0.000396 \\
+            15        &       -0.001413 & -0.00106 &   -0.000352 \\
+            16        &       -0.001397 & -0.00106 &   -0.000337 \\
+            17        &       -0.001391 & -0.00106 &   -0.000331 \\
+            18        &       -0.001425 & -0.00106 &   -0.000365 \\
+            19        &       -0.001395 & -0.00106 &   -0.000335 \\
+            20        &       -0.001383 & -0.00106 &   -0.000323 \\
+            21        &       -0.001439 & -0.00106 &   -0.000379 \\
+            22        &       -0.001501 & -0.00106 &   -0.000441 \\
+            \bottomrule
+            \end{tabular}
+        \caption{SFM model for scenario $S(C_1, \eta^{(1)}_{max\_depth}, Brier)$}
+        \label{table:sfm-cluster1}
+        \end{table}
+        
+    
+    \item Plot a Normal Q-Q Plot to visually observe the structure of the SFM residuals. In this study, the Normal Q-Q Plot will match the SFM residuals quantiles with the theoretical quantiles of a normal distribution, while also fitting a Linear Regression model and calculating the coefficient of determination ($R^2$), as suggested in \cite{Vallat2018}. Residuals are filtered to be inside the quantiles $q_{5}$ and $q_{95}$ to remove outliers. To showcase this, in Figure \ref{fig:resplot-1} the Normal Q-Q plot for the scenario $\mathcal{S}(C_1, \eta^{(1)}_{max\_depth, learning\_rate}, AUC)$ represents a distribution of residuals close to a normal distribution, with a relatively high $R^2$. This is a specific case where the ANOVA test could be used because of its robustness to the normality assumption, as stated in \cite{montgomery2017design} ``In general, moderate departures from normality are of little concern in the fixed effects analysis of variance''. A more drastic departure from normality can be observed in scenario $\mathcal{S}(C_1, \eta^{(1)}_{num\_estimators, learning\_rate}, Logloss)$, in Figure \ref{fig:resplot-2}.
+    \begin{figure}[!h]
+        \centering
+        \begin{subfigure}[b]{0.8\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{qqplot_c1.png}
+            \caption{Normal Q-Q Plot for scenario $\mathcal{S}(C_1, \eta^{(1)}_{max\_depth, learning\_rate}, AUC)$}
+            \label{fig:resplot-1}
+        \end{subfigure}
+        \hfill
+        \begin{subfigure}[b]{0.8\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{qqplot_c1_bad.png}
+            \caption{Normal Q-Q Plot for scenario $\mathcal{S}(C_1, \eta^{(1)}_{num\_estimators, learning\_rate}, Logloss)$}
+            \label{fig:resplot-2}
+        \end{subfigure}
+        \hfill
+           \caption{Two Normal Q-Q Plots from Cluster 1 results}
+           \label{fig:three graphs}
+   \end{figure}
+       
+    \item Perform a {\large\textbf{Shapiro–Wilk test}} for the normality assumption with $\alpha\text{-level} = 0.05$. In almost all of the experimental scenarios the test rejected the null hypothesis that the residuals are normally distributed with $p$-value less than $0.05$.
+
+    \item To validate the homoscedasticity assumption, a statistical test for equality of variance is also performed on the residuals. As indicated in \cite{montgomery2017design}, these statistical procedures are testing the folowing hypotheses:
+    \begin{align*}
+        H_0 &: \sigma^2_1 =  \sigma^2_2 = \cdots =  \sigma^2_k \\
+        H_1 &: \text{above not true for at least one } \sigma^2_i    
+    \end{align*}
+    A widely used procedure for homoscedasticity is the Bartlett's Test, which computes a statistic whose sampling distribution is, according to \cite{montgomery2017design}: ``closely approximated by the chi-square distribution with $k - 1$ degrees of freedom when the $k$ random samples are from independent normal populations.''. By analyzing the results of the Normal Q-Q plots and the Shapiro–Wilk tests there's no statistical evidence that the residuals of this study follow a normal distribution, so the Bartlett's test should not be used.
+    The {\large\textbf{Levene test}} is an alternate procedure that is robust to departures from normality, as explained in \cite{brown1974robust}, and it's the test chosen to verify the homoscedasticity for all experimental scenarios.
+    
 \end{enumerate}
+
+\subsection{Kruskal–Wallis: A Nonparametric Approach}
+
+Given that most of the experimental results failed the normality assumption tests, the Kruskal–Wallis test is used to test for statistical significance of the treatment means. The Kruskal–Wallis test is applied to all experimental scenarios, and is used to test the null hypothesis that the $k$ treatments are identical against the alternative hypothesis that some of the treatments generate observations that are larger than others. There's a convenient interpretation of the Kruskal–Wallis, described in \cite{montgomery2017design}:
+
+\begin{displayquote}
+
+``Because the procedure is designed to be sensitive for testing differences in means, it is sometimes convenient to think of the Kruskal–Wallis test as a test for equality of treatment means. The Kruskal–Wallis test is a \textbf{nonparametric alternative} to the usual analysis of variance.''
+
+\end{displayquote}
+
+Kruskal–Wallis works by applying the usual analysis of variance to the ranks of the observations. The \textit{rank transformation} consists of ranking the observations $y_{ij}$ in ascending order and replacing each observation by its rank $r_{ij}$. The results of testing after a ranking transformation are preferred because it is less likely to be distorted by nonnormality and unusual observations, which is the case of the experimental scenarios results in this study.
+
+Even though this nonparametric approach doesn't require the data to be normally distributed, it does however assume the same distribution within groups, as explained in \cite{mcdonald2009handbook}:
+
+\begin{displayquote}
+    ``(Kruskal–Wallis) does assume that the different groups have the same distribution, and groups with different standard deviations have different distributions. If your data are heteroscedastic, Kruskal–Wallis is no better than one-way anova, and may be worse.''
+\end{displayquote}
+
+So the homoscedasticity tests are still needed before interpreting the Kruskal–Wallis test. In Table \ref{table:result-cluster2} the statistical results for all the scenarios in Cluster 2 is available, where $NE$, $MD$ and $LR$ refer to \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate} respectively. The numbers in the table are the $p$-values of all statistical tests performed in Cluster 2 experiments, and the values in \textcolor{red}{red} are the tests that failed the desired hypothesis testing. Some tests can have NaN if there isn't enough samples or all values are equal, in the case of the residuals.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{l|lrrr}
+        \toprule
+                             &         &       Shapiro–Wilk &        Levene &        Kruskal–Wallis \\
+        \textbf{Treatment} & \textbf{Metric} &               &               &                \\
+        \midrule
+        $\eta^{(2)}_{NE}$ & $\delta_{AUC}$ &  \textcolor{red}{4.059920e-08} &  9.968117e-01 &   \textcolor{red}{9.996506e-01} \\
+                             & $\delta_{Brier}$ &  \textcolor{red}{5.942564e-06} &  2.105453e-01 &   \textcolor{red}{9.965572e-01} \\
+                             & $\delta_{Logloss}$ &  \textcolor{red}{2.502680e-05} &  \textcolor{red}{9.636175e-03} &   2.827828e-03 \\
+                             \hline
+        $\eta^{(2)}_{MD}$ & $\delta_{AUC}$ &  \textcolor{red}{2.536182e-10} &  9.210022e-01 &   1.860650e-02 \\
+                             & $\delta_{Brier}$ &  \textcolor{red}{3.926061e-06} &  2.774635e-01 &   2.283747e-02 \\
+                             & $\delta_{Logloss}$ &  \textcolor{red}{2.522154e-05} &  1.285176e-01 &   1.764531e-02 \\
+                             \hline
+        $\eta^{(2)}_{LR}$ & $\delta_{AUC}$ &  \textcolor{red}{2.714980e-09} &           NaN &            NaN \\
+                             & $\delta_{Brier}$ &  \textcolor{red}{9.808685e-09} &           NaN &            NaN \\
+                             & $\delta_{Logloss}$ &  \textcolor{red}{1.213540e-10} &           NaN &            NaN \\
+                             \hline
+        $\eta^{(2)}_{MD, LR}$ & $\delta_{AUC}$ &  \textcolor{red}{1.406702e-20} &  9.999939e-01 &   1.316980e-02 \\
+                             & $\delta_{Brier}$ &  \textcolor{red}{1.339994e-23} &  1.000000e+00 &   6.235464e-12 \\
+                             & $\delta_{Logloss}$ &  \textcolor{red}{1.334960e-23} &  1.000000e+00 &   1.005025e-08 \\
+                             \hline
+       $\eta^{(2)}_{MD, NE}$ & $\delta_{AUC}$ &  \textcolor{red}{2.548462e-22} &  1.000000e+00 &   1.000000e+00 \\
+                             & $\delta_{Brier}$ &  \textcolor{red}{6.494320e-28} &  9.969882e-01 &   \textcolor{red}{9.274816e-01} \\
+                             & $\delta_{Logloss}$ &  \textcolor{red}{3.974093e-21} &  \textcolor{red}{2.655356e-23} &   6.191510e-22 \\
+                             \hline
+        $\eta^{(2)}_{LR, NE}$ & $\delta_{AUC}$ &  \textcolor{red}{9.960932e-27} &  1.000000e+00 &   3.306332e-06 \\
+                             & $\delta_{Brier}$ &  \textcolor{red}{2.709085e-26} &  9.999995e-01 &   7.035798e-09 \\
+                             & $\delta_{Logloss}$ &  \textcolor{red}{2.452305e-24} &  9.999999e-01 &   1.650304e-05 \\
+                             \hline
+        $\eta^{(2)}_{NE, MD, LR}$ & $\delta_{AUC}$ &  \textcolor{red}{0.000000e+00} &  1.000000e+00 &   2.904172e-64 \\
+                             & $\delta_{Brier}$ &  \textcolor{red}{0.000000e+00} &  1.000000e+00 &  4.013155e-111 \\
+                             & $\delta_{Logloss}$ &  \textcolor{red}{0.000000e+00} &  1.000000e+00 &   7.298816e-70 \\
+        \bottomrule
+\end{tabular}        
+\caption{Statistical $p$-values of the experiment scenarios in Cluster 2. All the normality assumptions were rejected in this case}
+\label{table:result-cluster2}
+\end{table}
+
+    
+
 
 // separar em 2 capitulos:
 

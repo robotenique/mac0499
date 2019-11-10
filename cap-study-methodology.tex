@@ -111,25 +111,25 @@ In section \ref{gbm-hyperparams} it's explained the basic hyperparameters used i
 
 The intention is to train multiple models changing the hyperparameters values, and calculate the metrics (explained in Section \ref{classification-metrics}) for each combination of hyperparameter. In this study three hyperparameters are studied: \textbf{\code{max\_depth}}, \textbf{\code{learning\_rate}} and \textbf{\code{num\_estimators}}.
 
-In this study, the  \textit{hyperparameter space} also represents all valid hyperparameters values to run for the datasets, and is a function of $D_i$. The hyperparameter space is represented as a special tree, where each new leaf of the tree takes its parent node and generate new leafs based on a new hyperparameters. Let $LR_i$, $NE_i$ and $MD_i$ denote the sets of possible hyperparameter values for learning rate, number of estimators and maximum depth, respectively. Let $S_i$ be the set of all hyperparameter sets, i.e. $S_i = \{LR_i, NE_i, MD_i\}$, and $\mathcal{P}(s_i)$ the \textit{power set} of $S_i$. The number of values to test for each hyperparameter is denoted with the numbers $N_{LR}$, $N_{NE}$, $N_{MD}$: e.g. if $N_{LR} = 4$ it means $4$ values of learning rate will be generated (equivalent to say $|LR_i| = 4$).
+In this study, the  \textit{hyperparameter space} also represents all valid hyperparameters values to run for the datasets, and is a function of $D_i$. The hyperparameter space is represented as a special tree, where each new leaf of the tree takes its parent node and generate new leafs based on a new hyperparameters. Let $LR_i$, $NE_i$ and $MD_i$ denote the sets of possible hyperparameter values for learning rate, number of estimators and maximum depth, respectively. Let $S_i$ be the set of all hyperparameter sets, i.e. $S_i = \{LR_i, NE_i, MD_i\}$, and $\mathcal{P}(S_i)$ the \textit{power set} of $S_i$. The number of values to test for each hyperparameter is denoted with the numbers $N_{LR}$, $N_{NE}$, $N_{MD}$: e.g. if $N_{LR} = 4$ it means $4$ values of learning rate will be generated (equivalent to say $|LR_i| = 4$).
 
 For a given tree depth $k$, the hyperparameter set to be explored at that depth is defined using the rule in equation \ref{eq:hyperparam-tree}, where $\prod$ is the cartesian product operator.
 
 \begin{equation}\label{eq:hyperparam-tree}
-    C_k = \Big\{\prod_{X \in Q} X : Q \in \mathcal{P}(s_i), |Q| = k\Big\}
+    HS_k = \Big\{\prod_{X \in Q} X : Q \in \mathcal{P}(S_i), |Q| = k\Big\}
 \end{equation}
 
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[height=.3\textwidth]{hp_tree.png} 
+    \includegraphics[height=.3\textwidth]{htree_fixed.png} 
     \caption{Hyperparameter tree}
     \label{fig:hp-tree}
 \end{figure}
 
 The hyperparameter tree of this study, represented in Figure \ref{fig:hp-tree}, is then defined as different cartesian products of all valid $k$ combinations. Since there are three hyperparameters being changed, the maximum is $k=3$, and the final space is the union of all cartesian products combinations:
 
-$$Hspace_i = C_1 \cup C_2 \cup C_3$$
+$$Hspace_i = HS_1 \cup HS_2 \cup HS_3$$
 
 This structure is generalizable for any number of hyperparameters, and it was designed this way to measure hyperparameter impact depending on the number of combinations. E.g. it is expected that changing multiple hyperparameters at the same time has a bigger impact on the model performance than changing just one. Each level of the hyperparameter tree represents a "combination effect", i.e. the experiment can measure, for multiple combinations of hyperparameters, which combination effect provides the biggest impact on the metrics (for better or worse) compared with the other combinations.
 
@@ -141,16 +141,16 @@ $$MD = \{10, 20\}$$
 
 Then each leaf of the hyperparameter tree will be:
 
-$$C_1 = \Big\{\{0.1, 0.2\}, \{1, 2\}, \{10, 20\}\Big\}$$
+$$HS_1 = \Big\{\{0.1, 0.2\}, \{1, 2\}, \{10, 20\}\Big\}$$
 
 \begin{align*}
-    C_2 = \Big\{\{(0.1, 1), (0.1, 2), (0.2, 1), (0.2, 2)\}, \\
+    HS_2 = \Big\{\{(0.1, 1), (0.1, 2), (0.2, 1), (0.2, 2)\}, \\
             \{(0.1, 10), (0.1, 20), (0.2, 10), (0.2, 20)\}, \\
             \{(1, 10), (1, 20), (2, 10), (2, 20)\}\Big\}
 \end{align*}
 
 \begin{align*}
-    C_3 = \Big\{\{(0.1, 1, 10), (0.1, 1, 20), (0.1, 2, 10), (0.1, 2, 20), \\
+    HS_3 = \Big\{\{(0.1, 1, 10), (0.1, 1, 20), (0.1, 2, 10), (0.1, 2, 20), \\
     (0.2, 1, 10), (0.2, 1, 20), (0.2, 2, 10), (0.2, 2, 20)\}\Big\}
 \end{align*}
 
