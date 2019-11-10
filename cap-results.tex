@@ -512,7 +512,49 @@ So the homoscedasticity tests are still needed before interpreting the Kruskalâ€
 \label{table:result-cluster2}
 \end{table}
 
-    
+%% ------------------------------------------------------------------------- %%
+\section{Results}
+
+{\Huge Check MD,NE AUC for cluster 2}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{||c|lccccccc||}
+        \toprule
+                    & &  $\eta_{NE}$ & $\eta_{MD}$ & $\eta_{LR}$ & $\eta_{MD,LR}$ & $\eta_{MD, NE}$  & $\eta_{LR,NE}$ & $\eta_{NE, MD, LR}$\\
+        \textbf{Cluster} & \textbf{Metric} & & & & & & & \\
+        \midrule
+        \multirow{3}{4em}{\Large\centering 1} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
+                                            & $\delta_{Brier}$ & & & & & & & \\
+                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \midrule
+        \multirow{3}{4em}{\Large\centering 2} & $\delta_{AUC}$ & \notok & \ok & \notok & \ok & \ok & \ok & \ok \\
+                                            & $\delta_{Brier}$ & \notok & \ok & \notok & \ok & \notok & \ok & \ok \\
+                                            & $\delta_{Logloss}$ & \ok  & \ok & \notok & \ok & \notok & \ok & \ok \\
+        \midrule
+        \multirow{3}{4em}{\Large\centering 3} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
+                                            & $\delta_{Brier}$ & & & & & & & \\
+                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \midrule
+        \multirow{3}{4em}{\Large\centering 4} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
+                                            & $\delta_{Brier}$ & & & & & & & \\
+                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \midrule
+        \multirow{3}{4em}{\Large\centering 5} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
+                                            & $\delta_{Brier}$ & & & & & & & \\
+                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \midrule
+        \multirow{3}{4em}{\Large\centering 6} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
+                                            & $\delta_{Brier}$ & & & & & & & \\
+                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \bottomrule
+    \end{tabular}
+    \caption{kek}
+    \label{table:kek}
+\end{table}
+
+
+
 
 
 // separar em 2 capitulos:
