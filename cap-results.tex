@@ -495,7 +495,7 @@ So the homoscedasticity tests are still needed before interpreting the Kruskalâ€
                              & $\delta_{Brier}$ &  \textcolor{red}{1.339994e-23} &  1.000000e+00 &   6.235464e-12 \\
                              & $\delta_{Logloss}$ &  \textcolor{red}{1.334960e-23} &  1.000000e+00 &   1.005025e-08 \\
                              \hline
-       $\eta^{(2)}_{MD, NE}$ & $\delta_{AUC}$ &  \textcolor{red}{2.548462e-22} &  1.000000e+00 &   1.000000e+00 \\
+       $\eta^{(2)}_{MD, NE}$ & $\delta_{AUC}$ &  \textcolor{red}{2.548462e-22} &  1.000000e+00 &   \textcolor{red}{1.000000e+00} \\
                              & $\delta_{Brier}$ &  \textcolor{red}{6.494320e-28} &  9.969882e-01 &   \textcolor{red}{9.274816e-01} \\
                              & $\delta_{Logloss}$ &  \textcolor{red}{3.974093e-21} &  \textcolor{red}{2.655356e-23} &   6.191510e-22 \\
                              \hline
@@ -515,8 +515,6 @@ So the homoscedasticity tests are still needed before interpreting the Kruskalâ€
 %% ------------------------------------------------------------------------- %%
 \section{Results}
 
-{\Huge Check MD,NE AUC for cluster 2}
-
 \begin{table}[!h]
     \centering
     \begin{tabular}{||c|lccccccc||}
@@ -524,34 +522,37 @@ So the homoscedasticity tests are still needed before interpreting the Kruskalâ€
                     & &  $\eta_{NE}$ & $\eta_{MD}$ & $\eta_{LR}$ & $\eta_{MD,LR}$ & $\eta_{MD, NE}$  & $\eta_{LR,NE}$ & $\eta_{NE, MD, LR}$\\
         \textbf{Cluster} & \textbf{Metric} & & & & & & & \\
         \midrule
-        \multirow{3}{4em}{\Large\centering 1} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
-                                            & $\delta_{Brier}$ & & & & & & & \\
-                                            & $\delta_{Logloss}$ & & & & & & & \\
-        \midrule
-        \multirow{3}{4em}{\Large\centering 2} & $\delta_{AUC}$ & \notok & \ok & \notok & \ok & \ok & \ok & \ok \\
+        \multirow{3}{4em}{\Large\centering 1} & $\delta_{AUC}$ & \notok & \notok & \ok & \ok & \notok & \notok & \ok \\
                                             & $\delta_{Brier}$ & \notok & \ok & \notok & \ok & \notok & \ok & \ok \\
-                                            & $\delta_{Logloss}$ & \ok  & \ok & \notok & \ok & \notok & \ok & \ok \\
+                                            & $\delta_{Logloss}$ & \ok  & \ok & \notok & \notok & \ok & \ok & \ok \\
         \midrule
-        \multirow{3}{4em}{\Large\centering 3} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
-                                            & $\delta_{Brier}$ & & & & & & & \\
-                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \multirow{3}{4em}{\Large\centering 2} & $\delta_{AUC}$ & \notok & \ok & \notok & \ok & \notok & \ok & \ok \\
+                                            & $\delta_{Brier}$ & \notok & \ok & \notok & \ok & \notok & \ok & \ok \\
+                                            & $\delta_{Logloss}$ & \ok  & \ok & \notok & \ok & \ok & \ok & \ok \\
         \midrule
-        \multirow{3}{4em}{\Large\centering 4} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
-                                            & $\delta_{Brier}$ & & & & & & & \\
-                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \multirow{3}{4em}{\Large\centering 3} & $\delta_{AUC}$ & \notok & \notok & \ok & \ok & \notok & \notok & \notok\\
+                                            & $\delta_{Brier}$ & \notok & \notok & \notok & \ok & \notok & \notok & \notok \\
+                                            & $\delta_{Logloss}$ & \notok & \notok & \notok & \notok & \notok & \notok & \notok\\
         \midrule
-        \multirow{3}{4em}{\Large\centering 5} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
-                                            & $\delta_{Brier}$ & & & & & & & \\
-                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \multirow{3}{4em}{\Large\centering 4} & $\delta_{AUC}$ & \notok & \notok & \notok & \notok & \notok & \notok & \notok\\
+                                            & $\delta_{Brier}$ & \notok & \notok & \notok & \ok & \notok & \ok & \ok \\
+                                            & $\delta_{Logloss}$ & \notok & \notok & \notok & \ok & \notok & \ok & \ok \\
         \midrule
-        \multirow{3}{4em}{\Large\centering 6} & $\delta_{AUC}$ & \ok & \notok & & & & & \\
-                                            & $\delta_{Brier}$ & & & & & & & \\
-                                            & $\delta_{Logloss}$ & & & & & & & \\
+        \multirow{3}{4em}{\Large\centering 5} & $\delta_{AUC}$ & \notok & \notok & \ok & \ok & \notok & \ok & \ok \\
+                                            & $\delta_{Brier}$ & \notok & \ok & \ok &  \ok & \notok & \ok  & \ok \\
+                                            & $\delta_{Logloss}$ & \notok & \ok & \ok &  \ok & \notok & \ok & \ok \\
+        \midrule
+        \multirow{3}{4em}{\Large\centering 6} & $\delta_{AUC}$ & \ok & \ok & \notok & \ok & \notok & \ok & \ok \\
+                                            & $\delta_{Brier}$ & \notok & \ok & \notok & \ok & \notok & \notok & \notok \\
+                                            & $\delta_{Logloss}$ & \notok & \ok & \notok & \ok & \notok & \notok & \notok \\
         \bottomrule
     \end{tabular}
-    \caption{kek}
+    \caption{All experimental scenarios and their respective Kruskalâ€“Wallis results for equality of treatment means; The \ok represents that the test statistic is significant at $\alpha = 0.05$ and \notok otherwise (cannot reject $H_0$)}
     \label{table:kek}
 \end{table}
+
+
+{\Huge posthoc stuff}
 
 
 
