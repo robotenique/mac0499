@@ -250,7 +250,7 @@ In Figure \ref{fig:delta-auc1} is displayed the $\delta_{AUC}$ w.r.t \code{max\_
 
 \subsection{Ordering and Visualization}
 
-In Figure \ref{fig:delta-brier1} a different $\delta$ plot is displayed, where each point is the $\delta_{brier}$ w.r.t both \code{max\_depth} and \code{learning\_rate} changes summarized into a single dimension in the \textit{x axis}, for Cluster 2 experiments. The higher the number of hyperparameters being analyzed at the same time, the more difficult it is to visualize these $\delta$ plots due to the high dimensionality. For this reason, in the study the hyperparameter values were summarized into a single point which encompasses multiple hyperparameter changes.
+In Figure \ref{fig:delta-brier1} a different $\delta$ plot is displayed, where each point is the $\delta_{brier}$ w.r.t both \code{max\_depth} and \code{learning\_rate} changes summarized into a single dimension in the \textit{x axis}, for Cluster 2 experiments. The higher the number of hyperparameters being analyzed at the same time, the more difficult it's to visualize these $\delta$ plots due to the high dimensionality. For this reason, in the study the hyperparameter values were summarized into a single point which encompasses multiple hyperparameter changes.
 
 \begin{figure}[!h]
     \centering
@@ -260,7 +260,7 @@ In Figure \ref{fig:delta-brier1} a different $\delta$ plot is displayed, where e
 \end{figure}
 
 
-In the Subsections \ref{subsec:indv-impact}, \ref{subsec:double-impact} and \ref{subsec:triple-impact} it is shown the full results for individual hyperparameter impact, pairs of hyperparameters and finally all three hyperparameters, respectively. These plots are not possible in this part of the analysis because instead of one individual dataset experiment result being evaluated as in Section \ref{sec:single-dataset}, the final analysis is done with multiple datasets of a cluster.
+In the Subsections \ref{subsec:indv-impact}, \ref{subsec:double-impact} and \ref{subsec:triple-impact} it's shown the full results for individual hyperparameter impact, pairs of hyperparameters and finally all three hyperparameters, respectively. These plots are not possible in this part of the analysis because instead of one individual dataset experiment result being evaluated as in Section \ref{sec:single-dataset}, the final analysis is done with multiple datasets of a cluster.
 
 For visualization purposes, an ordering of the data points in the x axis was defined to facilitate the visualization and to maintain an order that makes sense, even when reducing the dimensionality. First, the ranking of each hyperparameter is calculated based on the sorted order within that individual hyperparameter distribution, and then the final ranking of these points is based on the average of the individual hyperparameter ranks. This custom ranking has two advantages:
 
@@ -458,11 +458,11 @@ Given that most of the experimental results failed the normality assumption test
 
 \begin{displayquote}
 
-``Because the procedure is designed to be sensitive for testing differences in means, it is sometimes convenient to think of the Kruskal–Wallis test as a test for equality of treatment means. The Kruskal–Wallis test is a \textbf{nonparametric alternative} to the usual analysis of variance.''
+``Because the procedure is designed to be sensitive for testing differences in means, it's sometimes convenient to think of the Kruskal–Wallis test as a test for equality of treatment means. The Kruskal–Wallis test is a \textbf{nonparametric alternative} to the usual analysis of variance.''
 
 \end{displayquote}
 
-Kruskal–Wallis works by applying the usual analysis of variance to the ranks of the observations. The \textit{rank transformation} consists of ranking the observations $y_{ij}$ in ascending order and replacing each observation by its rank $r_{ij}$. The results of testing after a ranking transformation are preferred because it is less likely to be distorted by nonnormality and unusual observations, which is the case of the experimental scenarios results in this study.
+Kruskal–Wallis works by applying the usual analysis of variance to the ranks of the observations. The \textit{rank transformation} consists of ranking the observations $y_{ij}$ in ascending order and replacing each observation by its rank $r_{ij}$. The results of testing after a ranking transformation are preferred because it's less likely to be distorted by nonnormality and unusual observations, which is the case of the experimental scenarios results in this study.
 
 Even though this nonparametric approach doesn't require the data to be normally distributed, it does however assume the same distribution within groups, as explained in \cite{mcdonald2009handbook}:
 
@@ -515,6 +515,14 @@ So the homoscedasticity tests are still needed before interpreting the Kruskal�
 %% ------------------------------------------------------------------------- %%
 \section{Results}
 
+All the statistical tests shown above were applied to all experimental scenarios and then filtered by their significance. In very few scenarios of the study it was possible to conclude that the residuals followed a normal distribution according to Shapiro-Wilk test. Even though in these specific instances the typical ANOVA test could be used (given they're also homoscedastic), it was decided to use only the Kruskal–Wallis test so every experimental scenario uses the same statistical framework.
+
+\subsection{Statistical Significance}
+
+Scenarios with a $p$-value above the 0.05 significance level in the Levene test means it failed to reject the hypothesis that the group variances are different: in practice, the homoscedasticity assumption is considered to be true in these cases. In the Kruskal–Wallis test if the $p$-value is less than the $0.05$ the null hypothesis of equal treatment means is rejected, i.e. in practice it's considered at least one treatment mean is different from the other. When an experimental scenario has enough samples (i.e. it won't return NaN), passed the homoscedasticity assumption and reject the equality of treatment means in the Kruskal–Wallis test it's indicated here as \ok. If either the homoscedasticity test failed or Kruskal–Wallis failed to reject the hypothesis of equal means, it's indicated as \notok. All the results of statistical significance of treatment means are summarized in Table \ref{table:stats-sig}.
+
+An important note about homoscedasticity in these results is that the results can be analyzed even though failing the homoscedasticity assumption. For instance, the treatment means can be individually analyzed taking into the context the experimental scenario it belongs to, and insights can be obtained from it. Even though in this case the Kruskal–Wallis cannot be used, observed behaviors which do not require directly statistical significance are reported if deemed insightful.
+
 \begin{table}[!h]
     \centering
     \begin{tabular}{||c|lccccccc||}
@@ -547,9 +555,24 @@ So the homoscedasticity tests are still needed before interpreting the Kruskal�
                                             & $\delta_{Logloss}$ & \notok & \ok & \notok & \ok & \notok & \notok & \notok \\
         \bottomrule
     \end{tabular}
-    \caption{All experimental scenarios and their respective Kruskal–Wallis results for equality of treatment means; The \ok represents that the test statistic is significant at $\alpha = 0.05$ and \notok otherwise (cannot reject $H_0$)}
-    \label{table:kek}
+    \caption{All experimental scenarios and their respective Kruskal–Wallis results for equality of treatment means}
+    \label{table:stats-sig}
 \end{table}
+
+Some interesting insights can be made by inspecting the statistical significance results in Table \ref{table:stats-sig} and the specific $p$-values for the tests at the \ref{Appendix}:
+
+\begin{enumerate}
+    \item For instance, Cluster 3 scenarios failed most of the homoscedasticity tests, but by visually analyzing the $\delta$ plot it displays the same behavior of the treatments as the other clusters. However, Cluster 3 datasets are all synthetically generated (as shown in Table \ref{table:1}), and this can be a reason why it has so few statistically significant results. In Figure \ref{res-failed-c3} one $\delta_{AUC}$ plot from Cluster 3 results is shown.
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=1\textwidth]{delta-auc-cluster3-failed.png} 
+        \caption{$\delta_{AUC}$ for scenario $S(C_3, \eta^{(3)}_{LR, NE}, AUC)$, which failed the Levene Test; Some datasets $\delta_{AUC}$ increased the variance in treatment groups with very high learning rate and number of estimators}
+        \label{fig:res-failed-c3}
+    \end{figure}
+\end{enumerate}
+
+
+
 
 
 {\Huge posthoc stuff}
