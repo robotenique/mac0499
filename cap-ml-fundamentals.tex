@@ -98,7 +98,7 @@ Brier score can sum up different components related to forecasting, especially t
 
 \subsection{Logloss}
 
-Logarithmic Loss or \textbf{Logloss} measure the accuracy of a classifier by penalizing mistakes depending on how uncertain a prediction is from the actual label. Basically, this encapsulates the intuition that giving a highly confident prediction (e.g. $\ypred = 0.95$) but being very far from the actual label $\ytarget = 0$ is worse then being uncertain about it (e.g.  $\ypred = 0.5$). The logloss equation for binary classifiers is shown in \ref{eq:logloss}
+Logarithmic Loss or \textbf{Logloss} measures the accuracy of a classifier by penalizing mistakes depending on how uncertain a prediction is from the actual label. Basically, this encapsulates the intuition that giving a highly confident prediction (e.g. $\ypred = 0.95$) but being very far from the actual label $\ytarget = 0$ is worse then being uncertain about it (e.g.  $\ypred = 0.5$). The logloss equation for binary classifiers is shown in \ref{eq:logloss}
 
 \begin{equation}\label{eq:logloss}
     Logloss = -\frac{1}{N}\sum_{i=1}^{n}[\yisup \log \yisupred + (1 - \yisup)\log(1 - \yisupred)]

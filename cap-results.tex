@@ -160,7 +160,6 @@ Comparing these results with \cite{van2018hyperparameter}, it would be better to
 
 The combination of changing both the maximum depth and learning rate ($\eta_{MD, LR}$) in the machine learning models is the one combination that had the highest number of significant changes in performance metrics, according to Kruskal–Wallis tests. For instance, 100\% of the scenarios with $\eta_{MD, LR}$ and $\delta_{Brier}$ have had a significant difference in the treatment means, the only hyperparameter combination to do so.
 
-As explained in the last Subsection, the learning rate can increase (or ``accelerate'') the search over the gradient boosting optimization space, and the results shown here confirm this intuition. First, we can observe in Figure \ref{fig:sfm-mdlr-1} and Figure \ref{fig:sfm-mdlr-2} the same behavior found in the SFM plots from the experimental scenarios where the treatments are only the max depth $\eta_{MD}$, albeit reversed because the figures shown here display the Brier Score instead of AUC. The other evidence is that, by looking at the statistical tests results in Table \ref{table:stats-sig}, one can see that all significant experiments for treatment $\eta_{MD}$ are also significant for $\eta_{MD, LR}$, but there's a number of experiments from column $\eta_{MD}$ which aren't significant that became significant when the treatment is $\eta_{MD, LR}$. 
 
 \begin{figure}[!h]
     \centering
@@ -169,9 +168,28 @@ As explained in the last Subsection, the learning rate can increase (or ``accele
     \label{fig:sfm-mdlr-1}
 \end{figure}
 
+As explained in the last Subsection, the learning rate can increase (or ``accelerate'') the search over the gradient boosting optimization space, and the results shown here confirm this intuition. First, we can observe in Figure \ref{fig:sfm-mdlr-1} and Figure \ref{fig:sfm-mdlr-2} the same behavior found in the SFM plots from the experimental scenarios where the treatments are only the max depth $\eta_{MD}$, albeit reversed because the figures shown here display the Brier Score instead of AUC. The other evidence is that, by looking at the statistical tests results in Table \ref{table:stats-sig}, one can see that all significant experiments for treatment $\eta_{MD}$ are also significant for $\eta_{MD, LR}$, but there's a number of experiments from column $\eta_{MD}$ which aren't significant that became significant when the treatment is $\eta_{MD, LR}$. 
+
+
 \begin{figure}[!h]
     \centering
     \includegraphics[width=.9\textwidth]{sfm-cluster1-brier-mdlr.png}
     \caption{SFM plot for $\mathcal{S}(C_1, \eta^{(1)}_{MD, LR}, Brier)$}
     \label{fig:sfm-mdlr-2}
+\end{figure}
+
+\subsection{\texorpdfstring{\Large$\eta_{MD, NE}$}{}}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.9\textwidth]{sfm-cluster2-logloss-mdne.png}
+    \caption{SFM plot for $\mathcal{S}(C_2, \eta^{(2)}_{MD, NE}, Logloss)$}
+    \label{fig:sfm-mdne-1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.9\textwidth]{sfm-cluster3-auc-mdne.png}
+    \caption{SFM plot for $\mathcal{S}(C_3, \eta^{(3)}_{MD, NE}, AUC)$}
+    \label{fig:sfm-mdne-2}
 \end{figure}
