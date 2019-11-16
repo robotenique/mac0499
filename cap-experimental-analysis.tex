@@ -94,7 +94,7 @@ Finally, each dataset is also run using all possible combinations of the studied
     \label{fig:res-all1}
 \end{figure}
 
-One of the inherent difficulties when analyzing these results is due to the high dimensionality of the results: Each experiment has at least the three hyperparameter values, plus three different metrics for each run. In Section \ref{} this problem will be tackled, with an overview of the statistical techniques and analysis performed to compare and obtain insights into the impact on performance metrics.
+One of the inherent difficulties when analyzing these results is due to the high dimensionality of the results: Each experiment has at least the three hyperparameter values, plus three different metrics for each run. In Subsection \ref{subsec:ordering} this problem will be tackled, with an overview of the statistical techniques and analysis performed to compare and obtain insights into the impact on performance metrics.
 
 %% ------------------------------------------------------------------------- %%
 \section{Dataset aggregation and clustering}
@@ -472,7 +472,7 @@ Even though this nonparametric approach doesn't require the data to be normally 
     ``(Kruskal–Wallis) does assume that the different groups have the same distribution, and groups with different standard deviations have different distributions. If your data are heteroscedastic, Kruskal–Wallis is no better than one-way anova, and may be worse.''
 \end{displayquote}
 
-So the homoscedasticity tests are still needed before interpreting the Kruskal–Wallis test. In Table \ref{table:result-cluster2} the statistical results for all the scenarios in Cluster 2 is available, where $NE$, $MD$ and $LR$ refer to \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate} respectively. The numbers in the table are the $p$-values of all statistical tests performed in Cluster 2 experiments, and the values in \textcolor{red}{red} are the tests that failed the desired hypothesis testing. Some tests can have NaN if there isn't enough samples or all values are equal, in the case of the residuals.
+So the homoscedasticity tests are still needed for the assumptions of the Kruskal–Wallis test. In Table \ref{table:result-cluster2} the statistical results for all the scenarios in Cluster 2 is available, where $NE$, $MD$ and $LR$ refer to \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate} respectively. The numbers in the table are the $p$-values of all statistical tests performed in Cluster 2 experiments, and the values in \textcolor{red}{red} are the tests that failed the desired hypothesis testing. Some tests can have NaN if there isn't enough samples or all values are equal, in the case of the residuals.
 
 \begin{table}[!h]
     \centering
