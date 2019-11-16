@@ -203,6 +203,7 @@ In this study $5$ unique learning rates are generated.
 \end{figure}
 
 \subsection{Number of Estimators}
+\label{subsec:hp-space-num-est}
 
 Both in XGBoost (\code{XGBClassifier}) and LightGBM the default value for the number of estimators is set to $100$. The optimal number of boosting iterations can be influenced by the dataset size: by fixing other hyperparameters, a model of a dataset with very few data points can converge much faster (i.e. in few boosting iterations) than a dataset with 10 times its size. Since in the study the intention is to test different boosting iterations, and the actual distribution ideally depends on $D_i$, first the maximum value of estimators a given dataset can have is defined, and then  multiple values of \code{num\_estimators} are generated. 
 

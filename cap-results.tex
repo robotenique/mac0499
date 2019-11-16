@@ -1,523 +1,11 @@
 %% ------------------------------------------------------------------------- %%
-\chapter{Results and Analysis}
+\chapter{Results}
 \label{cap:results}
 
-Each dataset pipeline result has all evaluted metrics (AUC, Brier and Logloss), the dataset statistics (described in \ref{dataset-aggregated-statistics}) and the generated hyperparameter space according to Section \ref{sec:hyperparam-space} of Chapter \ref{cap:study-methodology}.
-
-The focus of this Chapter is to give an overview of the main results, how the datasets were clustered, a basic explanation of the statistical theory necessary for the experimental analysis,  some insights about each hyperparameter effect and how sensitive the clustered datasets are to them.
-
+All the statistical tests shown in the last chapter were applied to all experimental scenarios and then filtered by their significance. In very few scenarios of the study it was possible to conclude that the residuals followed a normal distribution according to Shapiro-Wilk test. Even though in these specific instances the typical ANOVA test could be used (given they're also homoscedastic), it was decided to use only the Kruskal–Wallis test so every experimental scenario uses the same statistical framework.
 
 %% ------------------------------------------------------------------------- %%
-\section{Single Dataset Experiment}
-\label{sec:single-dataset}
-
-Each dataset result in the study has the following files:
-
-\begin{enumerate}
-    \item \textbf{\code{shape}}: The number of data points $D_i$ and the number of features of both train and test set;
-    \item \textbf{\code{analyzer\_info}}: A dictionary with information calculated by the \code{analyzer}. It contains the feature set, what is the target column, an indicator if the dataset contains any categorical variable, and all the categorical features if it has any;
-    \item \textbf{\code{openml\_object}}: The original \textit{OpenML} object of the dataset, with its name, description (if it has one), basic attribute information, etc;
-    \item \textbf{\code{hp\_tree}}: The generated hyperparameter tree for the dataset, i.e. all nodes of $Hspace_i$;
-    \item \textbf{\code{final\_result}}: All the metric results for all combinations of hyperparameters in the hyperparameter tree; Contains the values used for the main analysis.
-\end{enumerate}
-
-Each entry of \code{final\_result} contains the evaluators result for both train and test set for all hyperparameters combinations. An example of a single entry in the \code{final\_result} for a specific dataset (\textit{BNG(kr-vs-kp)}, a chess move classification problem) is shown in \ref{lst:krkp-result}.
-
-\begin{lstlisting}[caption={BNG(kr-vs-kp) experiment result for hyperparam combination (0.3, 1700, 10)}, label={lst:krkp-result}]
-{'learning_rate': 0.30000000000000004,
-'num_estimators': 1700,
-'max_depth': 10,
-'num_leaves': 1023,
-'seed': 42,
-'nthread': 32,
-'verbose': -1,
-'train_result': {'auc_evaluator__target': 0.9963452091395292,
-    'logloss_evaluator__target': 0.07025840176806959,
-    'brier_score_evaluator__target': 0.020611611004153745},
-'test_result': {'auc_evaluator__target': 0.9857593012343584,
-    'logloss_evaluator__target': 0.208979460099794,
-    'brier_score_evaluator__target': 0.03484311126894392},
-}  \end{lstlisting}
-
-
-Since each dataset has multiple results assigned to it, one can do an \textbf{individual analysis} looking into a single dataset behavior. In this section, a summarized analysis of the \textbf{BNG(kr-vs-kp)} dataset is given as an example. The \textit{BNG(kr-vs-kp)} or "King+Rook versus King+Pawn" is one of the datasets available in the OpenML platform, where the objective is to classify if the white player can win or not (given the board positions determined by the feature values), and it's described in more details in \cite{shapiro1987structured}. The "BNG" means this is an artificially augmented/generated dataset.
-
-\subsection{Individual Hyperparameter Impact}
-\label{subsec:indv-impact}
-
-The first node of the hyperparameter tree only defines single hyperparameters values. By keeping the default LightGBM values for the remaining hyperparameters one can observe the impact of changing a single hyperparameter on each metric of interest. The plot of these values is the classical learning curve used in model tuning to assess hyperparameter effect on model performance. In the Figure \ref{fig:res-ind2} impact of max depth is shown and in \ref{fig:res-ind1} the number of estimators, for the \textit{BNG(kr-vs-kp)} dataset.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{res-ind2.png} 
-    \caption{Individual impact of \textbf{\code{max\_depth}} on the \textit{BNG(kr-vs-kp)} dataset: one can observe that when $max\_depth > 14$ the model starts to overfit.}
-    \label{fig:res-ind2}
-\end{figure}
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth, height=1.2\textwidth]{res-ind1.png} 
-    \caption{Individual impact of \textbf{\code{num\_estimators}} on the \textit{BNG(kr-vs-kp)} dataset}
-    \label{fig:res-ind1}
-\end{figure}
-
-\subsection{Hyperparameter Pairs Impact}
-\label{subsec:double-impact}
-
-The second node of the hyperparameter tree defines all pairs of possible combinations of hyperparameters. In this study, these combinations are $MD_i \times LR_i$, $MD_i \times NE_i$ and $LR_i \times NE_i$. For example, in Figure \ref{fig:res-mult1} one can see at the same time that a high \textbf{\code{num\_estimators}} combined with lower \textbf{\code{max\_depth}} have higher AUC on the test set (on this specific dataset), but at the same time low \textbf{\code{num\_estimators}} combined with high \textbf{\code{max\_depth}} also achieve high AUC. This is an interesting behavior that repeats in different hyperparameters combinations, and are easily detectable in the final general analysis looking at the treatment effect of each hyperparameter combination.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{res-mult1.png} 
-    \caption{Pair impact of $MD_i \times NE_i$  on the \textit{BNG(kr-vs-kp)} dataset}
-    \label{fig:res-mult1}
-\end{figure}
-
-On the other hand, when analyzing \ref{fig:res-mult2} the pair $MD_i \times LR_i$ doesn't show a clear inversion of the hyperparameters impact: one can only conclude that for \textit{BNG(kr-vs-kp)} lower \textbf{\code{max\_depth}} and high \textbf{\code{learning\_rate}} results in higher AUC (keeping the other hyperparameters the same). This is expected since the learning rate doesn't have the same ``overfit relationship'' as maximum depth and number of estimators have (explained in \ref{subsec:max-depth}).
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{res-mult2.png}
-    \caption{Pair impact of $MD_i \times LR_i$  on the \textit{BNG(kr-vs-kp)} dataset}
-    \label{fig:res-mult2}
-\end{figure}
-
-\subsection{Hyperparameter Triples Impact}
-\label{subsec:triple-impact}
-
-Finally, each dataset is also run using all possible combinations of the studied hyperparameters, i.e. a classical Grid Search run using \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate}. Results of AUC of the triple impact for  \textit{BNG(kr-vs-kp)} can be seen in Figure \ref{fig:res-all1}.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{res-everything1.png} 
-    \caption{Triple impact of hyperparameters on the \textit{BNG(kr-vs-kp)} dataset, showing only \textbf{test} set AUC}
-    \label{fig:res-all1}
-\end{figure}
-
-One of the inherent difficulties when analyzing these results is due to the high dimensionality of the results: Each experiment has at least the three hyperparameter values, plus three different metrics for each run. In Section \ref{} this problem will be tackled, with an overview of the statistical techniques and analysis performed to compare and obtain insights into the impact on performance metrics.
-
-%% ------------------------------------------------------------------------- %%
-\section{Dataset aggregation and clustering}
-
-To tie dataset characteristics to hyperparameters effect in the subsequent analysis, a variety of different measures were calculated in the dataset analysis process, explained in details in Section \ref{dataset-aggregated-statistics} of Chapter \ref{cap:study-methodology}. When analyzing all datasets's features characteristics, useful insights into the data can be found on it. First, a clear conclusion is that proportion of categorical features in the dataset is much higher than  other types (numeric, Boolean or constants), as shown in Figure \ref{fig:dset-pre1}, and that the most common cardinality is two categories for the categorical features\footnote{These categorical features could be encoded as the \textit{Boolean} feature type, or vice-versa. In the study it was decided that Boolean features are columns which had explicitly \textbf{True} and \textbf{False} as values.}, while few features have high cardinality (Figure \ref{fig:dset-pre2}).
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=.7\textwidth]{dset-pre1.png} 
-    \caption{Feature types of the benchmark datasets}
-    \label{fig:dset-pre1}
-\end{figure}
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=.7\textwidth]{dset-pre2.png} 
-    \caption{Cardinality of categorical features of the benchmark datasets}
-    \label{fig:dset-pre2}
-\end{figure}
-
-With relation to the skewness of the numeric features, most of them have low skewness, with the majority of them having $0$ skewness. This can indicate either that the features themselves do not have innate skewness, or they've been processed different techniques to normalize and remove skewness, like a logarithmic transformation, cubic root transformation, etc. The distribution can be seen in Figure \ref{fig:dset-pre3}.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=.7\textwidth]{dset-pre3.png}
-    \caption{Skewness distribution of the numeric features in the dataset}
-    \label{fig:dset-pre3}
-\end{figure}
-
-\subsection{Aggregation}
-
-Since the granularity of the statistics are feature-wise, all datasets were subjected to an aggregation process which combines the feature-wise statistics into \textit{dataset aggregated characteristics}. The objective of this aggregation is to represent each dataset considered in the study into a point in a high dimensional space, which gives power to perform a multitude of transformations and comparisons, and in the case of this study, a clustering by the similarity of the datasets according to these aggregated values. For each dataset, the following aggregations are made:
-
-\begin{itemize}
-    \item \textbf{\code{num\_rows}}: Number of rows in the dataset, i.e. the number of instances of $D_i$;
-    \item \textbf{\code{num\_features}}: Number of features in the dataset;
-    \item \textbf{\code{mean\_skewness}}: $0$ if there's no numeric features in the dataset, otherwise the mean of the skewness of the numeric features;
-    \item \textbf{\code{mean\_variance}}: The mean of the \textit{variance} of categorical features, where the variance concept is the one described at Section \ref{dataset-aggregated-statistics};
-    \item \textbf{\code{num\_categorical}}: How many categorical features the dataset has;
-    \item \textbf{\code{sum\_cardinality\_over\_categorical}}: Let $K$ be the set of categorical features of the dataset, and $Cardinality_K$ the sum of the cardinality of all $k\in K$. Then, this aggregation is defined as $\frac{Cardinality_K}{|K| + 1}$, which is simply the "\textit{mean}" of cardinality in the dataset. The $+1$ is to avoid error with datasets which do not have categorical features;
-    \item \textbf{\code{categorical\_ratio}}: Proportion of categorical features in the dataset;
-    \item \textbf{\code{numeric\_ratio}}: Proportion of numeric features;
-    \item \textbf{\code{boolean\_ratio}}: Proportion of Boolean features;
-    \item \textbf{\code{constant\_ratio}}: Proportion of constant features.
-\end{itemize}
-
-
-After this transformation each dataset $D_i$ is now represented by a $\mathcal{P}_i \in \mathbb{R}^{10}$ where each component of the multidimensional point represents one of the aggregated characteristics calculated above. To visualize these multidimensional points, a t-SNE projection (dimensionality reduction technique, more details in \cite{maaten2008visualizing}) on two dimensions is shown in Figure \ref{fig:tsne-1}.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{tsne1.png}
-    \caption{t-SNE projection of all $\mathcal{P}_i$}
-    \label{fig:tsne-1}
-\end{figure}
-
-The aggregated characteristics were designed in a way to encompass both the proportion of feature types in the dataset and the absolute size of the dataset. The \code{*ratio} aggregations are done to compare multiple datasets regardless on the absolute numeric value of features it has, but on the ratio of the feature types. On the other hand, the absolute features like \code{num\_rows} captures the absolute size of the data. For example, a simple analysis using \code{num\_rows}, \code{num\_features} and \code{categorical\_ratio} could yield interesting insights and a way to bundle similar datasets together based on the proportion of categorical features, controlling for both the number of data points and the number of features. 
-
-Finally, there's also explicit emphasis on characteristics regarding numeric and categorical features, which are of interest in this study (more information about the premisses about it on Section \ref{dataset-aggregated-statistics} of Chapter \ref{cap:study-methodology}). The mean of skewness aggregation can be used to control (in the experimental design sense) for datasets with similar distribution of skewed or not numerical features, while the mean of variance, the number of categorical features and the "\textit{mean}" of cardinality describes important information regarding the categorical aspect of the dataset.  
-
-\subsection{Clustering Strategy}
-
-To analyze all experiments based on similar dataset characteristics, the decided approach was to perform a simple clustering technique, instead of manually selecting which datasets are similar by looking at the aggregated characteristics by hand. Using the aggregated characteristics explained on the last section, a clustering approach on the points $\mathcal{P}_i$ generates clusters based on those characteristics.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{dendrogram.png}
-    \caption{Dendrogram of the old clustering method}
-    \label{fig:dendrogram}
-\end{figure}
-
-After some initial experimentation, the chosen clustering approach was to use the well known K-means algorithm, with $k=6$ clusters. K-means is a very simple algorithm which reduces the data to \textit{centroids}, and resulted in reasonable clusters for this study. The other tested technique was to use agglomerative hierarchical clustering, and choose the number of clusters by analyzing the resulting dendrogram (the dendrogram for the hierarchical clustering is shown in Figure \ref{fig:dendrogram}). However, this technique generated an uneven number of datasets in each cluster, more than K-means, so the K-means was chosen. It's important to note that the algorithms and the number of clusters chosen here can highly impact the subsequent analysis of the experiment results. The objective is not to create a generic analysis that could work with any possible dataset, but to actually measure the impact of hyperparameters into specific clusters which follow a similar distribution of the aggregated characteristics.
-
-After the K-means procedure, the assigned clusters can be seen in the t-SNE projection in Figure \ref{fig:tsne-2}, where each color represents a different cluster. Even though the number of $\mathcal{P}_i$ in each cluster isn't uniform, the clustering assignment is more intuitive, albeit in reduced dimensionality. As an observation note, the two t-SNE projections (Figure \ref{fig:tsne-1} and  \ref{fig:tsne-2}) are different because the embeddings in low dimension change when new data is introduced. In this case, the centroids were also added to the dataset before using t-SNE.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{tsne2.png}
-    \caption{t-SNE projection with the assigned clusters and the centroids}
-    \label{fig:tsne-2}
-\end{figure}
-
-To understand better the behavior and semantic of each dataset of clusters, manual analysis of the datasets in each one was performed. As an example, the datasets names of Cluster 2 and 3 are in Table \ref{table:1}. From a superficial analysis on the content of each dataset, one can see that most of the datasets in Cluster 2 have a high number of categorical features, while datasets in Cluster 3 are all synthetically augmented, i.e. Bayesian Network Generated (\textit{BNG}) and have a very high number of rows.
-
-\begin{table}[h!] 
-    \centering
-    \begin{tabular}{||c c||} 
-     \hline
-     Cluster 2 & Cluster 3 \\ [0.5ex] 
-     \hline\hline
-     \textit{kr-vs-kp} & \textit{BNG(kr-vs-kp)} \\
-     \textit{splice} & \textit{BNG(labor,nominal,1000000)} \\
-     \textit{mfeat-pixel} & \textit{BNG(breast-cancer,nominal,1000000)} \\
-     \textit{PhishingWebsites} & \textit{BNG(mushroom)} \\
-     \textit{20\_newsgroups.drift} & \textit{BNG(colic.ORIG,nominal,1000000)} \\
-     \textit{Internet-Advertisements} & \textit{BNG(credit-a,nominal,1000000)} \\
-     & \textit{BNG(credit-g,nominal,1000000)} \\
-     & \textit{BNG(credit-g)} \\[1ex] 
-     \hline
-    \end{tabular}
-    \caption{Datasets from Cluster 2 and Cluster 3}
-    \label{table:1}
-\end{table}
-
-Using ridgeline plots is another way to understand the meaning of each cluster. By calculating the distribution of the aggregated characteristics over each cluster and plotting them in the same scale against each other, it's possible to evaluate if the clustering makes sense. In total there are $10$ ridgeline plots, one for each aggregated characteristic. Here two of them are shown: In Figure \ref{fig:joyplot-1} and Figure \ref{fig:joyplot-2} the ridgeline plots for \code{categorical\_ratio} and \code{mean\_skewness} can be seen. It's easy to see that Cluster 2 datasets have a very high categorical ratio with very little variance, i.e. almost all of the datasets in this cluster contains a high proportion of categorical features. Clusters 1 and 6 have the lowest proportion of categorical features amongst all Clusters. Another conclusion is that Cluster 6 contains more skewed features, as its distribution is skewed towards high \code{mean\_skewness} values.
-
-All the remaining ridgeline plots are available on the appendix \ref{}.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=.7\textwidth, height=.7\textwidth]{joyplot1.png}
-    \caption{Ridgeline plot of \code{categorical\_ratio}. Clusters are represented by different colors}
-    \label{fig:joyplot-1}
-\end{figure}
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=.7\textwidth, height=.7\textwidth]{joyplot2.png}
-    \caption{Ridgeline plot of \code{mean\_skewness}. Clusters are represented by different colors}
-    \label{fig:joyplot-2}
-\end{figure}
-
-
-%% ------------------------------------------------------------------------- %%
-\section{Experiment Definitions}
-
-The experimental analysis is performed on each cluster, therefore a common metric must be used when comparing multiple dataset's results. In fact, one of the objectives is to analyze the impact of changing selected hyperparameters on the specified performance metrics of classification tasks. For this part of the analysis, instead of looking directly into the performance metrics of AUC, Logloss and Brier Score, a \textit{delta} from the baseline metric $\delta$ is defined.
-
-\subsection{\texorpdfstring{$\delta_{metric}$}{delta} definition}
-
-The reason to not directly use the performance metrics when comparing different models under the same hyperparameters changes is that the objective of the study doesn't takes into account the actual performance of a given dataset, but actually how much each hyperparameter affects the performance metrics, i.e. the \textbf{sensitivity} of a dataset w.r.t a hyperparameter. For example, it doesn't matter in this case if dataset $A$ has a higher AUC than dataset $B$ under a new hyperparameter value $h$, but actually if the increase or decrease in performance of both datasets $A$ and $B$ are significant for hyperparameter value $h$. 
-
-Another problem that can be avoided by the following definition of a $\delta_{metric}$ is the fact that it captures relative changes, instead of the absolute value of the metric; e.g. a dataset with almost constant $0.9$ AUC value will have a $\delta_{AUC}$ equal to $0$ most of the time, and will be treated as equal as a dataset with constant low AUC (e.g. $0.55$): the actual absolute value of the AUC doesn't matter.
-
-LightGBM has a default set of values for its hyperparameters and the ones analyzed in this study  are defined below. As an observation, the correct default value for \code{max\_depth} is $-1$ because it's unlimited on LightGBM, as mentioned in Section \ref{gbm-hyperparams}; However, because the \code{num\_leaves} default is 31 and this approximately results in a balanced tree with depth 5.
-
-\begin{itemize}
-    \item LR = \{0.1\}
-    \item NE = \{100\}
-    \item MD = \{5\}
-\end{itemize}
-
-The baseline metrics are defined, for each dataset $D_i$, as the performance metrics (\textit{AUC, Logloss} and \textit{Brier Score} as explained in Section \ref{classification-metrics}) obtained on the {\Large\textbf{test set}} using the LightGBM model trained with the parameters as close as possible to the default hyperparameter values above. The $\delta_{metric}$ is then just the difference between a given new metric and the baseline metric. It's interpretation depends on the performance metric being analyzed: in the case of AUC, a positive $\delta_{AUC}$ means a higher AUC than baseline (a better result), a negative one means a lower AUC than baseline (worse result), and $0$ an equal performance in terms of AUC. For both the Brier Score and Logloss the interpretation is the opposite, as in these metrics the lower the better.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{delta_auc1.png}
-    \caption{$\delta_{AUC}$ for Cluster 3, changing only \code{max\_depth}. The colors represent different datasets}
-    \label{fig:delta-auc1}
-\end{figure}
-
-In Figure \ref{fig:delta-auc1} is displayed the $\delta_{AUC}$ w.r.t \code{max\_depth} changes for the datasets in Cluster 3, i.e. one example of a $\delta$ plot from the experiment result. The $\delta$ captures the relative increase or decrease in AUC considering $5$ the baseline for \code{max\_depth}. By manually analyzing the results of the $\delta{AUC}$ one can determine, for this Cluster, which values of \code{max\_depth} have the highest impact on the AUC metric, both positive and negative.
-
-\subsection{Ordering and Visualization}
-
-In Figure \ref{fig:delta-brier1} a different $\delta$ plot is displayed, where each point is the $\delta_{brier}$ w.r.t both \code{max\_depth} and \code{learning\_rate} changes summarized into a single dimension in the \textit{x axis}, for Cluster 2 experiments. The higher the number of hyperparameters being analyzed at the same time, the more difficult it's to visualize these $\delta$ plots due to the high dimensionality. For this reason, in the study the hyperparameter values were summarized into a single point which encompasses multiple hyperparameter changes.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{delta_brier1.png}
-    \caption{$\delta_{Brier}$ for Cluster 2, changing both \code{max\_depth} and \code{learning\_rate}. The colors represent different datasets}
-    \label{fig:delta-brier1}
-\end{figure}
-
-
-In the Subsections \ref{subsec:indv-impact}, \ref{subsec:double-impact} and \ref{subsec:triple-impact} it's shown the full results for individual hyperparameter impact, pairs of hyperparameters and finally all three hyperparameters, respectively. These plots are not possible in this part of the analysis because instead of one individual dataset experiment result being evaluated as in Section \ref{sec:single-dataset}, the final analysis is done with multiple datasets of a cluster.
-
-For visualization purposes, an ordering of the data points in the x axis was defined to facilitate the visualization and to maintain an order that makes sense, even when reducing the dimensionality. First, the ranking of each hyperparameter is calculated based on the sorted order within that individual hyperparameter distribution, and then the final ranking of these points is based on the average of the individual hyperparameter ranks. This custom ranking has two advantages:
-
-\begin{enumerate}
-    \item Retains the relative value of each hyperparameter into the final ordering. This means that the first points represent the lower values of all hyperparameters and the last points in the x axis represent the combinations with the highest hyperparameters values;
-    \item Is robust w.r.t the scale of the absolute values between the hyperparameters. The ordering takes first into account the rank of each hyperparameter to avoid dealing with values in uneven scales. For example, a learning rate of $1.5$ is considered to be a high value in practice, but its numeric value is much smaller than a maximum depth of $5$, which can be considered a small value of \code{max\_depth}.
-\end{enumerate}
-
-
-As an example of this ordering, if the points were $H = \{(3, 500), (20, 100), (5, 200), (10, 400)\}$, each tuple a 
-pair of maximum depth and number of estimators, the first step of the ordering is to get the ranking of each hyperparameter within it's distribution. This would generate a set of the individual ranks $r'(H) = \{(1, 4), (4, 1), (2, 2), (3, 3)\}$, and the final ranking order depends on the average ranks of each tuple, in this case $r_{avg}(H) = \{2.5, 2.5, 2, 3\}$. And using $r_{avg}(H)$ to order the original points $H$, the final ordering is $H^\star = \{(5, 200), (3, 500), (20, 100), (10, 400)\}$.
-
-It's important to note that, because of the statistical framework chosen in this study, the ranking strategy doesn't change the result of the analysis, but provides a way to visually understand its results.
-
-%% ------------------------------------------------------------------------- %%
-\section{Statistical Framework}
-
-With the objective to generalize the hyperparameter sensitivity analysis, an statistical framework is defined to analyze the $\delta_{metric}$ obtained on each cluster and different configurations of hyperparameters. The comparisons include changing different aspects of the experiment, such as: the performance metric chosen (AUC, Logloss, Brier Score), the hyperparameter(s) being changed and the clusters being analyzed.
-
-The statistical framework is divided in two main parts: tests for the significance of the changes in the $\delta_{metric}$ obtained in the experiment, and the subsequent modelling of the sensitivity factors of the hyperparameters of each cluster. An overview of the statistical tools used in this study are defined in the following subsections, along with examples of real results obtained in the analysis of the experiments.
-
-\subsection{Experimental Scenarios}
-
-An important concept in this study related to the statistical framework is the definition of an \textbf{experimental scenario}. In this study the experimental units are the datasets of a cluster, which receive a "treatment" of different hyperparameter values. First, $C_k$ is the set of experimental units (i.e. the datasets) of the $k$th cluster. The hyperparameters of a scenario are a partition $Q$ of the union of all hyperparameter spaces (as defined in Subsection \ref{subsec:hp-tree}) of the $k$th cluster ($\eta^{(k)}$, defined in Equation \ref{eq:exp-Hspace}) and is referred to as  $\eta^{(k)}_Q$. For example, the hyperparameters values of the experiment when changing both maximum depth and learning rate in Cluster 4 can be written as $\eta^{(4)}_{max\_depth, learning\_rate}$.
-
-\begin{equation}
-    \eta^{(k)} = \bigcup_{d \in C_k} Hspace_d
-    \label{eq:exp-Hspace}
-\end{equation}
-
-
-Given the $C_k$ experimental units, the hyperparameters configuration  $\eta^{(k)}_Q$ and a performance metric $m$, the experimental scenario can be represented as is Equation \ref{eq:exp-scenario}:
-
-\begin{equation}
- \mathcal{S}(C_k, \eta^{(k)}_Q, m)
- \label{eq:exp-scenario}
-\end{equation}
-
-Which means the experiment outputs of $\delta_m$ observed when applying the \textit{treatments} $\eta^{(k)}_Q$ to all experimental units in the $k$th cluster. For example,  Figure  \ref{fig:delta-auc1} represents the experimental scenario $\mathcal{S}(C_3, \eta^{(3)}_{max\_depth}, AUC)$ and Figure  \ref{fig:delta-brier1} is a visualization of $\mathcal{S}(C_2, \eta^{(2)}_{max\_depth,num\_estimators}, brier)$.
-
-
-\subsection{Analysis of Variance}
-
-The typical scenario of an analysis of variance, according to \cite{montgomery2017design}, is an experimental setting where there are $k$ {treatments} or different \textit{levels} of a factor that one wishes to compare. The response observed from each of the $k$ levels of treatment is a random variable. In general, there are $n$ observations under the same treatment, which can be seen in Table \ref{table:sfm}. In this study, the \textit{treatment} is the hyperparameter, and the different values of the hyperparameter are the different treatment levels in the analysis of variance.
-
-\begin{table}[h!] 
-    \centering
-    \begin{tabular}{||c |c c c c| c c||} 
-     \hline
-     \textbf{Treatment} & & \textbf{Observations} & & & \textbf{Totals} & \textbf{Averages} \\ [0.5ex]
-     \hline
-     $1$ & $y_{11}$ & $y_{12}$ & $\cdots$ & $y_{1n}$ & $\bm{y}^{(1)}$ & $\overline{\bm{y}^{(1)}}$\\
-     $2$ & $y_{21}$ & $y_{22}$ & $\cdots$ & $y_{2n}$ & $\bm{y}^{(2)}$ & $\overline{\bm{y}^{(2)}}$\\
-     $\vdots$ & $\vdots$ & $\vdots$ & $\cdots$ & $\vdots$ & $\vdots$ & $\vdots$\\
-     $k$ & $y_{k1}$ & $y_{k2}$ & $\cdots$ & $y_{kn}$ & $\bm{y}^{(k)}$ & $\overline{\bm{y}^{(k)}}$\\[1ex]
-     & &  &  &  &\text{\Large$\mathup{y}_\Sigma$} & \text{\Large$\overline{\mathup{y}_\Sigma}$}\\[1ex] 
-     \hline
-    \end{tabular}
-    \caption{Table exemplifying a general Single-Factor Experiment, based on \cite{montgomery2017design}}
-    \label{table:sfm}
-\end{table}
-
-There are two main models in the literature when dealing with Single-Factor experiments, the \textbf{means model} and the \textbf{effects model}. Even though in this study the observations from the experiments are described using the \textit{effects model}, it's useful to comprehend the idea behind both models to understand why one was chosen over the other.
-
-In the \textit{means model} each observation (i.e. each point in the $\delta$ plot for example) is defined as a function of the mean \textit{within treatment} and a random error component that incorporates ``all other sources of variability in the experiment including measurement, variability arising from uncontrolled factors, differences between the experimental units to which the treatments are applied, and the general background noise in the process'' according to \cite{montgomery2017design}. The structure from the means model is described in Equation \ref{eq:means-model}.
-
-\begin{equation}\label{eq:means-model}
-    y_{ij} = \mu_i + \epsilon_{ij}
-    \begin{cases}
-        i = 1, 2, \cdots , k\\
-        j = 1, 2, \cdots, n
-    \end{cases}
-\end{equation}
-
-On the other hand, the \textbf{effects model} defines the treatment means $\mu_i$ as a deviation from the overall mean $\bm{\mu}$ of the experiment, i.e. $\mu_i = \bm{\mu}+ \tau_i \text{ where } i = 1, 2, \cdots, k$. Thus, the experimental results are described according to Equation \ref{eq:effects-model}. The parameter $\tau_i$ is called the \textbf{\textit{i}th treatment effect}, and it represents the deviation from the overall mean of the experiment.
-
-For simplicity, in the study all the scenarios were structured using a single-factor model, even the scenarios where the treatment is actually two or more values of different hyperparameters being changed. This means that the results and conclusions from pairs or triples of hyperparameters are interpreted as a single factor that can change the $\delta$ of the gradient boosting models, instead of decomposing the effects into multiple variables.
-
-\begin{equation}\label{eq:effects-model}
-    y_{ij} = \bm{\mu} + \tau_i + \epsilon_{ij}
-    \begin{cases}
-        i = 1, 2, \cdots , k\\
-        j = 1, 2, \cdots, n
-    \end{cases}
-\end{equation}
-
-One of the reasons why the effects model was chosen to analyze the results of this study is because it has a more intuitive interpretation for the objective of this study. One can interpret the $\tau_i$ as the amount of effect a configuration of hyperparameter produces in the performance metrics, i.e. it's a measure of textit{sensitivity} from the overall case. Before modelling the experimental results and comparing the $\tau_i$ for different scenarios, it's important to test for equality of the output of the treatments (in this case, equality of $\delta_{metric}$ for different performance metrics) and testing the assumptions of the statistical tests.
-
-\subsection{ANOVA}
-
-The most widely used test in the analysis of variance is the \textbf{ANOVA} test, or \textit{single-factor analysis of variance}. In the assumptions of the ANOVA model there is a requirement that the experiments are performed in random order to keep the environment in which the experiments are applied as uniform as possible. According to \cite{montgomery2017design}, the objective is to test the appropriate hypothesis about the treatment means and to estimate them. However, there a very strong assumption that must be validated before applying the ANOVA test: the model errors $\epsilon_{ij}$ are assumed to be normally and independently distributed random variables with mean zero and variance $\sigma^2$; The data must also be \textit{homoscedastic}, i.e. the variance $\sigma^2$ is assumed to be constant for all levels of the factor.
-
-These assumptions imply that the observations must follow a normal distribution:
-
-$$y_{ij} \sim \mathcal{N}(\bm{\mu} + \tau_i, \sigma^2)$$
-
-The ANOVA model has different flavors, and is highly used in the field of applied statistics. Different variations and extensions of the ANOVA model can be found throughout the literature of statistics and machine learning. In the study of hyperparameters, \cite{hoos201x4efficient} describes a method using the functional ANOVA framework (a variation of ANOVA) to quantify the importance of ``both single hyperparameters and of interactions between hyperparameters'' in a single dataset. In a more recent work, \cite{van2017empirical} also extend the functional ANOVA framework for multiple datasets, with an empirical experiment using OpenML datasets.
-
-\subsection{Testing of Assumptions}
-
-However, the ANOVA test \textbf{was not} used in this study, because its assumptions were not met in almost all scenarios. A different non parametric statistical test was used, and since some of the assumptions applies for both the parametric (ANOVA) and non parametric tests, it's important to understand the assumptions of them. Using \cite{montgomery2017design} definition of the \textbf{residuals} for observation $j$ in treatment $i$ as
-
-\begin{equation}
-    \mathcal{E}_{ij} = y_{ij} - \hat{y}_{ij}    
-    \label{eq:sfm-residuals}
-\end{equation}
-
-
-where $\hat{y}_{ij}$ is an estimate of the respective observation $y_{ij}$, obtained as follows:
-
-\begin{equation}    
-    \begin{split}
-        \hat{y}_{ij} & = \hat{\bm{\mu}} + \hat{\tau_i}\\
-        & = \text{\Large$\overline{\mathup{y}_\Sigma}$} + (\overline{\bm{y}^{(i)}} - \text{\Large$\overline{\mathup{y}_\Sigma}$})\\
-        & = \overline{\bm{y}^{(i)}}
-    \end{split}
-\end{equation}
-
-This just means that the estimate of any experimental scenario observation in the $i$th treatment is the corresponding treatment average $\overline{\bm{y}^{(i)}}$. In the terms of this study, the estimate of relative change in the performance metric $\delta$ for a given configuration of a value of hyperparameters is the mean of the $\delta$'s of all datasets in the corresponding cluster being analyzed. The analysis of the residuals is one of the ways to check for model adequacy, and can be analyzed using a \textit{Normal Q-Q Plot} and using statistical tests to test for the normality and homoscedasticity assumptions.
-
-The test of assumptions is applied to every \textbf{experimental scenario} $\mathcal{S}$ in this study, in the following order:
-\newpage
-\begin{enumerate}
-    \item Fit a single-factor model (SFM) on $\mathcal{S}$, and calculate the residuals according to Equation \ref{eq:sfm-residuals}. In Table \ref{table:sfm-cluster1} the complete SFM model output for $S(C_1, \eta^{(1)}_{max\_depth}, Brier)$ is shown.
-    \begin{table}[!h]
-        \centering
-        \begin{tabular}{lrrr}
-            \toprule
-            {} &  $\overline{\bm{y}^{(i)}}$ &  $ \hat{\bm{\mu}}$ & $ \hat{\tau_i}$  \\
-            max\_depth &                 &          &             \\
-            \midrule
-            3         &        0.001872 & -0.00106 &    0.002932 \\
-            4         &        0.001275 & -0.00106 &    0.002335 \\
-            5         &        0.000000 & -0.00106 &    0.001060 \\
-            6         &       -0.000835 & -0.00106 &    0.000225 \\
-            7         &       -0.001350 & -0.00106 &   -0.000290 \\
-            8         &       -0.001588 & -0.00106 &   -0.000528 \\
-            9         &       -0.001548 & -0.00106 &   -0.000488 \\
-            10        &       -0.001575 & -0.00106 &   -0.000515 \\
-            11        &       -0.001558 & -0.00106 &   -0.000497 \\
-            12        &       -0.001646 & -0.00106 &   -0.000586 \\
-            13        &       -0.001451 & -0.00106 &   -0.000391 \\
-            14        &       -0.001456 & -0.00106 &   -0.000396 \\
-            15        &       -0.001413 & -0.00106 &   -0.000352 \\
-            16        &       -0.001397 & -0.00106 &   -0.000337 \\
-            17        &       -0.001391 & -0.00106 &   -0.000331 \\
-            18        &       -0.001425 & -0.00106 &   -0.000365 \\
-            19        &       -0.001395 & -0.00106 &   -0.000335 \\
-            20        &       -0.001383 & -0.00106 &   -0.000323 \\
-            21        &       -0.001439 & -0.00106 &   -0.000379 \\
-            22        &       -0.001501 & -0.00106 &   -0.000441 \\
-            \bottomrule
-            \end{tabular}
-        \caption{SFM model for scenario $S(C_1, \eta^{(1)}_{max\_depth}, Brier)$}
-        \label{table:sfm-cluster1}
-        \end{table}
-        
-    
-    \item Plot a Normal Q-Q Plot to visually observe the structure of the SFM residuals. In this study, the Normal Q-Q Plot will match the SFM residuals quantiles with the theoretical quantiles of a normal distribution, while also fitting a Linear Regression model and calculating the coefficient of determination ($R^2$), as suggested in \cite{Vallat2018}. Residuals are filtered to be inside the quantiles $q_{5}$ and $q_{95}$ to remove outliers. To showcase this, in Figure \ref{fig:resplot-1} the Normal Q-Q plot for the scenario $\mathcal{S}(C_1, \eta^{(1)}_{max\_depth, learning\_rate}, AUC)$ represents a distribution of residuals close to a normal distribution, with a relatively high $R^2$. This is a specific case where the ANOVA test could be used because of its robustness to the normality assumption, as stated in \cite{montgomery2017design} ``In general, moderate departures from normality are of little concern in the fixed effects analysis of variance''. A more drastic departure from normality can be observed in scenario $\mathcal{S}(C_1, \eta^{(1)}_{num\_estimators, learning\_rate}, Logloss)$, in Figure \ref{fig:resplot-2}.
-    \begin{figure}[!h]
-        \centering
-        \begin{subfigure}[b]{0.8\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{qqplot_c1.png}
-            \caption{Normal Q-Q Plot for scenario $\mathcal{S}(C_1, \eta^{(1)}_{max\_depth, learning\_rate}, AUC)$}
-            \label{fig:resplot-1}
-        \end{subfigure}
-        \hfill
-        \begin{subfigure}[b]{0.8\textwidth}
-            \centering
-            \includegraphics[width=\textwidth]{qqplot_c1_bad.png}
-            \caption{Normal Q-Q Plot for scenario $\mathcal{S}(C_1, \eta^{(1)}_{num\_estimators, learning\_rate}, Logloss)$}
-            \label{fig:resplot-2}
-        \end{subfigure}
-        \hfill
-           \caption{Two Normal Q-Q Plots from Cluster 1 results}
-           \label{fig:three graphs}
-   \end{figure}
-       
-    \item Perform a {\large\textbf{Shapiro–Wilk test}} for the normality assumption with $\alpha\text{-level} = 0.05$. In almost all of the experimental scenarios the test rejected the null hypothesis that the residuals are normally distributed with $p$-value less than $0.05$.
-
-    \item To validate the homoscedasticity assumption, a statistical test for equality of variance is also performed on the residuals. As indicated in \cite{montgomery2017design}, these statistical procedures are testing the folowing hypotheses:
-    \begin{align*}
-        H_0 &: \sigma^2_1 =  \sigma^2_2 = \cdots =  \sigma^2_k \\
-        H_1 &: \text{above not true for at least one } \sigma^2_i    
-    \end{align*}
-    A widely used procedure for homoscedasticity is the Bartlett's Test, which computes a statistic whose sampling distribution is, according to \cite{montgomery2017design}: ``closely approximated by the chi-square distribution with $k - 1$ degrees of freedom when the $k$ random samples are from independent normal populations.''. By analyzing the results of the Normal Q-Q plots and the Shapiro–Wilk tests there's no statistical evidence that the residuals of this study follow a normal distribution, so the Bartlett's test should not be used.
-    The {\large\textbf{Levene test}} is an alternate procedure that is robust to departures from normality, as explained in \cite{brown1974robust}, and it's the test chosen to verify the homoscedasticity for all experimental scenarios.
-    
-\end{enumerate}
-
-\subsection{Kruskal–Wallis: A Nonparametric Approach}
-
-Given that most of the experimental results failed the normality assumption tests, the Kruskal–Wallis test is used to test for statistical significance of the treatment means. The Kruskal–Wallis test is applied to all experimental scenarios, and is used to test the null hypothesis that the $k$ treatments are identical against the alternative hypothesis that some of the treatments generate observations that are larger than others. There's a convenient interpretation of the Kruskal–Wallis, described in \cite{montgomery2017design}:
-
-\begin{displayquote}
-
-``Because the procedure is designed to be sensitive for testing differences in means, it's sometimes convenient to think of the Kruskal–Wallis test as a test for equality of treatment means. The Kruskal–Wallis test is a \textbf{nonparametric alternative} to the usual analysis of variance.''
-
-\end{displayquote}
-
-Kruskal–Wallis works by applying the usual analysis of variance to the ranks of the observations. The \textit{rank transformation} consists of ranking the observations $y_{ij}$ in ascending order and replacing each observation by its rank $r_{ij}$. The results of testing after a ranking transformation are preferred because it's less likely to be distorted by nonnormality and unusual observations, which is the case of the experimental scenarios results in this study.
-
-Even though this nonparametric approach doesn't require the data to be normally distributed, it does however assume the same distribution within groups, as explained in \cite{mcdonald2009handbook}:
-
-\begin{displayquote}
-    ``(Kruskal–Wallis) does assume that the different groups have the same distribution, and groups with different standard deviations have different distributions. If your data are heteroscedastic, Kruskal–Wallis is no better than one-way anova, and may be worse.''
-\end{displayquote}
-
-So the homoscedasticity tests are still needed before interpreting the Kruskal–Wallis test. In Table \ref{table:result-cluster2} the statistical results for all the scenarios in Cluster 2 is available, where $NE$, $MD$ and $LR$ refer to \code{num\_estimators}, \code{max\_depth} and \code{learning\_rate} respectively. The numbers in the table are the $p$-values of all statistical tests performed in Cluster 2 experiments, and the values in \textcolor{red}{red} are the tests that failed the desired hypothesis testing. Some tests can have NaN if there isn't enough samples or all values are equal, in the case of the residuals.
-
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{l|lrrr}
-        \toprule
-                             &         &       Shapiro–Wilk &        Levene &        Kruskal–Wallis \\
-        \textbf{Treatment} & \textbf{Metric} &               &               &                \\
-        \midrule
-        $\eta^{(2)}_{NE}$ & $\delta_{AUC}$ &  \textcolor{red}{4.059920e-08} &  9.968117e-01 &   \textcolor{red}{9.996506e-01} \\
-                             & $\delta_{Brier}$ &  \textcolor{red}{5.942564e-06} &  2.105453e-01 &   \textcolor{red}{9.965572e-01} \\
-                             & $\delta_{Logloss}$ &  \textcolor{red}{2.502680e-05} &  \textcolor{red}{9.636175e-03} &   2.827828e-03 \\
-                             \hline
-        $\eta^{(2)}_{MD}$ & $\delta_{AUC}$ &  \textcolor{red}{2.536182e-10} &  9.210022e-01 &   1.860650e-02 \\
-                             & $\delta_{Brier}$ &  \textcolor{red}{3.926061e-06} &  2.774635e-01 &   2.283747e-02 \\
-                             & $\delta_{Logloss}$ &  \textcolor{red}{2.522154e-05} &  1.285176e-01 &   1.764531e-02 \\
-                             \hline
-        $\eta^{(2)}_{LR}$ & $\delta_{AUC}$ &  \textcolor{red}{2.714980e-09} &           NaN &            NaN \\
-                             & $\delta_{Brier}$ &  \textcolor{red}{9.808685e-09} &           NaN &            NaN \\
-                             & $\delta_{Logloss}$ &  \textcolor{red}{1.213540e-10} &           NaN &            NaN \\
-                             \hline
-        $\eta^{(2)}_{MD, LR}$ & $\delta_{AUC}$ &  \textcolor{red}{1.406702e-20} &  9.999939e-01 &   1.316980e-02 \\
-                             & $\delta_{Brier}$ &  \textcolor{red}{1.339994e-23} &  1.000000e+00 &   6.235464e-12 \\
-                             & $\delta_{Logloss}$ &  \textcolor{red}{1.334960e-23} &  1.000000e+00 &   1.005025e-08 \\
-                             \hline
-       $\eta^{(2)}_{MD, NE}$ & $\delta_{AUC}$ &  \textcolor{red}{2.548462e-22} &  1.000000e+00 &   \textcolor{red}{1.000000e+00} \\
-                             & $\delta_{Brier}$ &  \textcolor{red}{6.494320e-28} &  9.969882e-01 &   \textcolor{red}{9.274816e-01} \\
-                             & $\delta_{Logloss}$ &  \textcolor{red}{3.974093e-21} &  \textcolor{red}{2.655356e-23} &   6.191510e-22 \\
-                             \hline
-        $\eta^{(2)}_{LR, NE}$ & $\delta_{AUC}$ &  \textcolor{red}{9.960932e-27} &  1.000000e+00 &   3.306332e-06 \\
-                             & $\delta_{Brier}$ &  \textcolor{red}{2.709085e-26} &  9.999995e-01 &   7.035798e-09 \\
-                             & $\delta_{Logloss}$ &  \textcolor{red}{2.452305e-24} &  9.999999e-01 &   1.650304e-05 \\
-                             \hline
-        $\eta^{(2)}_{NE, MD, LR}$ & $\delta_{AUC}$ &  \textcolor{red}{0.000000e+00} &  1.000000e+00 &   2.904172e-64 \\
-                             & $\delta_{Brier}$ &  \textcolor{red}{0.000000e+00} &  1.000000e+00 &  4.013155e-111 \\
-                             & $\delta_{Logloss}$ &  \textcolor{red}{0.000000e+00} &  1.000000e+00 &   7.298816e-70 \\
-        \bottomrule
-\end{tabular}        
-\caption{Statistical $p$-values of the experiment scenarios in Cluster 2. All the normality assumptions were rejected in this case}
-\label{table:result-cluster2}
-\end{table}
-
-%% ------------------------------------------------------------------------- %%
-\section{Results}
-
-All the statistical tests shown above were applied to all experimental scenarios and then filtered by their significance. In very few scenarios of the study it was possible to conclude that the residuals followed a normal distribution according to Shapiro-Wilk test. Even though in these specific instances the typical ANOVA test could be used (given they're also homoscedastic), it was decided to use only the Kruskal–Wallis test so every experimental scenario uses the same statistical framework.
-
-\subsection{Statistical Significance}
+\section{Statistical Significance}
 
 Scenarios with a $p$-value above the 0.05 significance level in the Levene test means it failed to reject the hypothesis that the group variances are different: in practice, the homoscedasticity assumption is considered to be true in these cases. In the Kruskal–Wallis test if the $p$-value is less than the $0.05$ the null hypothesis of equal treatment means is rejected, i.e. in practice it's considered at least one treatment mean is different from the other. When an experimental scenario has enough samples (i.e. it won't return NaN), passed the homoscedasticity assumption and reject the equality of treatment means in the Kruskal–Wallis test it's indicated here as \ok. If either the homoscedasticity test failed or Kruskal–Wallis failed to reject the hypothesis of equal means, it's indicated as \notok. All the results of statistical significance of treatment means are summarized in Table \ref{table:stats-sig}.
 
@@ -550,46 +38,140 @@ An important note about homoscedasticity in these results is that the results ca
                                             & $\delta_{Brier}$ & \notok & \ok & \ok &  \ok & \notok & \ok  & \ok \\
                                             & $\delta_{Logloss}$ & \notok & \ok & \ok &  \ok & \notok & \ok & \ok \\
         \midrule
-        \multirow{3}{4em}{\Large\centering 6} & $\delta_{AUC}$ & \ok & \ok & \notok & \ok & \notok & \ok & \ok \\
-                                            & $\delta_{Brier}$ & \notok & \ok & \notok & \ok & \notok & \notok & \notok \\
-                                            & $\delta_{Logloss}$ & \notok & \ok & \notok & \ok & \notok & \notok & \notok \\
+        \multirow{3}{4em}{\Large\centering 6} & $\delta_{AUC}$ & \ok & \notok & \notok & \ok & \notok & \notok & \ok \\
+                                            & $\delta_{Brier}$ & \notok & \notok & \notok & \ok & \notok & \notok & \notok \\
+                                            & $\delta_{Logloss}$ & \notok & \notok & \notok & \ok & \notok & \notok & \notok \\
         \bottomrule
     \end{tabular}
     \caption{All experimental scenarios and their respective Kruskal–Wallis results for equality of treatment means}
     \label{table:stats-sig}
 \end{table}
 
-Some interesting insights can be made by inspecting the statistical significance results in Table \ref{table:stats-sig} and the specific $p$-values for the tests at the \ref{Appendix}:
+Some interesting insights can be made by inspecting the statistical significance results in Table \ref{table:stats-sig} and the specific $p$-values for the tests in the Table \ref{Appendix} in the Appendix:
 
 \begin{enumerate}
-    \item For instance, Cluster 3 scenarios failed most of the homoscedasticity tests, but by visually analyzing the $\delta$ plot it displays the same behavior of the treatments as the other clusters. However, Cluster 3 datasets are all synthetically generated (as shown in Table \ref{table:1}), and this can be a reason why it has so few statistically significant results. In Figure \ref{res-failed-c3} one $\delta_{AUC}$ plot from Cluster 3 results is shown.
+    \item For instance, Cluster 3 scenarios failed most of the homoscedasticity tests, but by visually analyzing the $\delta$ plot it displays the same behavior of the treatments as the other clusters. However, Cluster 3 datasets are all synthetically generated (as shown in Table \ref{table:1}), and this can be a reason why it has so few statistically significant results. In Figure \ref{fig:res-failed-c3} one $\delta_{AUC}$ plot from Cluster 3 results is shown.
     \begin{figure}[!h]
         \centering
         \includegraphics[width=1\textwidth]{delta-auc-cluster3-failed.png} 
-        \caption{$\delta_{AUC}$ for scenario $S(C_3, \eta^{(3)}_{LR, NE}, AUC)$, which failed the Levene Test; Some datasets $\delta_{AUC}$ increased the variance in treatment groups with very high learning rate and number of estimators}
+        \caption{$\delta_{AUC}$ for scenario $\mathcal{S}(C_3, \eta^{(3)}_{LR, NE}, AUC)$, which failed the Levene Test; Some datasets $\delta_{AUC}$ increased the variance in treatment groups with very high learning rate and number of estimators}
         \label{fig:res-failed-c3}
     \end{figure}
+    \item Analyzing Table \ref{table:stats-sig} column-wise, the experiments changing the number of estimators ($\eta_{NE}$) and changing both the number of estimators and maximum depth ($\eta_{MD, NE}$) have very few scenarios where there's a significant change in the performance metrics.
+    \item Overall, the Brier Score and Logloss metrics are relatively more sensitive when compared to AUC in the analyzed datasets.
 \end{enumerate}
 
+In experimental analysis, if a statistically significant result of a parametric or nonparametric analysis of variance is obtained on the experimental data, a \textit{post hoc} test is used to assess the difference between group treatments results, as described in \cite{Terpilowski2019}. In this study the results of the post hoc tests are not analyzed here, although it could be useful in future work. For this reason, the analysis pipeline implemented in the code has the option to perform a pair-wise Conover test (using the Holm–Bonferroni method to correct for \textit{family-wise error rate}) on all treatment means. In Figure \ref{fig:posthoc-conover} it is shown one example of a Conover test of the experimental scenario $\mathcal{S}(C_1, \eta^{(1)}_{LR}, Brier)$, to exemplify\footnote{This is just an example plot that wasn't used in the analysis, since the scenario isn't statistically significant according to Kruskal–Wallis.}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.75\textwidth]{conover-cluster1.png} 
+    \caption{Example of post hoc plot with the pairwise differences in treatment means}
+    \label{fig:posthoc-conover}
+\end{figure}
+
+%% ------------------------------------------------------------------------- %%
+\section{Treatment Effect and Single-Factor Plots}
+
+In the analysis, a SFM model is fitted for every experimental scenario. After the statistical testing, the calculated SFM model is then visualized using the \textit{SFM plot}, a very important plot to understand the overall behavior of the estimated treatment effects $\hat{\tau_i}$ w.r.t the overall estimated mean $\hat{\bm{\mu}}$. The defined ordering of the treatment values, defined in Subsection \ref{subsec:ordering} is very useful in this step to grasp the general impact in the metrics of an experimental scenario. To correctly understand the SFM plot, in Figure \ref{fig:sfm-plot-c3-mdlr} the processed SFM plot for scenario $\mathcal{S}(C_3, \eta^{(3)}_{MD, LR}, AUC)$ is shown. All SFM plots have two components:
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{sfm-cluster3-mdlr.png} 
+    \caption{SFM plot of  $\mathcal{S}(C_3, \eta^{(3)}_{MD, LR}, AUC)$}
+    \label{fig:sfm-plot-c3-mdlr}
+\end{figure}
 
 
+\begin{enumerate}
+    \item The \textbf{overall mean} is the estimated average effect $\hat{\bm{\mu}}$. In practice, it means what is the average change in the performance metric of the LightGBM classification model of the current cluster when subjected to all treatment values  $\eta^{(k)}_Q$.
+    \item The vertical lines in the plot are the estimated treatment effects $\hat{\tau_i}$ of each treatment value (shown in the x axis). The colors \textcolor{orange}{orange} and \textcolor{ForestGreen}{green} distinguish treatments higher and lower than  $\hat{\bm{\mu}}$, respectively.
+    \item For each SFM plot, the $\hat{\tau_i}$ with the highest and lowest value are calculated and highlighted in two groups:
+    \begin{enumerate}
+        \item The \textbf{best treatments} are the treatments that provide the highest improvement on the performance metric. As explained on Subsection \ref{subsec:delta-metrics}, this depends on the metric being chosen: in Figure \ref{fig:sfm-plot-c3-mdlr} a positive $\delta_{AUC}$ means a model with a higher AUC than baseline, so the highest \textcolor{orange}{orange} lines are the best treatments in this case.
+        \item The \textbf{worst treatments} are the treatments that have the worst impact on the performance metrics, i.e. treatments that generates models with worse metrics than the baseline. Again, it depends on the metrics being chosen: in the case of AUC the worst treatments are the ones where the $\delta_{AUC}$ is the lowest in absolute value, but for Logloss and Brier Score this interpretation is reversed. In Figure \ref{fig:sfm-plot-c3-mdlr} the worst cases for this specific scenario are low values of both learning rate and maximum depth, i.e. the lowest \textcolor{ForestGreen}{green} lines.
+    \end{enumerate}
+\end{enumerate}
+
+The SFM plots are the final plots for the analysis done in this study. They become increasingly difficult to read the higher the dimensionality of the treatments, i.e. the higher the number of different hyperparameters being changed at the same time.
+
+%% ------------------------------------------------------------------------- %%
+\section{Hyperparameters results}
+
+In this part, the hyperparameters combinations are analyzed individually for their impact obtained with the experimental results.
+
+\subsection{\texorpdfstring{\Large$\eta_{NE}$}{}}
+
+By analyzing the results of the Kruskal–Wallis tests, without considering the homoscedasticity test, the number of estimators is the hyperparameter that have the least impact on the metrics, on all clusters. The proportion of times this hyperparameter actually provided a significant difference for $\delta_{AUC}$, $\delta_{Brier}$ and $\delta_{Logloss}$ were approximately 16\%, 16\% and 50\% respectively. That is, from all the experimental scenarios with treatments of only changing the number of estimators ($\eta_{NE}$), almost none of them had a significant difference in AUC and Brier Score.
+
+When analyzing the SFM plots, a peculiar behavior was observed on the results of $\eta_{NE}$ experiments. The treatments effects are very noisy, with many intercalating positive and negative results. In many of the SFM plots there's a middle region where the worst treatments appear. In Figures \ref{fig:sfm-ne-1} and \ref{fig:sfm-ne-2} two SFM plots exemplify this behavior, one with a Logloss metric and the other with AUC. 
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{sfm-cluster1-logloss-ne.png}
+    \caption{SFM plot for $\mathcal{S}(C_1, \eta^{(1)}_{NE}, Logloss)$}
+    \label{fig:sfm-ne-1}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{sfm-cluster6-auc-ne.png}
+    \caption{SFM plot for $\mathcal{S}(C_6, \eta^{(6)}_{NE}, AUC)$}
+    \label{fig:sfm-ne-2}
+\end{figure}
+
+One possible explanation for these results can be that the hyperparameter space chosen for \code{num\_estimators}  (see Subsection \ref{subsec:hp-space-num-est}) didn't cover the most significant values for it. In the results of \cite{probst2018tunability}, the optimal default value for the number of estimators (in their case \code{n\_rounds}) is 4168, and the optimal tuning quantiles $q_5$ and $q_{95}$ for the number of boosting iterations were $920.7$ and $4550.95$, respectively. This means that a good improvement to assess the number of estimators impact is to increase the upper limit in the hyperparameter space of this study to at least $4550$ estimators, using the values from \cite{probst2018tunability}.
+
+\subsection{\texorpdfstring{\Large$\eta_{MD}$}{}}
+
+The maximum depth is the individual hyperparameter (i.e. treatments with only one type of hyperparameter being changed) that had the highest significant changes in the performance metrics over all analyzed clusters. The treatment effects are very intuitive and confirm the expected behavior of changing the maximum depth of the trees in machine learning models. This behavior being that small values of maximum depth will limit the model complexity (i.e. it's a form of regularization) and higher values will increase it, which can be seen in Figure \ref{fig:sfm-md-1}.
+
+Very low values of maximum depth generates models with poor performance, which then increases as the maximum depth rises, achieving an ``optimal point''. Then it starts decreasing, probably because the models start to overfit due to high complexity.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{sfm-cluster3-auc-md.png}
+    \caption{SFM plot for $\mathcal{S}(C_3, \eta^{(3)}_{MD}, AUC)$}
+    \label{fig:sfm-md-1}
+\end{figure}
 
 
-{\Huge posthoc stuff}
+\subsection{\texorpdfstring{\Large$\eta_{LR}$}{}}
 
+The learning rate hyperparameter had a small number of significant results, but when analyzing the absolute value of the experiment's $\hat{\tau_i}$, their overall absolute impact is smaller than $\eta_{MD}$. Increasing the value of the learning is a way to increase the ``steps'' in the \textit{optimization space} of an algorithm. Both the $\delta_{AUC}$ plot and the SFM plot in Figures \ref{fig:delta-auc-cluster3-lr} and \ref{fig:sfm-lr-1} show a similar pattern, where low values of learning rate usually have a worse performance metric than high values of learning rate. This probably happens because all other hyperparameters are kept the same, and the learning rate increases the effect of each boosting iteration, which can yield a better model if the number of boosting iterations (\code{num\_estimators}) is relatively low.
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.9\textwidth]{delta_auc-cluster3-lr.png}
+    \caption{$\delta_{AUC}$ plot for $\mathcal{S}(C_3, \eta^{(3)}_{LR}, AUC)$}
+    \label{fig:delta-auc-cluster3-lr}
+\end{figure}
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.9\textwidth]{sfm-cluster1-brier-lr.png}
+    \caption{SFM plot for $\mathcal{S}(C_1, \eta^{(1)}_{LR}, Brier)$}
+    \label{fig:sfm-lr-1}
+\end{figure}
 
+Comparing these results with \cite{van2018hyperparameter}, it would be better to use a log scale in this hyperparameter space, instead of a uniformly spaced learning rate values: probably the magnitude of the learning rate values was too small to really observe the full impact of the learning rate individually. Another fact is that some of the learning rate experiments didn't had enough samples when testing their significance, so a possible improvement for future work is to increase the number of learning rates values considered.
 
-// separar em 2 capitulos:
+\subsection{\texorpdfstring{\Large$\eta_{MD, LR}$}{}}
 
-1 - analise de metafeatures
-2 - analise de sensibilidade
+The combination of changing both the maximum depth and learning rate ($\eta_{MD, LR}$) in the machine learning models is the one combination that had the highest number of significant changes in performance metrics, according to Kruskal–Wallis tests. For instance, 100\% of the scenarios with $\eta_{MD, LR}$ and $\delta_{Brier}$ have had a significant difference in the treatment means, the only hyperparameter combination to do so.
 
+As explained in the last Subsection, the learning rate can increase (or ``accelerate'') the search over the gradient boosting optimization space, and the results shown here confirm this intuition. First, we can observe in Figure \ref{fig:sfm-mdlr-1} and Figure \ref{fig:sfm-mdlr-2} the same behavior found in the SFM plots from the experimental scenarios where the treatments are only the max depth $\eta_{MD}$, albeit reversed because the figures shown here display the Brier Score instead of AUC. The other evidence is that, by looking at the statistical tests results in Table \ref{table:stats-sig}, one can see that all significant experiments for treatment $\eta_{MD}$ are also significant for $\eta_{MD, LR}$, but there's a number of experiments from column $\eta_{MD}$ which aren't significant that became significant when the treatment is $\eta_{MD, LR}$. 
 
-% \\\CONCERNS about this, and how multiple points for a given $h$, using a robust statistical test can give us more guarantee about the actual result; The study will capture mostly changes in the AUC, not if the models are already good
-% thsi measure will capture the dataset sensitivity as well
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.9\textwidth]{sfm-cluster3-brier-mdlr.png}
+    \caption{SFM plot for $\mathcal{S}(C_3, \eta^{(3)}_{MD, LR}, Brier)$}
+    \label{fig:sfm-mdlr-1}
+\end{figure}
 
-
-% \ref{plot of a single delta metric - AUC}
-% \ref{plot of a single delta metric - Brier Score}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=.9\textwidth]{sfm-cluster1-brier-mdlr.png}
+    \caption{SFM plot for $\mathcal{S}(C_1, \eta^{(1)}_{MD, LR}, Brier)$}
+    \label{fig:sfm-mdlr-2}
+\end{figure}
