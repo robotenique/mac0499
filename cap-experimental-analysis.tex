@@ -2,7 +2,7 @@
 \chapter{Experimental Analysis}
 \label{cap:experimental-analysis}
 
-Each dataset pipeline result has all evaluted metrics (AUC, Brier and Logloss), the dataset statistics (described in \ref{dataset-aggregated-statistics}) and the generated hyperparameter space according to Section \ref{sec:hyperparam-space} of Chapter \ref{cap:study-methodology}.
+Each dataset pipeline result has all evaluated metrics (AUC, Brier and Logloss), the dataset statistics (described in \ref{dataset-aggregated-statistics}) and the generated hyperparameter space according to Section \ref{sec:hyperparam-space} of Chapter \ref{cap:study-methodology}.
 
 The focus of this Chapter is to give an overview of the main experimental analysis, how the datasets were clustered and a basic explanation of the statistical theory necessary for the analysis and statistical framework used.
 
@@ -446,7 +446,7 @@ The test of assumptions is applied to every \textbf{experimental scenario} $\mat
        
     \item Perform a {\large\textbf{Shapiro–Wilk test}} for the normality assumption with $\alpha\text{-level} = 0.05$. In almost all of the experimental scenarios the test rejected the null hypothesis that the residuals are normally distributed with $p$-value less than $0.05$.
 
-    \item To validate the homoscedasticity assumption, a statistical test for equality of variance is also performed on the residuals. As indicated in \cite{montgomery2017design}, these statistical procedures are testing the folowing hypotheses:
+    \item To validate the homoscedasticity assumption, a statistical test for equality of variance is also performed on the residuals. As indicated in \cite{montgomery2017design}, these statistical procedures are testing the following hypotheses:
     \begin{align*}
         H_0 &: \sigma^2_1 =  \sigma^2_2 = \cdots =  \sigma^2_k \\
         H_1 &: \text{above not true for at least one } \sigma^2_i    
