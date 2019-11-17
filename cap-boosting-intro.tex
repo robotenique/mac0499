@@ -4,7 +4,7 @@
 
 \textit{Gradient Boosting Machines}(GBM) is a machine learning algorithm, based on the idea of additive models from statistics and gradient descent. GBM works by building a forward stagewise additive model by performing gradient descent in function space, as proposed by \cite{gbmdef}. 
 
-Gradient Boosting, especially tree based gradient boosting, has been achieving state-of-the-art results in many datasets (\cite{li2012robust}), especially with tabular data. It's a widely-used machine learning algorithm due to its efficiency, accuracy, and interpretability, according to \cite{ke2017lightgbm}. The \textit{Additive Modeling} technique and the \textit{Gradient Descent} algorithm are key ideas to GBMs, and are briefly introduced below.
+Gradient Boosting, especially tree based gradient boosting, has been achieving state-of-the-art results in many datasets (\cite{li2012robust}), especially with tabular data. it is a widely-used machine learning algorithm due to its efficiency, accuracy, and interpretability, according to \cite{ke2017lightgbm}. The \textit{Additive Modeling} technique and the \textit{Gradient Descent} algorithm are key ideas to GBMs, and are briefly introduced below.
 
 %% ------------------------------------------------------------------------- %%
 \section{Additive Model}\index{additive!model}\index{regression}
@@ -72,7 +72,7 @@ Since GBMs deal with finite data, they optimize the functions in terms of the su
     F_M(x) = F_0(x) + \sum_{m=1}^M F_m(x)
 \end{equation}
 
-The $F_m(x)$ functions are boosted functions built in a stagewise fashion, just like the $\theta_t$ in gradient descent. The base functions are learners, and they can be paremeterized as $\beta_mh(x;a_m)$, where $\beta_m$ is a weight, and $a_m$ the learner parameters. In most implementations the base functions are tree-based learners, but they could be any learner where it's possible to assign weights. Also, given a loss function $L(y_i, F_m(x_i))$, we would like to find all the optimal values of $a_m$ and $\beta_m$ that would minimize the loss function, ie., if we have $M$ functions:
+The $F_m(x)$ functions are boosted functions built in a stagewise fashion, just like the $\theta_t$ in gradient descent. The base functions are learners, and they can be paremeterized as $\beta_mh(x;a_m)$, where $\beta_m$ is a weight, and $a_m$ the learner parameters. In most implementations the base functions are tree-based learners, but they could be any learner where it is possible to assign weights. Also, given a loss function $L(y_i, F_m(x_i))$, we would like to find all the optimal values of $a_m$ and $\beta_m$ that would minimize the loss function, ie., if we have $M$ functions:
 
 \begin{equation*}
 \{\beta_m, a_m\}_1^M = \argmin_{\{\beta_m^\apsimple, a_m^\apsimple\}_1^M} \sum_{i=1}^n L\bigg(\yisup, \sum_{m=1}^M \beta_m^\apsimple h(\xisup;a_m^\apsimple)\bigg)
@@ -136,13 +136,13 @@ These improvements and a parallel tree learning architecture are the main reason
   \end{figure}
   
 
-However, the algorithm used in this study is the novel \textbf{LightGBM}, created in 2017 by Microsoft Research in \cite{ke2017lightgbm}. It's important to understand the basic principles and improvements of XGBoost, since its the chosen baseline for performance comparison in XGBoost. There are two main ideas behind LightGBM, both trying to improve the scalability of the gradient boosting process for highly-dimensional data.
+However, the algorithm used in this study is the novel \textbf{LightGBM}, created in 2017 by Microsoft Research in \cite{ke2017lightgbm}. it is important to understand the basic principles and improvements of XGBoost, since its the chosen baseline for performance comparison in XGBoost. There are two main ideas behind LightGBM, both trying to improve the scalability of the gradient boosting process for highly-dimensional data.
 
 First, they propose a new technique for estimation of information gain called \textit{Gradient-based One-Side Sampling} (GOSS). Since one of the most time consuming tasks in the learning process in gradient boosting is to find the split for the trees, usually some sort of sampling is done in this step for efficiency purposes. The researchers noticed that the gradient for each data point in the boosting process has useful information for a smarter data sampling strategy. In the paper \cite{ke2017lightgbm} explains that ``(...) if an instance is associated with a small gradient, the training error for this instance is small and it is already well-trained''. A data sampling strategy is then built based on the rank of the absolute value of the gradient for each instance, sampling instances with higher gradient and subsampling instances with small gradients. The idea is to put more focus on the under-trained instances but keeping the data distribution closer to the original. GOSS has a theoretical proof that its estimation power and generalization performance is close to using the full data, and better than random sampling.
 
-To reduce the number of features, LightGBM develops a technique called \textit{Exclusive Feature Bundling}. It makes use of the high sparsity usually present in high-dimensional data, by designing a `` (...)nearly lossless approach to reduce the number of features''. Since commonly there are many features which are mutually exclusive (never take nonzero values simultaneously), they can be bundled into a single feature. This reduces significantly the algorithmic complexity of the algorithm, since it's basically reducing the number of features. 
+To reduce the number of features, LightGBM develops a technique called \textit{Exclusive Feature Bundling}. It makes use of the high sparsity usually present in high-dimensional data, by designing a `` (...)nearly lossless approach to reduce the number of features''. Since commonly there are many features which are mutually exclusive (never take nonzero values simultaneously), they can be bundled into a single feature. This reduces significantly the algorithmic complexity of the algorithm, since it is basically reducing the number of features. 
 
-Since in this work the impact of \textbf{hyperparameters} from LightGBM is studied, it's important to understand the basics of hyperparameters in these algorithms, covered in the next section.
+Since in this work the impact of \textbf{hyperparameters} from LightGBM is studied, it is important to understand the basics of hyperparameters in these algorithms, covered in the next section.
 
 %% ------------------------------------------------------------------------- %%
 \section{Hyperparameters}\index{boosting}\index{gradient!boosting!machines}\index{hyperparameter}
@@ -163,11 +163,11 @@ In the documentation from \cite{lightgbmparams}, there are a list of more than 2
 
     \item \textbf{\code{num\_leaves}}
     
-    This hyperparameter control the maximum number of leaves to grow on each boosting iteration, and it's the main way to control the model complexity. By default, LightGBM has no tree maximum depth limit, so this is the main way to apply regularization on the structure of the model. 
+    This hyperparameter control the maximum number of leaves to grow on each boosting iteration, and it is the main way to control the model complexity. By default, LightGBM has no tree maximum depth limit, so this is the main way to apply regularization on the structure of the model. 
 
     \item \textbf{\code{min\_data\_in\_leaf}}
     
-    Controls the minimum number of data points required to grow a new leaf, it's very important since it helps prevent overfitting in leaf-wise trees. From practical experience, this parameter is one of the most sensitive to the number of training samples.
+    Controls the minimum number of data points required to grow a new leaf, it is very important since it helps prevent overfitting in leaf-wise trees. From practical experience, this parameter is one of the most sensitive to the number of training samples.
 
     \item \textbf{\code{max\_depth}}
     
@@ -175,7 +175,7 @@ In the documentation from \cite{lightgbmparams}, there are a list of more than 2
 
     \item \textbf{\code{learning\_rate}}
     
-    The learning rate is the parameter $\eta$ from the equation \ref{eq:gbm-eta}, and controls the influence of each new learner. In practice, this isn't usually a "tunable" hyperparameter, but rather used in combination with other hyperparameters in the tuning process (e.g. higher learning rate makes the training of the model faster, therefore allowing for faster model tuning). This is one of the hyperparameters analyzed in this study. 
+    The learning rate is the parameter $\eta$ from the equation \ref{eq:gbm-eta}, and controls the influence of each new learner. In practice, this is not usually a "tunable" hyperparameter, but rather used in combination with other hyperparameters in the tuning process (e.g. higher learning rate makes the training of the model faster, therefore allowing for faster model tuning). This is one of the hyperparameters analyzed in this study. 
 
    \item \textbf{\code {n\_estimators}}
    

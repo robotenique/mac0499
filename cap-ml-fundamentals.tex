@@ -50,7 +50,7 @@ When the codomain of $f(x)$ is finite, i.e. $\ytarget$ can assume a finite set o
     \label{fig:binaryclassifier}
 \end{figure}
 
-The Email Spam detection problem described in the last section is a binary classification problem, since the output is binary, either is spam, or isn't. In this work, the focus will be on \textbf{binary classification} problems and its specific metrics.
+The Email Spam detection problem described in the last section is a binary classification problem, since the output is binary, either is spam, or is not. In this work, the focus will be on \textbf{binary classification} problems and its specific metrics.
 
 %% ------------------------------------------------------------------------- %%
 \section{Classification Metrics}\index{tree}\index{classifier}\index{metrics}\index{AUC}
@@ -63,7 +63,7 @@ In a binary classifier, each prediction of the model is a number between 0 and 1
 The intuition behind choosing these specific metrics are:
 
 \begin{itemize}
-    \item AUC is widely used in research, and it's a good metric insensitive to \textit{class imbalance}, having a bounded value between 0 and 1;
+    \item AUC is widely used in research, and it is a good metric insensitive to \textit{class imbalance}, having a bounded value between 0 and 1;
     \item Logloss is the direct function optimized in the experiments, i.e. the gradient boosting steps are trying to reduce the logarithmic loss in each step. The logloss takes into account the uncertainty of the prediction and how much the actual label differ from it;
     \item Brier score has good statistical properties, according to \cite{rufibach2010use} it also addresses simultaneously probability calibration, consistency between predicted probabilities and the observation as well as \textit{sharpness}, which is related to the concentration of the predictive distribution;
 \end{itemize}
@@ -88,7 +88,7 @@ where TP, FP, TN and FN stands for \textit{True Positives}, \textit{False Positi
 
 \subsection{Brier Score}
 
-The \textbf{brier score} is the mean squared difference between the predicted probabilities and the actual labels. Similar to the AUC, brier score is a bounded measure from 0 to 1, but it's interpretation and ordering is different: 0 is the best possible brier score, while 1 is the worst. The actual equation is shown in \ref{eq:brier-score}.
+The \textbf{brier score} is the mean squared difference between the predicted probabilities and the actual labels. Similar to the AUC, brier score is a bounded measure from 0 to 1, but it is interpretation and ordering is different: 0 is the best possible brier score, while 1 is the worst. The actual equation is demonstrated in \ref{eq:brier-score}.
 
 Brier score can sum up different components related to forecasting, especially taking into account the calibration of the predicted probabilities. In \cite{murphy1973new} there's an insightful partition of the Brier Score in three components, according to the article: ``a measure of the uncertainty inherent in the events, or states, on the occasions of concern (...); a measure of the reliability of the forecasts; and  a new measure of the resolution of the forecasts''.
 
@@ -144,4 +144,3 @@ The actual learning process of a decision tree is called an \textit{induction} o
 The learning process of classification trees consists in multiple iterations to choose optimal splits given the training data provided, according to some criteria. Common optimization criteria are usually derived from Information Theory, like the Gini Index, Cross-Entropy and misclassification error. In practical usages and because of numeric properties (see \cite{hastie2009elements}), Gini Index and Cross-Entropy are favored over the misclassification error.
 
 Typical hyperparameters of classifications trees refer to the actual structure of the tree. The \textit{maximum depth} hyperparameter controls how deep the tree can grow, i.e. how many splits will it have, \textit{minimum leaf samples} controls the minimum number of samples each leaf must have, etc. For an extensive empirical study of decision tree hyperparameter tuning, one can refer to \cite{mantovani2018empirical}.
-%% ------------------------------------------------------------------------- %%

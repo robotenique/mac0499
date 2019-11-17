@@ -47,7 +47,7 @@ OpenML provides a python API package for automatically retrieving datasets, task
     \label{fig:openml-eda1}
 \end{figure}
 
-After all these filters, the number of valid datasets for the experiment would be close to 400 (figure \ref{fig:openml-eda1}), in theory. However, a lot of datasets could not be opened by the python API due to a variety of errors, mostly related to Attribute-Relation File Format (ARFF) in python. This brought the number of possible datasets to experiment close to $200$, but since each hyperparameter experiment takes a long time to run (favoring more hyperparameter space covered over the number of datasets, check \ref{subsec:hp-tree}), the final number of datasets analyzed in this study is 70.
+After all these filters, the number of valid datasets for the experiment would be close to 400 (figure \ref{fig:openml-eda1}), in theory. However, several of datasets could not be opened by the python API due to a variety of errors, mostly related to Attribute-Relation File Format (ARFF) in python. This brought the number of possible datasets to experiment close to $200$, but since each hyperparameter experiment takes a long time to run (favoring more hyperparameter space covered over the number of datasets, check \ref{subsec:hp-tree}), the final number of datasets analyzed in this study is 70.
 
 
 Each dataset retrieved by the OpenML API has a dataset id (\code{did}) related to it, along with very useful metadata related to it, as it can be seen in Figure \ref{fig:openml-eda3}. With a simple exploratory analysis of the datasets it was observed a great number of datasets with high number of categorical variables, and usually high number of features too. Datasets with only textual data as features were also removed from the study, along with features not explicitly indicated as a categorical feature by the API.
@@ -75,7 +75,7 @@ Analyzing the number of instances in the subset of datasets used in this study, 
 In this study there are only two data cleaning steps, with the objective to keep the cleaned dataset as close as possible to the original to not interfere with the experiment results.
 \begin{enumerate}
     \item The OpenML provides an attribute describing which of the features in the dataset are the categorical features; In the dataset building process, the type of each variable is identified (using \textit{pandas-profiling} package), and from each identified feature as "categorical", remove all that aren't explicitly declared by the OpenML attributes;
-    \item The data in each OpenML dataset doesn't follow a specific pattern, e.g. some datasets represent the \textbf{target} variable as a string (\textit{'y'} and \textit{'n'}), some are represented in floating point, Boolean, etc. In the experiment pipeline, the \textbf{target} is converted to an integer, if possible. If not, the \textbf{target} is encoded using a \textit{label encoder}.
+    \item The data in each OpenML dataset does not follow a specific pattern, e.g. some datasets represent the \textbf{target} variable as a string (\textit{'y'} and \textit{'n'}), some are represented in floating point, Boolean, etc. In the experiment pipeline, the \textbf{target} is converted to an integer, if possible. If not, the \textbf{target} is encoded using a \textit{label encoder}.
 \end{enumerate}
 
 %% ------------------------------------------------------------------------- %%
@@ -96,7 +96,7 @@ To analyze subgroups of datasets and categorize each one of them, multiple stati
     As an example, if 90\% of the values of a given feature is the same, then the categorical variability of the said feature is $0.1$.
 \end{itemize}
 
-For \textbf{numeric features}, the main specific statistic calculated is the sample \textbf{skewness} of each feature. Skewness is a degree of distortion of a distribution, and in this study it's calculated using the unbiased adjusted Fisher–Pearson standardized moment coefficient from \textit{pandas}. The skewness is also trying to measure the variability of the numeric features, and is used in the clustering of each dataset as a feature.
+For \textbf{numeric features}, the main specific statistic calculated is the sample \textbf{skewness} of each feature. Skewness is a degree of distortion of a distribution, and in this study it is calculated using the unbiased adjusted Fisher–Pearson standardized moment coefficient from \textit{pandas}. The skewness is also trying to measure the variability of the numeric features, and is used in the clustering of each dataset as a feature.
 
 The pipeline also calculates other useful statistics for each feature, like the percentiles, number of NaNs, infinite values, mean, median, etc. They're useful in the exploratory step, but are not used when clustering the datasets in the result analysis step.
 
@@ -104,7 +104,7 @@ The pipeline also calculates other useful statistics for each feature, like the 
 \section{Hyperparameter space}
 \label{sec:hyperparam-space}
 
-In section \ref{gbm-hyperparams} it's explained the basic hyperparameters used in LightGBM's gradient boosting algorithm. In this section the \textit{hyperparameter space}\footnote{In model tuning, the \textit{hyperparameter space} is the set of all the values each hyperparameter can assume in the tuning process.} of this study is explained, along with a simple overview of the hypothesis behind each distribution choice, related to LightGBM default hyperparameters and dataset size.  Let $D_i$ denote the number of instances of the $i$-th dataset, i.e. the total number of $\supervised$ pairs for the $i$-th dataset. 
+In section \ref{gbm-hyperparams} it is explained the basic hyperparameters used in LightGBM's gradient boosting algorithm. In this section the \textit{hyperparameter space}\footnote{In model tuning, the \textit{hyperparameter space} is the set of all the values each hyperparameter can assume in the tuning process.} of this study is explained, along with a simple overview of the hypothesis behind each distribution choice, related to LightGBM default hyperparameters and dataset size.  Let $D_i$ denote the number of instances of the $i$-th dataset, i.e. the total number of $\supervised$ pairs for the $i$-th dataset. 
 
 \subsection{Hyperparameters tree}
 \label{subsec:hp-tree}
@@ -154,13 +154,13 @@ $$HS_1 = \Big\{\{0.1, 0.2\}, \{1, 2\}, \{10, 20\}\Big\}$$
     (0.2, 1, 10), (0.2, 1, 20), (0.2, 2, 10), (0.2, 2, 20)\}\Big\}
 \end{align*}
 
-It can be observed that the number of hyperparameters in each tree node increase multiplicatively with the number of initial hyperparameters and the number of layers $k$ in the hyperparameter tree, and it's one of the reasons why the experiment may take a long time to run depending on the dataset. This was the chosen configuration of the experiment since the objective is not to perform a model tuning, but rather to measure the "magnitude" of the effects in performance metrics. Better strategies could be used for model tuning like Grid Search, Random Search or Bayesian Optimization, as it's stated in \cite{probst2018tunability}.
+It can be observed that the number of hyperparameters in each tree node increase multiplicatively with the number of initial hyperparameters and the number of layers $k$ in the hyperparameter tree, and it is one of the reasons why the experiment may take a long time to run depending on the dataset. This was the chosen configuration of the experiment since the objective is not to perform a model tuning, but rather to measure the "magnitude" of the effects in performance metrics. Better strategies could be used for model tuning like Grid Search, Random Search or Bayesian Optimization, as it is stated in \cite{probst2018tunability}.
 
 \subsection{Maximum Depth}
 \label{subsec:max-depth}
 The maximum depth is the hyperparameter that controls the maximum possible depth each boosting tree can have. As explained in Section \ref{gbm-hyperparams}, LightGBM default behavior is to grow the trees leaf-wise, having an unbound maximum depth, but the structure being controlled by the number of leaves in the tree. Max depth is a way to apply a constraint on the function space, i.e. the possible hypothesis the learning algorithm can use, and is commonly optimized in classical decision trees for pruning. 
 
-Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree isn't as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constraint the model, one can overfit in the data given a high enough number of boosting iterations : this can be seen as an ``overfit relationship'' between \code{max\_depth} and \code{num\_estimators}. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there's isn't a clear rule to choose an optimal value. 
+Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree is not as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constraint the model, one can overfit in the data given a high enough number of boosting iterations : this can be seen as an ``overfit relationship'' between \code{max\_depth} and \code{num\_estimators}. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there's is not a clear rule to choose an optimal value. 
 
 In this study, the tested maximum depth values are always the same, independent on the dataset size:
 
@@ -170,7 +170,7 @@ In the experiments $N_{MD} = 20$, so each dataset is run using max depth from $3
 
 \subsection{Learning rate}
 
-The learning rate distribution is simple, and it depends only on the dataset size $D_i$. In XGBoost the default value of learning rate (also called \textit{eta}) is $0.3$ and in LightGBM it's $0.1$, which is also the default learning rate for \textit{scikit-learn} implementation of gradient boosting. Since in the OpenML datasets the dataset sizes aren't too similar (see Figure \ref{fig:openml-eda2}), the distribution of learning rate values to generate is a simple function starting from $0.01$ for small datasets, changing based on the dataset size.
+The learning rate distribution is simple, and it depends only on the dataset size $D_i$. In XGBoost the default value of learning rate (also called \textit{eta}) is $0.3$ and in LightGBM it is $0.1$, which is also the default learning rate for \textit{scikit-learn} implementation of gradient boosting. Since in the OpenML datasets the dataset sizes aren't too similar (see Figure \ref{fig:openml-eda2}), the distribution of learning rate values to generate is a simple function starting from $0.01$ for small datasets, changing based on the dataset size.
 
 \textbf{Premise:} Start with a learning rate value between $0.01$ for small datasets, and a multiple of $0.1$ for bigger datasets (a rule was defined by dividing $D_i$ by $10000$). Then, experiment with bigger and smaller values of learning rate around the "middle" value.
 
