@@ -97,7 +97,7 @@ In the analysis, a SFM model is fitted for every experimental scenario. After th
 The SFM plots are the final plots for the analysis done in this study. They become increasingly difficult to read the higher the dimensionality of the treatments, i.e. the higher the number of different hyperparameters being changed at the same time.
 
 %% ------------------------------------------------------------------------- %%
-\section{Hyperparameters Results}
+\section{Result by Hyperparameters}
 
 In this part, the hyperparameters combinations are analyzed individually for their impact obtained with the experimental results.
 
@@ -247,7 +247,7 @@ In some metrics and clusters, the SFM plot for $\eta_{NE, MD, LR}$ is very noisy
 \end{figure}
 
 %% ------------------------------------------------------------------------- %%
-\section{Hyperparameter Combination Effect}
+\section{Results by Hyperparameter Combination Effect}
 
 Another perspective of analysis of the experiments results is about the ``combination effect'' of the hyperparameters, i.e. how changing one hyperparameter individually, in pairs or in triples differ in terms of significant difference in the performance metrics $\delta_{metric}$.
 
@@ -348,4 +348,16 @@ Regarding the performance metrics of the study, described in  Section \ref{class
     \label{table:stats-metrics}
 \end{table}
 
-The higher percentage of significance of the logarithmic loss is expected, since it is the metric being optimized in all LightGBM binary classification models of the study. Logloss is not bound to the $\left[0, 1\right]$ interval as AUC and Brier, which means, in practice, that the treatment values of the logloss The similarity of the percentage of Table \ref{table:stats-metrics} between the Brier Score and Logloss is partially expected, as both metrics assess the value of the predicted probabilities of the classifier.
+The higher percentage of significance of the logarithmic loss is expected, since it is the metric being optimized in all LightGBM binary classification models of the study. Logloss is not bound to the $\left[0, 1\right]$ interval as AUC and Brier Score, which means in practice the treatment values of the Logloss aren't as interpretable when compared to other metrics. The similarity of the percentage of Table \ref{table:stats-metrics} between the Brier Score and Logloss is partially expected, as both metrics assess the value of the predicted probabilities of the classifier.
+
+At the same time, the AUC does not directly evaluate the performance of the predicted probabilities themselves, but it actually assess the relative ordering of the classifier. For this reason, results like the one observed in Cluster 4 can happen, i.e. the relative ordering performance can be kept the same while the forecasted probabilities can be better. The highest change of the $\delta_{AUC}$ was in the experimental scenario $\mathcal{S}(C_5, \eta^{(5)}_{NE, MD, LR}, AUC)$ illustrated in Figure \ref{fig:sfm-cluster5-auc-nemdlr}, albeit mostly worse AUC than baseline --- probably because Cluster 5 datasets have relatively few instances that make the models easy to overfit.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.9\textwidth]{sfm-cluster5-auc-nemdlr.png}
+    \caption{$\delta_{AUC}$ plot for $\mathcal{S}(C_5, \eta^{(5)}_{NE, MD, LR}, AUC)$}
+    \label{fig:sfm-cluster5-auc-nemdlr}
+\end{figure}
+
+
+Several clusters in the study have imbalanced datasets, and it is known that AUC isn't the most informative metric in imbalanced situations, as described in \cite{saito2015precision}. In future work, a possible improvement is to use the Precision-Recall curve for imbalanced datasets, as it provides a better interpretation and of the classifier performance in these cases.
