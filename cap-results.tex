@@ -96,7 +96,7 @@ In the analysis, a SFM model is fitted for every experimental scenario. After th
 The SFM plots are the final plots for the analysis done in this study. They become increasingly difficult to read the higher the dimensionality of the treatments, i.e. the higher the number of different hyperparameters being changed at the same time.
 
 %% ------------------------------------------------------------------------- %%
-\section{Hyperparameters results}
+\section{Hyperparameters Results}
 
 In this part, the hyperparameters combinations are analyzed individually for their impact obtained with the experimental results.
 
@@ -243,3 +243,33 @@ In some metrics and clusters, the SFM plot for $\eta_{NE, MD, LR}$ is very noisy
     \caption{SFM plot for $\mathcal{S}(C_1, \eta^{(1)}_{NE, MD, LR}, Logloss)$}
     \label{fig:sfm-nemdlr-2}
 \end{figure}
+
+%% ------------------------------------------------------------------------- %%
+\section{Hyperparameter Combination Effect}
+
+Another perspective of analysis of the experiments results is about the ``combination effect'' of the hyperparameters, i.e. how changing one hyperparameter individually, in pairs or in triples differ in terms of significant difference in the performance metrics $\delta$.
+
+Theoretically, training models while changing multiple hyperparameters in a model tuning process means more hyperparameter space is covered. For example, the Random Search algorithm (see \cite{probst2018tunability}) typically change more than one hyperparameter value at a time, searching for a more ``extensive'' hyperparameter space than changing just a single hyperparameter value each time. This fact can be confirmed in study, at least for the clusters analyzed here. Table \ref{table:stats-combination} show the percentage of scenarios which a significant change in the metrics was observed in the study.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{l|lcc}
+              & \multicolumn{3}{c}{\textbf{Metric}}                                 \\
+              & \multicolumn{1}{c}{$\delta_{AUC}$} &  \multicolumn{1}{c}{$\delta_{Brier}$} &  \multicolumn{1}{c}{$\delta_{Logloss}$} \\
+    \textbf{Combinations} &          & \multicolumn{1}{l}{} & \multicolumn{1}{l}{} \\
+    \midrule
+   \multicolumn{1}{c}{Individual} & $22.2\%$ & $22.2\%$ & $38.8\%$\\
+   \multicolumn{1}{c}{Pair}       & $38.8\%$ & $55.5\%$ & $50\%$\\
+   \multicolumn{1}{c}{Triple}     & $66.6\%$ & $66.6\%$ & $66.6\%$
+    \end{tabular}
+    \caption{Percentage of statistically significant results for each comparison and metric}
+    \label{table:stats-combination}
+\end{table}
+
+In practice changing a lot of hyperparameters at the same time can be costly, which is one of the reasons a Bayesian Optimization or multi-stage optimization can be performed, e.g. the multi-stage algorithm described in \cite{wang-etal-2015-efficient}. Using the results of this study, the typical trade-off between computational complexity and search space in the model tuning can be better evaluated depending on the case. For instance, one could start a gradient boosting model tuning process by changing \code{max\_depth} and \code{learning\_rate} at the same time, as it's a pair of hyperparameters (it's faster to run than a triple or higher number of combinations) that resulted in a high percentage of statistically significant SFM models (the models are highly sensitive to this combination of hyperparameters).
+
+    
+%% ------------------------------------------------------------------------- %%
+\section{Results by Cluster}
+
+Each cluster result can also provide useful insights related to the datasets inside the cluster and how sensitive they are w.r.t different combinations of hyperparameters. In this section the main observations from each cluster results are addressed, along with possible explanations for their behavior.
