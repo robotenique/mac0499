@@ -2,4 +2,18 @@
 \chapter{Conclusion}
 \label{cap:conclusion}
 
-a
+The comprehension of hyperparameters effects and its impacts on performance metrics is very important in the process of building a good machine learning model. Throughout this study, different aspects of the interaction between gradient boosting hyperparameters and performance metrics were observed and analyzed, providing an insight into how they affect a model.
+
+In this work, a large-scale benchmark was done using 70 different binary classification datasets, which provided enough results to observe how each combination of hyperparameter affected the metrics. Using a solid analysis of variance statistical framework, the experimental results of this work also take into account the statistical significance of each experimental scenario. It was found that some combinations of hyperparameters highly impacted the machine learning models, like the combination of maximum depth and learning rate, while others had a small impact. 
+
+The final results also present a variety of single-factor models that estimate the impact effect of each hyperparameter(s) value(s), while at the same time providing useful information about the overall behavior of the hyperparameter in the datasets of the study. Some of the effects observed could be isolated due to the characteristics of some datasets, like the number of features and proportion of categorical features. These insights may prove useful when building new gradient boosting models from scratch, by giving a better idea of which hyperparameters to tackle first depending on the characteristics of the dataset.
+
+\section{Limitations and Future Work}
+
+Given the amount of computational time taken to completely run the study (approximately one month, sharing the workload in parallel between 4 different machines), the scope of this study had to be reduced. First, it only considers binary classification problems, even though the experiment comprises a fairly decent number of 70 datasets. Future work could expand the experiment to analyze the hyperparameters interactions on multiclass classification, regression, ranking, survival models, etc.
+
+The experiment pipeline is rather solid, so it could also be extended with different values, or even with different techniques other than gradient boosting. For instance, different types of hyperparameters could be analyzed in future work, or different combinations of hyperparameters. In this regard, a different framework could be used, like a Functional ANOVA or even a surrogate model to assess the importance of the hyperparameters.
+
+The hyperparameter space of the study could also increase the gaps between the hyperparameter values, alongside with the maximum level for some of them. A specific limitation found was that the maximum number of estimators generated was probably too small to observe more effects of this hyperparameter. The learning rate could also be generated using a logarithmic scale instead of being uniformly distributed, to generate more different levels of magnitude.
+
+Finally, the clustering strategy could be enriched a lot by adding new information for the datasets. For example, the OpenML platform provides much more characteristics of datasets than the ones it was used here: entropy of the classes, dimensionality, kurtosis of the features, auto correlation, percentage of missing values, etc. These statistics could lead to other useful conclusions, depending on the objective of the research. 
