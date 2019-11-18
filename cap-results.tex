@@ -48,7 +48,7 @@ An important note about homoscedasticity in these results is that the results ca
     \label{table:stats-sig}
 \end{table}
 
-Some interesting insights can be made by inspecting the statistical significance results in Table \ref{table:stats-sig} and the specific $p$-values for the tests in the Table \ref{Appendix} in the Appendix:
+Some interesting insights can be made by inspecting the statistical significance results in Table \ref{table:stats-sig} and the specific $p$-values for the tests in the Table \ref{ape:statistical-tests} in the Appendix:
 
 \begin{enumerate}
     \item For instance, Cluster 3 scenarios failed most of the homoscedasticity tests, but by visually analyzing the $\delta_{metric}$ plot it displays the same behavior of the treatments as the other clusters. However, Cluster 3 datasets are all synthetically generated (as illustrated in Table \ref{table:1}), and this can be a reason why it has so few statistically significant results. In Figure \ref{fig:res-failed-c3} one $\delta_{AUC}$ plot from Cluster 3 results is illustrated.
@@ -58,7 +58,7 @@ Some interesting insights can be made by inspecting the statistical significance
         \caption{$\delta_{AUC}$ for scenario $\mathcal{S}(C_3, \eta^{(3)}_{LR, NE}, AUC)$, which failed the Levene Test; Some datasets $\delta_{AUC}$ increased the variance in treatment groups with very high learning rate and number of estimators}
         \label{fig:res-failed-c3}
     \end{figure}
-    \item Analyzing Table \ref{table:stats-sig} column-wise, the experiments changing the number of estimators ($\eta_{NE}$) and changing both the number of estimators and maximum depth ($\eta_{MD, NE}$) have very few scenarios where there's a significant change in the performance metrics.
+    \item Analyzing Table \ref{table:stats-sig} column-wise, the experiments changing the number of estimators ($\eta_{NE}$) and changing both the number of estimators and maximum depth ($\eta_{MD, NE}$) have very few scenarios where there is a significant change in the performance metrics.
     \item Overall, the Brier Score and Logloss metrics are relatively more sensitive when compared to AUC in the analyzed datasets.
 \end{enumerate}
 
@@ -106,7 +106,7 @@ In this part, the hyperparameters combinations are analyzed individually for the
 
 By analyzing the results of the Kruskal–Wallis tests, without considering the homoscedasticity test, the number of estimators is the hyperparameter that have the least impact on the metrics, on all clusters. The proportion of times this hyperparameter actually provided a significant difference for $\delta_{AUC}$, $\delta_{Brier}$ and $\delta_{Logloss}$ were approximately 16\%, 16\% and 50\% respectively. That is, from all the experimental scenarios with treatments of only changing the number of estimators ($\eta_{NE}$), almost none of them had a significant difference in AUC and Brier Score.
 
-When analyzing the SFM plots, a peculiar behavior was observed on the results of $\eta_{NE}$ experiments. The treatments effects are very noisy, with many intercalating positive and negative results. In many of the SFM plots there's a middle region where the worst treatments appear. In Figures \ref{fig:sfm-ne-1} and \ref{fig:sfm-ne-2} two SFM plots exemplify this behavior, one with a Logloss metric and the other with AUC. 
+When analyzing the SFM plots, a peculiar behavior was observed on the results of $\eta_{NE}$ experiments. The treatments effects are very noisy, with many intercalating positive and negative results. In many of the SFM plots there is a middle region where the worst treatments appear. In Figures \ref{fig:sfm-ne-1} and \ref{fig:sfm-ne-2} two SFM plots exemplify this behavior, one with a Logloss metric and the other with AUC. 
 
 \begin{figure}[H]
     \centering
@@ -141,7 +141,7 @@ Very low values of maximum depth generates models with poor performance, which t
 
 \subsection{\texorpdfstring{\Large$\eta_{LR}$}{}}
 
-The learning rate hyperparameter had a small number of significant results, but when analyzing the absolute value of the experiment's $\hat{\tau_i}$, their overall absolute impact is smaller than $\eta_{MD}$. Increasing the value of the learning is a way to increase the ``steps'' in the \textit{optimization space} of an algorithm. Both the $\delta_{AUC}$ plot and the SFM plot in Figures \ref{fig:delta-auc-cluster3-lr} and \ref{fig:sfm-lr-1} show a similar pattern, where low values of learning rate usually have a worse performance metric than high values of learning rate. This probably happens because all other hyperparameters are kept the same, and the learning rate increases the effect of each boosting iteration, which can yield a better model if the number of boosting iterations (\code{num\_estimators}) is relatively low.
+The learning rate hyperparameter had a small number of significant results, but when analyzing the absolute value of the experiment is $\hat{\tau_i}$, their overall absolute impact is smaller than $\eta_{MD}$. Increasing the value of the learning is a way to increase the ``steps'' in the \textit{optimization space} of an algorithm. Both the $\delta_{AUC}$ plot and the SFM plot in Figures \ref{fig:delta-auc-cluster3-lr} and \ref{fig:sfm-lr-1} show a similar pattern, where low values of learning rate usually have a worse performance metric than high values of learning rate. This probably happens because all other hyperparameters are kept the same, and the learning rate increases the effect of each boosting iteration, which can yield a better model if the number of boosting iterations (\code{num\_estimators}) is relatively low.
 
 \begin{figure}[H]
     \centering
@@ -171,7 +171,7 @@ The combination of changing both the maximum depth and learning rate ($\eta_{MD,
     \label{fig:sfm-mdlr-1}
 \end{figure}
 
-As explained in the last Subsection, the learning rate can increase (or ``accelerate'') the search over the gradient boosting optimization space, and the results shown here confirm this intuition. First, we can observe in Figure \ref{fig:sfm-mdlr-1} and Figure \ref{fig:sfm-mdlr-2} the same behavior found in the SFM plots from the experimental scenarios where the treatments are only the max depth $\eta_{MD}$, albeit reversed because the figures shown here display the Brier Score instead of AUC. The other evidence is that, by looking at the statistical tests results in Table \ref{table:stats-sig}, one can see that all significant experiments for treatment $\eta_{MD}$ are also significant for $\eta_{MD, LR}$, but there's a number of experiments from column $\eta_{MD}$ which aren't significant that became significant when the treatment is $\eta_{MD, LR}$. 
+As explained in the last Subsection, the learning rate can increase (or ``accelerate'') the search over the gradient boosting optimization space, and the results shown here confirm this intuition. First, we can observe in Figure \ref{fig:sfm-mdlr-1} and Figure \ref{fig:sfm-mdlr-2} the same behavior found in the SFM plots from the experimental scenarios where the treatments are only the max depth $\eta_{MD}$, albeit reversed because the figures shown here display the Brier Score instead of AUC. The other evidence is that, by looking at the statistical tests results in Table \ref{table:stats-sig}, one can see that all significant experiments for treatment $\eta_{MD}$ are also significant for $\eta_{MD, LR}$, but there is a number of experiments from column $\eta_{MD}$ which aren't significant that became significant when the treatment is $\eta_{MD, LR}$. 
 
 
 \begin{figure}[H]
@@ -185,7 +185,7 @@ As explained in the last Subsection, the learning rate can increase (or ``accele
 
 This combination of maximum depth and number of estimators had the lowest number of statistically significant experiments: only in two experiments scenarios the null hypothesis of the Kruskal–Wallis test was rejected. This combination, when seen on an individual level (as in Figure \ref{fig:res-mult1}), reveals that possibly treating both maximum depth and number of estimators as a single factor does not captures the overall impact of each hyperparameter. Different approaches might be more useful here, like the \textit{Functional ANOVA} used in \cite{van2018hyperparameter}. Higher limits of the number of estimators distribution could also give a better overall picture of the $\eta_{MD, NE}$, as explained in Subsection \ref{subsec:res-ne}.
 
-However, when analyzing some of the SFM models (even the ones which are heteroscedastic), there's a common pattern in the SFM plots structure. It was explained in \ref{subsec:max-depth} a relationship between max depth and the number of estimators, which describe different ways to change the performance of a classifier based on the magnitude of each hyperparameter.
+However, when analyzing some of the SFM models (even the ones which are heteroscedastic), there is a common pattern in the SFM plots structure. It was explained in \ref{subsec:max-depth} a relationship between max depth and the number of estimators, which describe different ways to change the performance of a classifier based on the magnitude of each hyperparameter.
 
 \begin{figure}[H]
     \centering
@@ -194,7 +194,7 @@ However, when analyzing some of the SFM models (even the ones which are heterosc
     \label{fig:sfm-mdne-2}
 \end{figure}
 
-The same pattern observed in Figure \ref{fig:res-mult1} can be recognized in the SFM plots of the experiments with treatments $\eta_{MD, NE}$. In Figure \ref{fig:sfm-mdne-2} for example, lower values of both \code{max\_depth} and \code{num\_estimators} decreases the AUC, then the AUC increases when there's an equilibrium between both hyperparameter values (the  \textcolor{orange}{orange} section). Finally, the AUC starts decreasing again when both hyperparameter values have high values. There's also a ``middle ground'' where the estimated treatment effects are intercalating, which is an effect of the ordering defined in Subsection \ref{subsec:ordering}: combinations with an average value of maximum depth or number of estimators can increase or decrease the AUC with high variance, which produces the intercalating effect clearly seen in Figure \ref{fig:sfm-mdne-1}.
+The same pattern observed in Figure \ref{fig:res-mult1} can be recognized in the SFM plots of the experiments with treatments $\eta_{MD, NE}$. In Figure \ref{fig:sfm-mdne-2} for example, lower values of both \code{max\_depth} and \code{num\_estimators} decreases the AUC, then the AUC increases when there is an equilibrium between both hyperparameter values (the  \textcolor{orange}{orange} section). Finally, the AUC starts decreasing again when both hyperparameter values have high values. There is also a ``middle ground'' where the estimated treatment effects are intercalating, which is an effect of the ordering defined in Subsection \ref{subsec:ordering}: combinations with an average value of maximum depth or number of estimators can increase or decrease the AUC with high variance, which produces the intercalating effect clearly seen in Figure \ref{fig:sfm-mdne-1}.
 
 \begin{figure}[H]
     \centering
@@ -207,7 +207,7 @@ The same pattern observed in Figure \ref{fig:res-mult1} can be recognized in the
 
 The combination of learning rate and number of estimators yield a similar result to $\eta_{MD, LR}$, with more statistically significant results than individually changing either learning rate or number of estimators individually. The SFM plots from these scenarios follow a $\cup$-shaped pattern for AUC , and the opposite $\cap$-shaped pattern for Brier Score (Figure \ref{fig:sfm-lrne-1}) and Logloss results.
 
-The result is also intuitive, because on one hand a small number of boosting iterations coupled with a small learning rate will likely lead to a very simple gradient boosting model, with low performance on the test set. On the other hand, high values of both learning rate and number of estimators can also generate bad classifiers. In the middle section of the SFM plot there's the highest density of the best treatments, which equilibrate both hyperparameter values.
+The result is also intuitive, because on one hand a small number of boosting iterations coupled with a small learning rate will likely lead to a very simple gradient boosting model, with low performance on the test set. On the other hand, high values of both learning rate and number of estimators can also generate bad classifiers. In the middle section of the SFM plot there is the highest density of the best treatments, which equilibrate both hyperparameter values.
 
 \begin{figure}[H]
     \centering
@@ -218,9 +218,9 @@ The result is also intuitive, because on one hand a small number of boosting ite
 
 \subsection{\texorpdfstring{\Large$\eta_{NE, MD, LR}$}{}}
 
-There's a high proportion of single-factor models of experimental scenarios with $\eta_{NE, MD, LR}$ that are significant. If not taking into account the homoscedasticity violations from Cluster 3 data, this would be the combination with the highest number of significant experiments.
+There is a high proportion of single-factor models of experimental scenarios with $\eta_{NE, MD, LR}$ that are significant. If not taking into account the homoscedasticity violations from Cluster 3 data, this would be the combination with the highest number of significant experiments.
 
-Even though this combination has a high impact on the performance metrics, it is harder to visualize a pattern in the SFM plots due to the high dimensionality of the data. There's a clear pattern throughout all cluster results, although some behaviors can be interpreted from it. Figure \ref{fig:delta-nemdlr-1} illustrates the $\delta_{Logloss}$ plot for all treatment values of $\eta_{NE, MD, LR}$ for Cluster 2, with the respective SFM plot in Figure \ref{fig:sfm-nemdlr-1}: there's a similar $\cup$-shaped pattern as in the $\eta_{LR, NE}$ combinations, but in this case this pattern does not consistently appear in the other clusters experimental results.
+Even though this combination has a high impact on the performance metrics, it is harder to visualize a pattern in the SFM plots due to the high dimensionality of the data. There is a clear pattern throughout all cluster results, although some behaviors can be interpreted from it. Figure \ref{fig:delta-nemdlr-1} illustrates the $\delta_{Logloss}$ plot for all treatment values of $\eta_{NE, MD, LR}$ for Cluster 2, with the respective SFM plot in Figure \ref{fig:sfm-nemdlr-1}: there is a similar $\cup$-shaped pattern as in the $\eta_{LR, NE}$ combinations, but in this case this pattern does not consistently appear in the other clusters experimental results.
 
 % yes, the cluster is 2, there's a typo in the image filename =(
 \begin{figure}[H]
@@ -274,7 +274,7 @@ In practice changing several hyperparameters at the same time can be costly, whi
 %% ------------------------------------------------------------------------- %%
 \section{Results by Cluster}
 
-Each cluster result can also provide useful insights related to the datasets inside the cluster and how sensitive they are w.r.t different combinations of hyperparameters. In this section the main observations from each cluster results are addressed, along with possible explanations for their behavior.
+Each cluster result can also provide useful insights related to the datasets inside the cluster and how sensitive they are w.r.t different combinations of hyperparameters. In this section the main observations from each cluster results are addressed, along with possible explanations for their behavior. To understand this analysis, it is useful to refer to the cluster's ridgeline plots in Appendix \ref{ape:joyplots}.
 
 By using table \ref{table:stats-sig} from Section \ref{sec:stats-significance}, it is possible to summarize the results of the experiments grouping by the cluster number. Table \ref{table:stats-clusters} describes the proportion of statistically significant experiments for each metric on each cluster. This table gives an idea of how sensitive each cluster is to changes in the performance metrics, when subjected to all treatments of this study.
 

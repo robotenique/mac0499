@@ -105,6 +105,36 @@ framexleftmargin=10pt,
 framexrightmargin=10pt
 }
 
+
+
+% commands for symbols
+\newcommand{\mathup}[1]{\text{\textup{#1}}} % upcase a letter
+% Custom commands for mathematical notation
+\newcommand{\xisup}{\bm{x}^{(i)}}
+\newcommand{\yisup}{\bm{y}^{(i)}}
+\newcommand{\yisupred}{\hat{\bm{y}}^{(i)}}
+\newcommand{\supervised}{(\xisup,\yisup)}
+\newcommand{\xmat}{\bm{X}}
+\newcommand{\apsimple}{\textsc{\char13}} % The char ' 
+\newcommand{\ytarget}{\textbf{\mathup{y}}}
+\newcommand{\ypred}{\hat{\textbf{{\mathup{y}}}}}
+\newcommand{\residual}{\textbf{{\mathup{r}}}}
+\newcommand{\code}[1]{\texttt{#1}} % make font monospace
+\newcommand{\ok}{ \textcolor{green}{\checkmark}} % show a green checkmark
+\newcommand{\notok}{\textcolor{red}{$\times$}} % show a red X
+
+
+% use a better epigraph
+\usepackage{epigraph}
+\newcommand{\epigrafe}[2] {%
+  \setlength{\epigraphrule}{0pt}
+  \ifthenelse{\equal{}{#2}}{
+    \epigraph{\itshape\RaggedLeft #1}{}
+  }{
+    \epigraph{\itshape\RaggedLeft #1}{--- #2}
+  }
+}
+
 % ---------------------------------------------------------------------------- %
 % Corpo do texto
 \begin{document}
@@ -207,22 +237,37 @@ língua portuguesa.
 
 
 
-%% % ---------------------------------------------------------------------------- %
-%% \chapter{Lista de Abreviaturas}
-%% \begin{tabular}{ll}
-%%          CFT         & Transformada contínua de Fourier (\emph{Continuous Fourier Transform})\\
-%%          DFT         & Transformada discreta de Fourier (\emph{Discrete Fourier Transform})\\
-%%         EIIP         & Potencial de interação elétron-íon (\emph{Electron-Ion Interaction Potentials})\\
-%%         STFT         & Tranformada de Fourier de tempo reduzido (\emph{Short-Time Fourier Transform})\\
-%% \end{tabular}
+% ---------------------------------------------------------------------------- %
+% \chapter{Lista de Abreviaturas}
+% \begin{tabular}{ll}
+%          CFT         & Transformada contínua de Fourier (\emph{Continuous Fourier Transform})\\
+%          DFT         & Transformada discreta de Fourier (\emph{Discrete Fourier Transform})\\
+%         EIIP         & Potencial de interação elétron-íon (\emph{Electron-Ion Interaction Potentials})\\
+%         STFT         & Tranformada de Fourier de tempo reduzido (\emph{Short-Time Fourier Transform})\\
+% \end{tabular}
 
-%% % ---------------------------------------------------------------------------- %
-%% \chapter{Lista de Símbolos}
-%% \begin{tabular}{ll}
-%%         $\omega$    & Frequência angular\\
-%%         $\psi$      & Função de análise \emph{wavelet}\\
-%%         $\Psi$      & Transformada de Fourier de $\psi$\\
-%% \end{tabular}
+\chapter{Symbols and Notations}
+\label{sec:notation}
+
+The symbols and notations are based on \cite{Goodfellow-et-al-2016}, with slight modifications.
+
+\begin{center}
+%\textbf{\large{Datasets}}\\
+\begin{tabular}{l p{0.5\linewidth}}
+$\xisup$ & The $i$-th example from a dataset, vector or scalar\\
+$\yisup$ & The target associated with $\xisup$\\
+$\yisupred$ & The prediction associated with $\xisup$ \\
+$\supervised$ & A supervised dataset pair\\
+$\xmat$ & A $n \times p$ matrix, with input example $\xisup$ in the $i$-th row\\
+$\xmat_{i,j}$ & Element $i, j$ of matrix $\xmat$ \\
+$\xmat_{i, :}$ & Row $i$ of matrix  $\xmat$ \\
+$\xmat_{:, i}$ & Column $i$ of matrix $\xmat$ \\
+$\ytarget$ & Vector of the actual targets of $\xmat$\\
+$\ypred$ & Vector of the predictions of the targets, where the $i$-th position is the prediction of $\xisup$\\
+
+\end{tabular}
+\end{center}
+
 
 %% % ---------------------------------------------------------------------------- %
 %% % Listas de figuras e tabelas criadas automaticamente
@@ -234,30 +279,13 @@ língua portuguesa.
 % ---------------------------------------------------------------------------- %
 % Capítulos do trabalho
 \mainmatter 
-\newcommand{\mathup}[1]{\text{\textup{#1}}} % upcase a letter
-% Custom commands for mathematical notation
-\newcommand{\xisup}{\bm{x}^{(i)}}
-\newcommand{\yisup}{\bm{y}^{(i)}}
-\newcommand{\yisupred}{\hat{\bm{y}}^{(i)}}
-\newcommand{\supervised}{(\xisup,\yisup)}
-\newcommand{\xmat}{\bm{X}}
-\newcommand{\apsimple}{\textsc{\char13}} % The char ' 
-\newcommand{\ytarget}{\textbf{\mathup{y}}}
-\newcommand{\ypred}{\hat{\textbf{{\mathup{y}}}}}
-\newcommand{\residual}{\textbf{{\mathup{r}}}}
-\newcommand{\code}[1]{\texttt{#1}} % make font monospace
-\newcommand{\ok}{ \textcolor{green}{\checkmark}} % show a green checkmark
-\newcommand{\notok}{\textcolor{red}{$\times$}} % show a red X
-
-
-
-
 
 % cabeçalho para as páginas de todos os capítulos
 \fancyhead[RE,LO]{\thesection}
 
 \onehalfspacing            % espaçamento um e meio
 
+1
 
 \input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
 \input cap-ml-fundamentals % what is machine learning; ml as optimization
@@ -275,7 +303,10 @@ língua portuguesa.
 \fancyhead[RE,LO]{}
 \appendix
 
-\include{ape-conjuntos}      % associado ao arquivo: 'ape-conjuntos.tex'
+\include{ape-joyplots}
+\include{ape-statistical-pvalues}
+\include{ape-delta-plots}      % associado ao arquivo: 'ape-delta-plots.tex'
+\include{ape-sfm-plots}
 
 
 % ---------------------------------------------------------------------------- %

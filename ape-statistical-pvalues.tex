@@ -1,0 +1,210 @@
+\chapter{Statistical Tests Results}
+\label{ape:statistical-tests}
+
+\singlespacing
+
+\renewcommand{\arraystretch}{0.85}
+\captionsetup{margin=1.0cm}  % correção nas margens dos captions.
+%--------------------------------------------------------------------------------------
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{l|lrrr}
+    \toprule
+                              &                    &  \textbf{Shapiro–Wilk} &  \textbf{Levene} &  \textbf{Kruskal-Wallis} \\
+    \textbf{Treatment} & \textbf{Metric} &                        &                  &                          \\
+    \midrule
+    $\eta^{(1)}_{NE}$ & $\delta_{AUC}$ &           4.965994e-19 &     9.630606e-01 &             9.951832e-01 \\
+                              & $\delta_{Brier}$ &           3.710903e-24 &     9.999938e-01 &             9.793033e-01 \\
+                              & $\delta_{Logloss}$ &           6.203025e-23 &     9.828542e-01 &             3.733919e-04 \\
+    $\eta^{(1)}_{MD}$ & $\delta_{AUC}$ &           3.388219e-21 &     8.590251e-01 &             2.901450e-01 \\
+                              & $\delta_{Brier}$ &           8.838670e-15 &     2.941775e-01 &             4.174048e-04 \\
+                              & $\delta_{Logloss}$ &           9.113385e-14 &     1.231119e-01 &             1.246510e-02 \\
+    $\eta^{(1)}_{LR}$ & $\delta_{AUC}$ &           1.013322e-07 &     9.811205e-01 &             2.878008e-02 \\
+                              & $\delta_{Brier}$ &           5.617271e-14 &     1.408917e-03 &             2.329982e-07 \\
+                              & $\delta_{Logloss}$ &           7.958839e-14 &     1.050014e-03 &             3.927624e-07 \\
+    $\eta^{(1)}_{MD, LR}$ & $\delta_{AUC}$ &           2.401885e-32 &     9.999982e-01 &             6.661712e-08 \\
+                              & $\delta_{Brier}$ &           1.177091e-43 &     3.361336e-01 &             1.067366e-90 \\
+                              & $\delta_{Logloss}$ &           6.678448e-41 &     9.901324e-19 &             8.193802e-91 \\
+    $\eta^{(1)}_{MD, NE}$ & $\delta_{AUC}$ &           0.000000e+00 &     1.000000e+00 &             1.000000e+00 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     1.000000e+00 &             1.000000e+00 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &     1.000000e+00 &             1.025601e-04 \\
+    $\eta^{(1)}_{LR, NE}$ & $\delta_{AUC}$ &           0.000000e+00 &     6.240957e-01 &             2.852539e-01 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     9.999999e-01 &             4.590395e-17 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &     1.000000e+00 &             1.088594e-33 \\
+    $\eta^{(1)}_{NE, MD, LR}$ & $\delta_{AUC}$ &           0.000000e+00 &     1.000000e+00 &             1.089024e-10 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     1.000000e+00 &            6.880061e-293 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &     1.000000e+00 &             0.000000e+00 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Statistical $p$-values of the experiment scenarios in Cluster 1}
+    \end{table}
+    
+    
+    \begin{table}[!h]
+    \centering
+    \begin{tabular}{l|lrrr}
+    \toprule
+                              &                    &  \textbf{Shapiro–Wilk} &  \textbf{Levene} &  \textbf{Kruskal-Wallis} \\
+    \textbf{Treatment} & \textbf{Metric} &                        &                  &                          \\
+    \midrule
+    $\eta^{(2)}_{NE}$ & $\delta_{AUC}$ &           4.059920e-08 &     9.968117e-01 &             9.996506e-01 \\
+                              & $\delta_{Brier}$ &           5.942564e-06 &     2.105453e-01 &             9.965572e-01 \\
+                              & $\delta_{Logloss}$ &           2.502680e-05 &     9.636175e-03 &             2.827828e-03 \\
+    $\eta^{(2)}_{MD}$ & $\delta_{AUC}$ &           2.536182e-10 &     9.210022e-01 &             1.860650e-02 \\
+                              & $\delta_{Brier}$ &           3.926061e-06 &     2.774635e-01 &             2.283747e-02 \\
+                              & $\delta_{Logloss}$ &           2.522154e-05 &     1.285176e-01 &             1.764531e-02 \\
+    $\eta^{(2)}_{LR}$ & $\delta_{AUC}$ &           2.714980e-09 &              NaN &                      NaN \\
+                              & $\delta_{Brier}$ &           9.808685e-09 &              NaN &                      NaN \\
+                              & $\delta_{Logloss}$ &           1.213540e-10 &              NaN &                      NaN \\
+    $\eta^{(2)}_{MD, LR}$ & $\delta_{AUC}$ &           1.406702e-20 &     9.999939e-01 &             1.316980e-02 \\
+                              & $\delta_{Brier}$ &           1.339994e-23 &     1.000000e+00 &             6.235464e-12 \\
+                              & $\delta_{Logloss}$ &           1.334960e-23 &     1.000000e+00 &             1.005025e-08 \\
+    $\eta^{(2)}_{MD, NE}$ & $\delta_{AUC}$ &           2.548462e-22 &     1.000000e+00 &             1.000000e+00 \\
+                              & $\delta_{Brier}$ &           6.494320e-28 &     9.969882e-01 &             9.274816e-01 \\
+                              & $\delta_{Logloss}$ &           3.974093e-21 &     2.655356e-23 &             6.191510e-22 \\
+    $\eta^{(2)}_{LR, NE}$ & $\delta_{AUC}$ &           9.960932e-27 &     1.000000e+00 &             3.306332e-06 \\
+                              & $\delta_{Brier}$ &           2.709085e-26 &     9.999995e-01 &             7.035798e-09 \\
+                              & $\delta_{Logloss}$ &           2.452305e-24 &     9.999999e-01 &             1.650304e-05 \\
+    $\eta^{(2)}_{NE, MD, LR}$ & $\delta_{AUC}$ &           0.000000e+00 &     1.000000e+00 &             2.904172e-64 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     1.000000e+00 &            4.013155e-111 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &     1.000000e+00 &             7.298816e-70 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Statistical $p$-values of the experiment scenarios in Cluster 2}
+    \end{table}
+    
+    
+    \begin{table}[!h]
+    \centering
+    \begin{tabular}{l|lrrr}
+    \toprule
+                              &                    &  \textbf{Shapiro–Wilk} &  \textbf{Levene} &  \textbf{Kruskal-Wallis} \\
+    \textbf{Treatment} & \textbf{Metric} &                        &                  &                          \\
+    \midrule
+    $\eta^{(3)}_{NE}$ & $\delta_{AUC}$ &           5.611898e-16 &     9.988256e-01 &             1.147338e-01 \\
+                              & $\delta_{Brier}$ &           2.050222e-10 &     8.124238e-01 &             9.418066e-02 \\
+                              & $\delta_{Logloss}$ &           8.273422e-11 &     6.302806e-01 &             2.663393e-01 \\
+    $\eta^{(3)}_{MD}$ & $\delta_{AUC}$ &           3.139396e-07 &     2.645190e-02 &             2.556998e-05 \\
+                              & $\delta_{Brier}$ &           3.959432e-05 &     3.419306e-02 &             4.180864e-06 \\
+                              & $\delta_{Logloss}$ &           6.005177e-04 &     3.551900e-02 &             2.702174e-06 \\
+    $\eta^{(3)}_{LR}$ & $\delta_{AUC}$ &           3.676430e-01 &     1.621118e-01 &             1.767196e-06 \\
+                              & $\delta_{Brier}$ &           5.871765e-03 &     6.829990e-04 &             1.551529e-06 \\
+                              & $\delta_{Logloss}$ &           1.938849e-02 &     6.932106e-06 &             1.598158e-06 \\
+    $\eta^{(3)}_{MD, LR}$ & $\delta_{AUC}$ &           8.839741e-14 &     5.496276e-01 &             2.534254e-20 \\
+                              & $\delta_{Brier}$ &           5.927692e-07 &     7.132355e-01 &             8.655283e-48 \\
+                              & $\delta_{Logloss}$ &           3.870745e-10 &     3.646846e-02 &             1.441531e-51 \\
+    $\eta^{(3)}_{MD, NE}$ & $\delta_{AUC}$ &           3.996994e-40 &     3.524884e-03 &             6.177612e-25 \\
+                              & $\delta_{Brier}$ &           2.490148e-35 &     2.958452e-02 &             6.911108e-22 \\
+                              & $\delta_{Logloss}$ &           2.679125e-35 &    1.031149e-169 &            3.001168e-100 \\
+    $\eta^{(3)}_{LR, NE}$ & $\delta_{AUC}$ &           8.223911e-28 &     3.639094e-15 &             4.084732e-19 \\
+                              & $\delta_{Brier}$ &           4.965566e-27 &     1.425324e-08 &             6.548453e-23 \\
+                              & $\delta_{Logloss}$ &           1.446958e-34 &     5.364655e-11 &             1.063454e-24 \\
+    $\eta^{(3)}_{NE, MD, LR}$ & $\delta_{AUC}$ &           0.000000e+00 &     2.067193e-23 &            2.847486e-123 \\
+                              & $\delta_{Brier}$ &           1.401298e-45 &     1.522520e-09 &            1.016972e-125 \\
+                              & $\delta_{Logloss}$ &           1.401298e-45 &     0.000000e+00 &             0.000000e+00 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Statistical $p$-values of the experiment scenarios in Cluster 3}
+    \end{table}
+    
+    
+    \begin{table}[!h]
+    \centering
+    \begin{tabular}{l|lrrr}
+    \toprule
+                              &                    &  \textbf{Shapiro–Wilk} &  \textbf{Levene} &  \textbf{Kruskal-Wallis} \\
+    \textbf{Treatment} & \textbf{Metric} &                        &                  &                          \\
+    \midrule
+    $\eta^{(4)}_{NE}$ & $\delta_{AUC}$ &           3.616501e-13 &     9.873830e-01 &             2.111212e-01 \\
+                              & $\delta_{Brier}$ &           2.482372e-13 &     9.980555e-01 &             9.970748e-01 \\
+                              & $\delta_{Logloss}$ &           1.336703e-11 &     9.292868e-01 &             9.770873e-01 \\
+    $\eta^{(4)}_{MD}$ & $\delta_{AUC}$ &           2.537239e-11 &     9.982780e-01 &             9.797863e-01 \\
+                              & $\delta_{Brier}$ &           1.019241e-06 &     9.964629e-01 &             9.957778e-01 \\
+                              & $\delta_{Logloss}$ &           6.850468e-10 &     9.998679e-01 &             9.999136e-01 \\
+    $\eta^{(4)}_{LR}$ & $\delta_{AUC}$ &           1.831653e-07 &     0.000000e+00 &             1.000000e+00 \\
+                              & $\delta_{Brier}$ &           3.636517e-09 &     0.000000e+00 &             1.024704e-01 \\
+                              & $\delta_{Logloss}$ &           3.636517e-09 &     6.581044e-29 &             1.024704e-01 \\
+    $\eta^{(4)}_{MD, LR}$ & $\delta_{AUC}$ &           9.831066e-33 &     9.999617e-01 &             7.098868e-01 \\
+                              & $\delta_{Brier}$ &           9.176373e-28 &     1.000000e+00 &             2.899170e-10 \\
+                              & $\delta_{Logloss}$ &           2.758601e-30 &     9.999158e-01 &             5.548296e-09 \\
+    $\eta^{(4)}_{MD, NE}$ & $\delta_{AUC}$ &           3.372529e-39 &     1.000000e+00 &             9.862816e-01 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     1.000000e+00 &             1.000000e+00 \\
+                              & $\delta_{Logloss}$ &           4.203895e-45 &     1.000000e+00 &             1.000000e+00 \\
+    $\eta^{(4)}_{LR, NE}$ & $\delta_{AUC}$ &           1.439362e-30 &     9.994980e-01 &             1.000000e+00 \\
+                              & $\delta_{Brier}$ &           1.217919e-29 &     9.984107e-01 &             1.066378e-08 \\
+                              & $\delta_{Logloss}$ &           2.404549e-26 &     9.772312e-01 &             4.468989e-09 \\
+    $\eta^{(4)}_{NE, MD, LR}$ & $\delta_{AUC}$ &           0.000000e+00 &     1.000000e+00 &             1.000000e+00 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     1.000000e+00 &            2.812655e-136 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &     1.000000e+00 &            2.501047e-153 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Statistical $p$-values of the experiment scenarios in Cluster 4}
+    \end{table}
+    
+    
+    \begin{table}[!h]
+    \centering
+    \begin{tabular}{l|lrrr}
+    \toprule
+                              &                    &  \textbf{Shapiro–Wilk} &  \textbf{Levene} &  \textbf{Kruskal-Wallis} \\
+    \textbf{Treatment} & \textbf{Metric} &                        &                  &                          \\
+    \midrule
+    $\eta^{(5)}_{NE}$ & $\delta_{AUC}$ &           2.727656e-13 &     9.999921e-01 &             8.138489e-01 \\
+                              & $\delta_{Brier}$ &           2.316378e-11 &     5.085153e-01 &             9.999896e-01 \\
+                              & $\delta_{Logloss}$ &           5.203110e-10 &     5.821598e-03 &             9.999997e-01 \\
+    $\eta^{(5)}_{MD}$ & $\delta_{AUC}$ &           1.056675e-27 &     9.999371e-01 &             3.299262e-01 \\
+                              & $\delta_{Brier}$ &           5.635529e-28 &     9.999508e-01 &             1.229116e-04 \\
+                              & $\delta_{Logloss}$ &           1.100347e-27 &     9.999037e-01 &             1.275362e-02 \\
+    $\eta^{(5)}_{LR}$ & $\delta_{AUC}$ &           6.518040e-13 &     9.998573e-01 &             1.734229e-02 \\
+                              & $\delta_{Brier}$ &           3.448695e-14 &     9.983008e-01 &             1.984047e-03 \\
+                              & $\delta_{Logloss}$ &           1.160934e-13 &     9.997163e-01 &             2.143289e-03 \\
+    $\eta^{(5)}_{MD, LR}$ & $\delta_{AUC}$ &           2.371575e-30 &     1.000000e+00 &             3.281449e-28 \\
+                              & $\delta_{Brier}$ &           1.079978e-39 &     1.000000e+00 &             7.005511e-07 \\
+                              & $\delta_{Logloss}$ &           3.393346e-36 &     1.000000e+00 &             1.115711e-06 \\
+    $\eta^{(5)}_{MD, NE}$ & $\delta_{AUC}$ &           0.000000e+00 &     1.000000e+00 &             1.000000e+00 \\
+                              & $\delta_{Brier}$ &           2.802597e-45 &     9.981370e-01 &             1.000000e+00 \\
+                              & $\delta_{Logloss}$ &           4.049753e-43 &     6.341819e-85 &             1.000000e+00 \\
+    $\eta^{(5)}_{LR, NE}$ & $\delta_{AUC}$ &           0.000000e+00 &     1.000000e+00 &             1.663213e-08 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     1.000000e+00 &             7.634533e-16 \\
+                              & $\delta_{Logloss}$ &           1.401298e-45 &     1.000000e+00 &             1.683672e-15 \\
+    $\eta^{(5)}_{NE, MD, LR}$ & $\delta_{AUC}$ &           0.000000e+00 &     1.000000e+00 &             1.252096e-92 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     1.000000e+00 &            1.095053e-251 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &     1.000000e+00 &            8.787394e-273 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Statistical $p$-values of the experiment scenarios in Cluster 5}
+    \end{table}
+    
+    
+    \begin{table}[!h]
+    \centering
+    \begin{tabular}{l|lrrr}
+    \toprule
+                              &                    &  \textbf{Shapiro–Wilk} &  \textbf{Levene} &  \textbf{Kruskal-Wallis} \\
+    \textbf{Treatment} & \textbf{Metric} &                        &                  &                          \\
+    \midrule
+    $\eta^{(6)}_{NE}$ & $\delta_{AUC}$ &           5.555299e-15 &     7.331148e-02 &             9.810169e-05 \\
+                              & $\delta_{Brier}$ &           4.446020e-13 &     1.695424e-02 &             1.426687e-07 \\
+                              & $\delta_{Logloss}$ &           5.699214e-15 &     1.302647e-04 &             1.309669e-17 \\
+    $\eta^{(6)}_{MD}$ & $\delta_{AUC}$ &           8.323186e-18 &     9.659329e-01 &             2.275562e-01 \\
+                              & $\delta_{Brier}$ &           8.587676e-18 &     8.808170e-01 &             3.733077e-02 \\
+                              & $\delta_{Logloss}$ &           8.382108e-16 &     7.293658e-01 &             1.738130e-01 \\
+    $\eta^{(6)}_{LR}$ & $\delta_{AUC}$ &           8.634467e-17 &              NaN &                      NaN \\
+                              & $\delta_{Brier}$ &           1.000000e+00 &              NaN &                      NaN \\
+                              & $\delta_{Logloss}$ &           5.394157e-16 &              NaN &                      NaN \\
+    $\eta^{(6)}_{MD, LR}$ & $\delta_{AUC}$ &           8.691273e-41 &     9.990496e-01 &             3.351863e-04 \\
+                              & $\delta_{Brier}$ &           7.470919e-39 &     1.000000e+00 &             6.020948e-12 \\
+                              & $\delta_{Logloss}$ &           1.597480e-43 &     9.999978e-01 &             1.947958e-15 \\
+    $\eta^{(6)}_{MD, NE}$ & $\delta_{AUC}$ &           0.000000e+00 &     6.248752e-01 &             9.997299e-01 \\
+                              & $\delta_{Brier}$ &           6.459986e-43 &     9.233229e-71 &             1.014506e-50 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &    3.935870e-148 &            5.383524e-198 \\
+    $\eta^{(6)}_{LR, NE}$ & $\delta_{AUC}$ &           1.401298e-45 &     9.999975e-01 &             2.575427e-03 \\
+                              & $\delta_{Brier}$ &           1.916556e-41 &     2.863830e-01 &             1.070646e-03 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &     6.187968e-16 &             2.237852e-06 \\
+    $\eta^{(6)}_{NE, MD, LR}$ & $\delta_{AUC}$ &           0.000000e+00 &     1.000000e+00 &            2.705704e-150 \\
+                              & $\delta_{Brier}$ &           0.000000e+00 &     5.205595e-22 &             6.798990e-02 \\
+                              & $\delta_{Logloss}$ &           0.000000e+00 &     0.000000e+00 &             6.851411e-86 \\
+    \bottomrule
+    \end{tabular}
+    \caption{Statistical $p$-values of the experiment scenarios in Cluster 6}
+    \end{table}

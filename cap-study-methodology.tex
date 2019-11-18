@@ -79,7 +79,7 @@ In this study there are only two data cleaning steps, with the objective to keep
 \end{enumerate}
 
 %% ------------------------------------------------------------------------- %%
-\section{Descriptive dataset statistics}
+\section{Descriptive Dataset Statistics}
 \label{dataset-aggregated-statistics}
 
 To analyze subgroups of datasets and categorize each one of them, multiple statistics related to the structure of the dataset is calculated before any machine learning model is trained. Before the training process, the granularity of these statistics are feature-wise, which are then further aggregated in the result analysis step.
@@ -101,12 +101,12 @@ For \textbf{numeric features}, the main specific statistic calculated is the sam
 The pipeline also calculates other useful statistics for each feature, like the percentiles, number of NaNs, infinite values, mean, median, etc. They're useful in the exploratory step, but are not used when clustering the datasets in the result analysis step.
 
 %% ------------------------------------------------------------------------- %%
-\section{Hyperparameter space}
+\section{Hyperparameter Space}
 \label{sec:hyperparam-space}
 
 In section \ref{gbm-hyperparams} it is explained the basic hyperparameters used in LightGBM's gradient boosting algorithm. In this section the \textit{hyperparameter space}\footnote{In model tuning, the \textit{hyperparameter space} is the set of all the values each hyperparameter can assume in the tuning process.} of this study is explained, along with a simple overview of the hypothesis behind each distribution choice, related to LightGBM default hyperparameters and dataset size.  Let $D_i$ denote the number of instances of the $i$-th dataset, i.e. the total number of $\supervised$ pairs for the $i$-th dataset. 
 
-\subsection{Hyperparameters tree}
+\subsection{Hyperparameters Tree}
 \label{subsec:hp-tree}
 
 The intention is to train multiple models changing the hyperparameters values, and calculate the metrics (explained in Section \ref{classification-metrics}) for each combination of hyperparameter. In this study three hyperparameters are studied: \textbf{\code{max\_depth}}, \textbf{\code{learning\_rate}} and \textbf{\code{num\_estimators}}.
@@ -160,7 +160,7 @@ It can be observed that the number of hyperparameters in each tree node increase
 \label{subsec:max-depth}
 The maximum depth is the hyperparameter that controls the maximum possible depth each boosting tree can have. As explained in Section \ref{gbm-hyperparams}, LightGBM default behavior is to grow the trees leaf-wise, having an unbound maximum depth, but the structure being controlled by the number of leaves in the tree. Max depth is a way to apply a constraint on the function space, i.e. the possible hypothesis the learning algorithm can use, and is commonly optimized in classical decision trees for pruning. 
 
-Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree is not as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constraint the model, one can overfit in the data given a high enough number of boosting iterations : this can be seen as an ``overfit relationship'' between \code{max\_depth} and \code{num\_estimators}. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there's is not a clear rule to choose an optimal value. 
+Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree is not as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constraint the model, one can overfit in the data given a high enough number of boosting iterations : this can be seen as an ``overfit relationship'' between \code{max\_depth} and \code{num\_estimators}. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there is is not a clear rule to choose an optimal value. 
 
 In this study, the tested maximum depth values are always the same, independent on the dataset size:
 
@@ -168,7 +168,7 @@ $$MD_i = \{3, 4, ..., N_{MD} + 3\}$$
 
 In the experiments $N_{MD} = 20$, so each dataset is run using max depth from $3$ to $22$. The intuition behind these values is to neither test with very big depth values, nor very small depth for a weak learner in gradient boosting. The \code{num\_leaves} parameter is automatically set to be $\min(2^{max\_depth} - 1, 2^{15})$, because this way the number of leaves will not influence too much the results when changing the maximum depth and at the same time the number of nodes in each boosting tree will not grow unbound when training with \code{max\_depth} $\geq 16$.
 
-\subsection{Learning rate}
+\subsection{Learning Rate}
 
 The learning rate distribution is simple, and it depends only on the dataset size $D_i$. In XGBoost the default value of learning rate (also called \textit{eta}) is $0.3$ and in LightGBM it is $0.1$, which is also the default learning rate for \textit{scikit-learn} implementation of gradient boosting. Since in the OpenML datasets the dataset sizes aren't too similar (see Figure \ref{fig:openml-eda2}), the distribution of learning rate values to generate is a simple function starting from $0.01$ for small datasets, changing based on the dataset size.
 
@@ -238,7 +238,7 @@ $$step = \frac{\Big(max_{ne}(D_i) - min_{ne}(D_i)\Big)}{N_{NE} - 1}$$
 \end{figure}
 
 \newpage
-\section{Final experiment pipeline}
+\section{Final Experiment Pipeline}
 
 For each dataset considered in this study a pipeline is built for it, following the sequence:
 

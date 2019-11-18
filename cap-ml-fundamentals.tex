@@ -90,7 +90,7 @@ where TP, FP, TN and FN stands for \textit{True Positives}, \textit{False Positi
 
 The \textbf{brier score} is the mean squared difference between the predicted probabilities and the actual labels. Similar to the AUC, brier score is a bounded measure from 0 to 1, but it is interpretation and ordering is different: 0 is the best possible brier score, while 1 is the worst. The actual equation is demonstrated in \ref{eq:brier-score}.
 
-Brier score can sum up different components related to forecasting, especially taking into account the calibration of the predicted probabilities. In \cite{murphy1973new} there's an insightful partition of the Brier Score in three components, according to the article: ``a measure of the uncertainty inherent in the events, or states, on the occasions of concern (...); a measure of the reliability of the forecasts; and  a new measure of the resolution of the forecasts''.
+Brier score can sum up different components related to forecasting, especially taking into account the calibration of the predicted probabilities. In \cite{murphy1973new} there is an insightful partition of the Brier Score in three components, according to the article: ``a measure of the uncertainty inherent in the events, or states, on the occasions of concern (...); a measure of the reliability of the forecasts; and  a new measure of the resolution of the forecasts''.
 
 \begin{equation}\label{eq:brier-score}
     Brier=\frac{1}{n}\sum_{i=1}^{n}(\yisupred - \yisup)^2
@@ -110,7 +110,7 @@ Logarithmic Loss or \textbf{Logloss} measures the accuracy of a classifier by pe
 %% ------------------------------------------------------------------------- %%
 \section{Model Tuning}\index{tuning}\index{hyperparameter}\index{machine!learning}
 
-Many models in supervised learning have parameters that cannot be directly from the available data. For example, in a decision tree algorithm the max depth or the criterion to measure the quality of a split needs to be chosen before the algorithm learning process. According to \cite{kuhn2013applied} this type of parameter is called a \textit{tuning parameter} because there's no analytical formula available to calculate an appropriate value. This parameter is also called a \textbf{hyperparameter}. 
+Many models in supervised learning have parameters that cannot be directly from the available data. For example, in a decision tree algorithm the max depth or the criterion to measure the quality of a split needs to be chosen before the algorithm learning process. According to \cite{kuhn2013applied} this type of parameter is called a \textit{tuning parameter} because there is no analytical formula available to calculate an appropriate value. This parameter is also called a \textbf{hyperparameter}. 
 
 Usually hyperparameters control the complexity of a model, controlling bias and variance of an algorithm. In the decision tree example, increasing the max depth the learning algorithm can use will increase the complexity of the model, as the tree can learn more complex patterns in data. In the logistic regression model, the regularization parameter (usually denoted $\lambda$) is a hyperparameter of the model, and also controls the complexity of the model. For a more complete explanation of regularization and its importance in predictive modeling refer to Chapter 5 of \cite{hastie2009elements}.
 
@@ -125,7 +125,7 @@ Besides the traditional separation into train, validation and test set, resampli
     \label{fig:cvschema}
 \end{figure}
 
-Model tuning is critical part of the workflow when building machine learning models, and there's vast literature exploring different approaches to quantify more sensitive hyperparameters given an algorithm (in \cite{probst2018tunability}), automatic tuning approaches using Bayesian Optimization (\cite{bergstra2013hyperopt}), etc. In this study, the focus is on the hyperparameters of gradient boosting algorithms, specifically gradient boosting with decision trees, explained on Chapter \ref{cap:boosting-intro}.
+Model tuning is critical part of the workflow when building machine learning models, and there is vast literature exploring different approaches to quantify more sensitive hyperparameters given an algorithm (in \cite{probst2018tunability}), automatic tuning approaches using Bayesian Optimization (\cite{bergstra2013hyperopt}), etc. In this study, the focus is on the hyperparameters of gradient boosting algorithms, specifically gradient boosting with decision trees, explained on Chapter \ref{cap:boosting-intro}.
 
 %% ------------------------------------------------------------------------- %%
 \section{Decision Trees}\index{tree}\index{classifier}

@@ -24,7 +24,7 @@ The main objective of this work is to study and obtain insights about the main h
 
 \begin{enumerate}
   \item How each type of hyperparameter (or combinations of them) affects the performance of the model, overall. Is there a hyperparameter which does not affect much the performance? What is the combination of hyperparameter that impacts the most? How sensitive is the gradient boosting algorithm to the studied hyperparameters?
-  \item How different characteristics of a dataset affect the hyperparameters impact, if there's a difference in them. Datasets with high number of features will have a different impact on hyperparameter? How the datasets are sensitive to hyperparameter changes in the algorithm?
+  \item How different characteristics of a dataset affect the hyperparameters impact, if there is a difference in them. Datasets with high number of features will have a different impact on hyperparameter? How the datasets are sensitive to hyperparameter changes in the algorithm?
   \item How the performance metrics of classification models relate, obtain insights about the relative behavior of the performance metrics and the hyperparameters. Is there a pattern in the metrics behavior? Which combination of hyperparameter causes the highest change in a performance metric?
 \end{enumerate}
 
@@ -34,26 +34,3 @@ The main objective of this work is to study and obtain insights about the main h
 \label{sec:organizacao_trabalho}
 
 The next two chapters of this work, Chapter \ref{cap:ml-fundamentals} and Chapter \ref{cap:boosting-intro} introduce the required theoretical background for supervised machine learning and gradient boosting machines, including an explanation of the studied hyperparameters. Chapter \ref{cap:study-methodology} describe the structure of the experiment, which datasets were used, how the hyperparameters values were created and the experiment pipeline. In Chapter \ref{cap:experimental-analysis} the experimental analysis is outlined, with the description of the aggregation method used, definitions of concepts for the final analysis and a complete characterization of the statistical framework used in the results. The main results are presented in \ref{cap:results}, with the outcomes observed from the analysis along with discussions of what was observed. Finally, Chapter \ref{cap:conclusion} present the conclusions from the overall study and a discussion about some of its limitations that could be addressed in future work.
-
-%% ------------------------------------------------------------------------- %%
-\section{Symbols and Notations}
-\label{sec:notation}
-
-The symbols and notations are based on \cite{Goodfellow-et-al-2016}, with slight modifications.
-
-\begin{center}
-%\textbf{\large{Datasets}}\\
-\begin{tabular}{l p{0.5\linewidth}}
-$\xisup$ & The $i$-th example from a dataset, vector or scalar\\
-$\yisup$ & The target associated with $\xisup$\\
-$\yisupred$ & The prediction associated with $\xisup$ \\
-$\supervised$ & A supervised dataset pair\\
-$\xmat$ & A $n \times p$ matrix, with input example $\xisup$ in the $i$-th row\\
-$\xmat_{i,j}$ & Element $i, j$ of matrix $\xmat$ \\
-$\xmat_{i, :}$ & Row $i$ of matrix  $\xmat$ \\
-$\xmat_{:, i}$ & Column $i$ of matrix $\xmat$ \\
-$\ytarget$ & Vector of the actual targets of $\xmat$\\
-$\ypred$ & Vector of the predictions of the targets, where the $i$-th position is the prediction of $\xisup$\\
-
-\end{tabular}
-\end{center}
