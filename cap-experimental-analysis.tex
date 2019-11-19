@@ -298,14 +298,14 @@ An important concept in this study related to the statistical framework is the d
 \end{equation}
 
 
-Given the $C_k$ experimental units, the hyperparameters configuration  $\eta^{(k)}_Q$ and a performance metric $m$, the experimental scenario can be represented as is Equation \ref{eq:exp-scenario}:
+\noindent Given the $C_k$ experimental units, the hyperparameters configuration  $\eta^{(k)}_Q$ and a performance metric $m$, the experimental scenario can be represented as is Equation \ref{eq:exp-scenario}:
 
 \begin{equation}
  \mathcal{S}(C_k, \eta^{(k)}_Q, m)
  \label{eq:exp-scenario}
 \end{equation}
 
-Which means the experiment outputs of $\delta_m$ observed when applying the \textit{treatments} $\eta^{(k)}_Q$ to all experimental units in the $k$th cluster. For example,  Figure  \ref{fig:delta-auc1} represents the experimental scenario $\mathcal{S}(C_3, \eta^{(3)}_{max\_depth}, AUC)$ and Figure  \ref{fig:delta-brier1} is a visualization of $\mathcal{S}(C_2, \eta^{(2)}_{max\_depth,num\_estimators}, brier)$.
+\noindent Which means the experiment outputs of $\delta_m$ observed when applying the \textit{treatments} $\eta^{(k)}_Q$ to all experimental units in the $k$th cluster. For example,  Figure  \ref{fig:delta-auc1} represents the experimental scenario $\mathcal{S}(C_3, \eta^{(3)}_{max\_depth}, AUC)$ and Figure  \ref{fig:delta-brier1} is a visualization of $\mathcal{S}(C_2, \eta^{(2)}_{max\_depth,num\_estimators}, brier)$.
 
 
 \subsection{Analysis of Variance}
@@ -375,7 +375,7 @@ However, the ANOVA test \textbf{was not} used in this study, because its assumpt
 \end{equation}
 
 
-where $\hat{y}_{ij}$ is an estimate of the respective observation $y_{ij}$, obtained as follows:
+\noindent where $\hat{y}_{ij}$ is an estimate of the respective observation $y_{ij}$, obtained as follows:
 
 \begin{equation}    
     \begin{split}
@@ -385,7 +385,7 @@ where $\hat{y}_{ij}$ is an estimate of the respective observation $y_{ij}$, obta
     \end{split}
 \end{equation}
 
-This just means that the estimate of any experimental scenario observation in the $i$th treatment is the corresponding treatment average $\overline{\bm{y}^{(i)}}$. In the terms of this study, the estimate of relative change in the performance metric $\delta_{metric}$ for a given configuration of a value of hyperparameters is the mean of the $\delta_{metric}$'s of all datasets in the corresponding cluster being analyzed. The analysis of the residuals is one of the ways to check for model adequacy, and can be analyzed using a \textit{Normal Q-Q Plot} and using statistical tests to test for the normality and homoscedasticity assumptions.
+\noindent This just means that the estimate of any experimental scenario observation in the $i$th treatment is the corresponding treatment average $\overline{\bm{y}^{(i)}}$. In the terms of this study, the estimate of relative change in the performance metric $\delta_{metric}$ for a given configuration of a value of hyperparameters is the mean of the $\delta_{metric}$'s of all datasets in the corresponding cluster being analyzed. The analysis of the residuals is one of the ways to check for model adequacy, and can be analyzed using a \textit{Normal Q-Q Plot} and using statistical tests to test for the normality and homoscedasticity assumptions.
 
 The test of assumptions is applied to every \textbf{experimental scenario} $\mathcal{S}$ in this study, in the following order:
 \newpage

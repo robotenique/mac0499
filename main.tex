@@ -111,13 +111,13 @@ framexrightmargin=10pt
 \newcommand{\mathup}[1]{\text{\textup{#1}}} % upcase a letter
 % Custom commands for mathematical notation
 \newcommand{\xisup}{\bm{x}^{(i)}}
-\newcommand{\yisup}{\bm{y}^{(i)}}
-\newcommand{\yisupred}{\hat{\bm{y}}^{(i)}}
+\newcommand{\yisup}{y^{(i)}}
+\newcommand{\yisupred}{\hat{y}^{(i)}}
 \newcommand{\supervised}{(\xisup,\yisup)}
 \newcommand{\xmat}{\bm{X}}
 \newcommand{\apsimple}{\textsc{\char13}} % The char ' 
-\newcommand{\ytarget}{\textbf{\mathup{y}}}
-\newcommand{\ypred}{\hat{\textbf{{\mathup{y}}}}}
+\newcommand{\ytarget}{\mathup{y}}
+\newcommand{\ypred}{\hat{{\mathup{y}}}}
 \newcommand{\residual}{\textbf{{\mathup{r}}}}
 \newcommand{\code}[1]{\texttt{#1}} % make font monospace
 \newcommand{\ok}{ \textcolor{green}{\checkmark}} % show a green checkmark
@@ -252,7 +252,7 @@ língua portuguesa.
 \chapter{Symbols and Notations}
 \label{sec:notation}
 
-The symbols and notations are based on \cite{Goodfellow-et-al-2016}, with slight modifications.
+Some of the symbols and notations are based on \cite{Goodfellow-et-al-2016}, with slight modifications.
 
 \begin{center}
 %\textbf{\large{Datasets}}\\
@@ -267,6 +267,16 @@ $\xmat_{i, :}$ & Row $i$ of matrix  $\xmat$ \\
 $\xmat_{:, i}$ & Column $i$ of matrix $\xmat$ \\
 $\ytarget$ & Vector of the actual targets of $\xmat$\\
 $\ypred$ & Vector of the predictions of the targets, where the $i$-th position is the prediction of $\xisup$\\
+$D_i$ & Number of instances of the $i$th dataset\\
+$LR$ & Notation for \code{learning\_rate}\\
+$NE$ & Notation for \code{num\_estimators}\\
+$MD$ & Notation for \code{max\_depth}\\
+$Hspace_i$ & Hyperparameter space of the $i$th dataset\\
+$\delta_{metric}$ & difference between a new metric and the baseline\\
+$\eta^{(k)}$ & Union of all hyperparameters of the $k$th cluster\\
+$\eta^{(k)}_Q$ & A partition $Q$ of $\eta^{(k)}$\\
+$\mathcal{S}(C_k, \eta^{(k)}_Q, m)$ & Experimental scenario in the $k$th cluster, partitioned by hyperparameters $Q$ and metric $m$\\
+$H_0$ & Null hypothesis \\
 
 \end{tabular}
 \end{center}

@@ -98,7 +98,7 @@ To analyze subgroups of datasets and categorize each one of them, multiple stati
 
 For \textbf{numeric features}, the main specific statistic calculated is the sample \textbf{skewness} of each feature. Skewness is a degree of distribution distortion, and in this study, it is calculated using the unbiased adjusted Fisher–Pearson standardized moment coefficient from \textit{pandas}. The skewness is also trying to measure the variability of the numeric features and is used in the clustering of each dataset as a feature.
 
-The pipeline also calculates other useful statistics for each feature, like the percentiles, number of NaNs, infinite values, mean, median, etc. They're useful in the exploratory step but are not used when clustering the datasets in the result analysis step.
+The pipeline also calculates other useful statistics for each feature, like the percentiles, number of NaNs, infinite values, mean, median, etc. They are useful in the exploratory step but are not used when clustering the datasets in the result analysis step.
 
 %% ------------------------------------------------------------------------- %%
 \section{Hyperparameter Space}
@@ -126,11 +126,11 @@ For a given tree depth $k$, the hyperparameter set to be explored at that depth 
     \label{fig:hp-tree}
 \end{figure}
 
-The hyperparameter tree of this study, represented in Figure \ref{fig:hp-tree}, is then defined as different cartesian products of all valid $k$ combinations. Since three hyperparameters are being changed, the maximum is $k=3$, and the final space is the union of all cartesian products combinations:
+\noindent The hyperparameter tree of this study, represented in Figure \ref{fig:hp-tree}, is then defined as different cartesian products of all valid $k$ combinations. Since three hyperparameters are being changed, the maximum is $k=3$, and the final space is the union of all cartesian products combinations:
 
 $$Hspace_i = HS_1 \cup HS_2 \cup HS_3$$
 
-This structure is generalizable for any number of hyperparameters, and it was designed this way to measure hyperparameter impact depending on the number of combinations. E.g. It is expected that changing multiple hyperparameters at the same time have a bigger impact on model performance than changing just one. Each level of the hyperparameter tree represents a "combination effect", i.e. the experiment can measure, for multiple combinations of hyperparameters, which combination effect provides the biggest impact on the metrics (for better or worse) compared with the other combinations.
+\noindent This structure is generalizable for any number of hyperparameters, and it was designed this way to measure hyperparameter impact depending on the number of combinations. E.g. It is expected that changing multiple hyperparameters at the same time have a bigger impact on model performance than changing just one. Each level of the hyperparameter tree represents a "combination effect", i.e. the experiment can measure, for multiple combinations of hyperparameters, which combination effect provides the biggest impact on the metrics (for better or worse) compared with the other combinations.
 
 As an example, consider the three sets of hyperparameters below:
 
@@ -138,7 +138,7 @@ $$LR = \{0.1, 0.2\}$$
 $$NE = \{1, 2\}$$
 $$MD = \{10, 20\}$$
 
-Then each leaf of the hyperparameter tree will be:
+\noindent Then each leaf of the hyperparameter tree will be:
 
 $$HS_1 = \Big\{\{0.1, 0.2\}, \{1, 2\}, \{10, 20\}\Big\}$$
 
@@ -165,7 +165,7 @@ In this study, the tested maximum depth values are always the same, independent 
 
 $$MD_i = \{3, 4, ..., N_{MD} + 3\}$$
 
-In the experiments $N_{MD} = 20$, so each dataset is run using max depth from $3$ to $22$. The intuition behind these values is to neither test with very big depth values, nor very small depth for a weak learner in gradient boosting. The \code{num\_leaves} parameter is automatically set to be $\min(2^{max\_depth} - 1, 2^{15})$, because this way the number of leaves will not influence too much the results when changing the maximum depth and at the same time the number of nodes in each boosting tree will not grow unbound when training with \code{max\_depth} $\geq 16$.
+\noindent In the experiments $N_{MD} = 20$, so each dataset is run using max depth from $3$ to $22$. The intuition behind these values is to neither test with very big depth values, nor very small depth for a weak learner in gradient boosting. The \code{num\_leaves} parameter is automatically set to be $\min(2^{max\_depth} - 1, 2^{15})$, because this way the number of leaves will not influence too much the results when changing the maximum depth and at the same time the number of nodes in each boosting tree will not grow unbound when training with \code{max\_depth} $\geq 16$.
 
 \subsection{Learning Rate}
 
@@ -185,7 +185,7 @@ First it is defined a "middle" learning rate value $\psi_i$ (defined in equation
     \label{eq:lr-eq2}
 \end{equation}
 
-The symmetric pattern and the final $LR_i$ are generated following the rule described in equation \ref{eq:lr-eq3}. By changing the maximum length $N_{LR}$ and the dataset size $D_i$, one can see the learning rate distribution behavior: In Figure \ref{fig:hyperparam-lr1} all the $D_i$ from the study are categorized in percentiles, and depending on the length ($N_{LR}$) a given distribution of learning rate values $LR_i$ is shown.
+\noindent The symmetric pattern and the final $LR_i$ are generated following the rule described in equation \ref{eq:lr-eq3}. By changing the maximum length $N_{LR}$ and the dataset size $D_i$, one can see the learning rate distribution behavior: In Figure \ref{fig:hyperparam-lr1} all the $D_i$ from the study are categorized in percentiles, and depending on the length ($N_{LR}$) a given distribution of learning rate values $LR_i$ is shown.
 
 \begin{equation}
     LR_i = \Big\{\frac{\psi_i}{\kappa_i}, \frac{\psi_i}{\kappa_i - 1}, \frac{\psi_i}{\kappa_i - 2}, ..., \text{\Large $\psi_i$}, ..., (\kappa_i - 2)\cdot\psi_i, (\kappa_i - 1)\cdot\psi_i, \kappa_i\cdot\psi_i\Big\}
@@ -228,7 +228,7 @@ The definition of this function is a little arbitrary, but the objective is to c
     \label{fig:hyperparam-ne1}
 \end{figure}
 
-The final list of number of estimators generated is then a linear interpolation starting at $min_{ne}(D_i) = \min(\frac{D_i}{4}, 50)$ to $max_{ne}(D_i)$, in evenly spaced steps (equation \ref{eq:hyperparam-ne-step}). An example of multiple $NE_i$ distributions is shown in Figure \ref{fig:hyperparam-ne1} for different $D_i$ values, but with a fixed length $N_{NE} = 20$.
+\noindent The final list of number of estimators generated is then a linear interpolation starting at $min_{ne}(D_i) = \min(\frac{D_i}{4}, 50)$ to $max_{ne}(D_i)$, in evenly spaced steps (equation \ref{eq:hyperparam-ne-step}). An example of multiple $NE_i$ distributions is shown in Figure \ref{fig:hyperparam-ne1} for different $D_i$ values, but with a fixed length $N_{NE} = 20$.
 
 $$step = \frac{\Big(max_{ne}(D_i) - min_{ne}(D_i)\Big)}{N_{NE} - 1}$$
 \begin{equation}
