@@ -4,7 +4,7 @@
 
 The main objective of this work is to study and compare the impact of selected hyperparameters in different models trained on different datasets, using the LightGBM gradient boosting algorithm. Each "type" of dataset will be aggregated in different categories using the values of aggregated characteristics of the dataset itself (e.g. number of features, number of instances), this can be checked on Section \ref{dataset-aggregated-statistics}.
 
-In the following sections an overview about the methodology and experimental setup is given, explaining the datasets, the hyperparameters chosen and its distributions, pipeline for testing and the tools used in each step.
+In the following sections an overview of the methodology and the experimental setup is given, explaining the datasets, the hyperparameters chosen and its distributions, pipeline for testing and the tools used in each step.
 
 %% ------------------------------------------------------------------------- %%
 \section{Tools}
@@ -47,12 +47,12 @@ OpenML provides a python API package for automatically retrieving datasets, task
     \label{fig:openml-eda1}
 \end{figure}
 
-After all these filters, the number of valid datasets for the experiment would be close to 400 (figure \ref{fig:openml-eda1}), in theory. However, several of datasets could not be opened by the python API due to a variety of errors, mostly related to Attribute-Relation File Format (ARFF) in python. This brought the number of possible datasets to experiment close to $200$, but since each hyperparameter experiment takes a long time to run (favoring more hyperparameter space covered over the number of datasets, check \ref{subsec:hp-tree}), the final number of datasets analyzed in this study is 70.
+After all these filters, the number of valid datasets for the experiment would be close to 400 (figure \ref{fig:openml-eda1}), in theory. However, several datasets could not be opened by the python API due to a variety of errors, mostly related to Attribute-Relation File Format (ARFF) in python. This brought the number of possible datasets to experiment close to $200$, but since each hyperparameter experiment takes a long time to run (favoring more hyperparameter space covered over the number of datasets, check \ref{subsec:hp-tree}), the final number of datasets analyzed in this study is 70.
 
 
-Each dataset retrieved by the OpenML API has a dataset id (\code{did}) related to it, along with very useful metadata related to it, as it can be seen in Figure \ref{fig:openml-eda3}. With a simple exploratory analysis of the datasets it was observed a great number of datasets with high number of categorical variables, and usually high number of features too. Datasets with only textual data as features were also removed from the study, along with features not explicitly indicated as a categorical feature by the API.
+Each dataset retrieved by the OpenML API has a dataset id (\code{did}) related to it, along with very useful metadata related to it, as it can be seen in Figure \ref{fig:openml-eda3}. With a simple exploratory analysis of the datasets, it was observed that a great number of them had a high proportion of categorical variables, and usually a high number of features too. Datasets with only textual data as features were also removed from the study, along with features not explicitly indicated as a categorical feature by the API.
 
-\begin{figure}[!h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{openml_eda3.png} 
     \caption{Example of dataset information from OpenML}
@@ -61,7 +61,7 @@ Each dataset retrieved by the OpenML API has a dataset id (\code{did}) related t
 
 Analyzing the number of instances in the subset of datasets used in this study, it can be seen that most of the datasets have a relatively small number of instances, but a portion of them have more than $300000$ data points, in hope to cover more data-heavy models (\ref{fig:openml-eda2}).
 
-\begin{figure}[!h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=.7\textwidth]{openml_eda2.png} 
     \caption{Number of data points distribution}
@@ -72,7 +72,7 @@ Analyzing the number of instances in the subset of datasets used in this study, 
 
 \subsection{Data Cleaning}
 
-In this study there are only two data cleaning steps, with the objective to keep the cleaned dataset as close as possible to the original to not interfere with the experiment results.
+In this study, there are only two data cleaning steps, intending to keep the cleaned dataset as close as possible to the original to not interfere with the experiment results.
 \begin{enumerate}
     \item The OpenML provides an attribute describing which of the features in the dataset are the categorical features; In the dataset building process, the type of each variable is identified (using \textit{pandas-profiling} package), and from each identified feature as "categorical", remove all that aren't explicitly declared by the OpenML attributes;
     \item The data in each OpenML dataset does not follow a specific pattern, e.g. some datasets represent the \textbf{target} variable as a string (\textit{'y'} and \textit{'n'}), some are represented in floating point, Boolean, etc. In the experiment pipeline, the \textbf{target} is converted to an integer, if possible. If not, the \textbf{target} is encoded using a \textit{label encoder}.
@@ -82,13 +82,13 @@ In this study there are only two data cleaning steps, with the objective to keep
 \section{Descriptive Dataset Statistics}
 \label{dataset-aggregated-statistics}
 
-To analyze subgroups of datasets and categorize each one of them, multiple statistics related to the structure of the dataset is calculated before any machine learning model is trained. Before the training process, the granularity of these statistics are feature-wise, which are then further aggregated in the result analysis step.
+To analyze subgroups of datasets and categorize each one of them, multiple statistics related to the structure of the dataset are calculated before any machine learning model is trained. Before the training process, the granularity of these statistics is feature-wise, which is then further aggregated in the result analysis step.
 
-\textbf{Categorical features} are known to cause a \textit{prediction shift} in traditional gradient boosting models, as demonstrated in \cite{prokhorenkova2018catboost}. This shift is identified as a special kind of target leakage, which can also be caused in a preprocessing step of categorical features when using target statistics (e.g. using the target/mean encoding technique)\footnote{To fix this kind of problem in a dataset with many categorical features a new boosting algorithm was developed by \cite{dorogush2018catboost} called \textbf{Catboost}.}. As noted in the mentioned paper, LightGBM converts categorical features to gradient statistics at each step of the boosting process (as explained in Section \ref{lightgbm-explanation}), which result in some information loss. To categorize datasets with relation to categorical features, in this work the following statistics related to categorical variables are calculated:
+\textbf{Categorical features} are known to cause a \textit{prediction shift} in traditional gradient boosting models, as demonstrated in \cite{prokhorenkova2018catboost}. This shift is identified as a special kind of target leakage, which can also be caused in a preprocessing step of categorical features when using target statistics (e.g. using the target/mean encoding technique)\footnote{To fix this kind of problem in a dataset with many categorical features a new boosting algorithm was developed by \cite{dorogush2018catboost} called \textbf{Catboost}.}. As noted in the mentioned paper, LightGBM converts categorical features to gradient statistics at each step of the boosting process (as explained in Section \ref{lightgbm-explanation}), which results in some information loss. To categorize datasets with relation to categorical features, in this work the following statistics related to categorical variables are calculated:
 
 \begin{itemize}
     \item \textbf{cardinality}, is the number of unique categorical values of a given feature;
-    \item \textbf{variance}, is  a simple measure of variability of a specific categorical feature.
+    \item \textbf{variance}, is  a simple measure of the variability of a specific categorical feature.
     Let $|top_{j}|$ be the number of occurrences of the most frequent category in feature $j$, i.e. the column $\xmat_{:, j}$. Then, this metric is defined as the inverse of the ratio of occurrences of the most frequent category:
 
     $$categorical\_variability=1 - \frac{|top_{j}|}{|\xmat_{:, j}|}$$
@@ -96,15 +96,15 @@ To analyze subgroups of datasets and categorize each one of them, multiple stati
     As an example, if 90\% of the values of a given feature is the same, then the categorical variability of the said feature is $0.1$.
 \end{itemize}
 
-For \textbf{numeric features}, the main specific statistic calculated is the sample \textbf{skewness} of each feature. Skewness is a degree of distortion of a distribution, and in this study it is calculated using the unbiased adjusted Fisher–Pearson standardized moment coefficient from \textit{pandas}. The skewness is also trying to measure the variability of the numeric features, and is used in the clustering of each dataset as a feature.
+For \textbf{numeric features}, the main specific statistic calculated is the sample \textbf{skewness} of each feature. Skewness is a degree of distribution distortion, and in this study, it is calculated using the unbiased adjusted Fisher–Pearson standardized moment coefficient from \textit{pandas}. The skewness is also trying to measure the variability of the numeric features and is used in the clustering of each dataset as a feature.
 
-The pipeline also calculates other useful statistics for each feature, like the percentiles, number of NaNs, infinite values, mean, median, etc. They're useful in the exploratory step, but are not used when clustering the datasets in the result analysis step.
+The pipeline also calculates other useful statistics for each feature, like the percentiles, number of NaNs, infinite values, mean, median, etc. They're useful in the exploratory step but are not used when clustering the datasets in the result analysis step.
 
 %% ------------------------------------------------------------------------- %%
 \section{Hyperparameter Space}
 \label{sec:hyperparam-space}
 
-In section \ref{gbm-hyperparams} it is explained the basic hyperparameters used in LightGBM's gradient boosting algorithm. In this section the \textit{hyperparameter space}\footnote{In model tuning, the \textit{hyperparameter space} is the set of all the values each hyperparameter can assume in the tuning process.} of this study is explained, along with a simple overview of the hypothesis behind each distribution choice, related to LightGBM default hyperparameters and dataset size.  Let $D_i$ denote the number of instances of the $i$-th dataset, i.e. the total number of $\supervised$ pairs for the $i$-th dataset. 
+In section \ref{gbm-hyperparams} it is explained the basic hyperparameters used in LightGBM's gradient boosting algorithm. In this section, the \textit{hyperparameter space}\footnote{In model tuning, the \textit{hyperparameter space} is the set of all the values each hyperparameter can assume in the tuning process.} of this study is explained, along with a simple overview of the hypothesis behind each distribution choice, related to LightGBM default hyperparameters and dataset size.  Let $D_i$ denote the number of instances of the $i$-th dataset, i.e. the total number of $\supervised$ pairs for the $i$-th dataset. 
 
 \subsection{Hyperparameters Tree}
 \label{subsec:hp-tree}
@@ -119,7 +119,6 @@ For a given tree depth $k$, the hyperparameter set to be explored at that depth 
     HS_k = \Big\{\prod_{X \in Q} X : Q \in \mathcal{P}(S_i), |Q| = k\Big\}
 \end{equation}
 
-
 \begin{figure}[!h]
     \centering
     \includegraphics[height=.3\textwidth]{htree_fixed.png} 
@@ -127,11 +126,11 @@ For a given tree depth $k$, the hyperparameter set to be explored at that depth 
     \label{fig:hp-tree}
 \end{figure}
 
-The hyperparameter tree of this study, represented in Figure \ref{fig:hp-tree}, is then defined as different cartesian products of all valid $k$ combinations. Since there are three hyperparameters being changed, the maximum is $k=3$, and the final space is the union of all cartesian products combinations:
+The hyperparameter tree of this study, represented in Figure \ref{fig:hp-tree}, is then defined as different cartesian products of all valid $k$ combinations. Since three hyperparameters are being changed, the maximum is $k=3$, and the final space is the union of all cartesian products combinations:
 
 $$Hspace_i = HS_1 \cup HS_2 \cup HS_3$$
 
-This structure is generalizable for any number of hyperparameters, and it was designed this way to measure hyperparameter impact depending on the number of combinations. E.g. It is expected that changing multiple hyperparameters at the same time has a bigger impact on the model performance than changing just one. Each level of the hyperparameter tree represents a "combination effect", i.e. the experiment can measure, for multiple combinations of hyperparameters, which combination effect provides the biggest impact on the metrics (for better or worse) compared with the other combinations.
+This structure is generalizable for any number of hyperparameters, and it was designed this way to measure hyperparameter impact depending on the number of combinations. E.g. It is expected that changing multiple hyperparameters at the same time have a bigger impact on model performance than changing just one. Each level of the hyperparameter tree represents a "combination effect", i.e. the experiment can measure, for multiple combinations of hyperparameters, which combination effect provides the biggest impact on the metrics (for better or worse) compared with the other combinations.
 
 As an example, consider the three sets of hyperparameters below:
 
@@ -158,9 +157,9 @@ It can be observed that the number of hyperparameters in each tree node increase
 
 \subsection{Maximum Depth}
 \label{subsec:max-depth}
-The maximum depth is the hyperparameter that controls the maximum possible depth each boosting tree can have. As explained in Section \ref{gbm-hyperparams}, LightGBM default behavior is to grow the trees leaf-wise, having an unbound maximum depth, but the structure being controlled by the number of leaves in the tree. Max depth is a way to apply a constraint on the function space, i.e. the possible hypothesis the learning algorithm can use, and is commonly optimized in classical decision trees for pruning. 
+The maximum depth is the hyperparameter that controls the maximum possible depth each boosting tree can have. As explained in Section \ref{gbm-hyperparams}, LightGBM default behavior is to grow the trees leaf-wise, having an unbound maximum depth, but the structure is controlled by the number of leaves in the tree. Max depth is a way to apply a constraint on the function space, i.e. the possible hypothesis the learning algorithm can use and is commonly optimized in classical decision trees for pruning. 
 
-Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree is not as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constraint the model, one can overfit in the data given a high enough number of boosting iterations : this can be seen as an ``overfit relationship'' between \code{max\_depth} and \code{num\_estimators}. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there is is not a clear rule to choose an optimal value. 
+Since gradient boosting harness the power of weak learners by combining them, usually the depth of a single tree is not as deep as a traditional single classification tree. For example, in XGBoost the default value for max depth is $6$, while in the \textit{rpart} package in R (single decision trees) the default max depth is $30$. Even though in gradient boosting the max depth can be used to constrain the model, one can overfit in the data given a high enough number of boosting iterations: this can be seen as an ``overfit relationship'' between \code{max\_depth} and \code{num\_estimators}. For this reason, when defining the maximum depth or which values of it to optimize in a model tuning step there is is not a clear rule to choose an optimal value. 
 
 In this study, the tested maximum depth values are always the same, independent on the dataset size:
 
@@ -174,7 +173,7 @@ The learning rate distribution is simple, and it depends only on the dataset siz
 
 \textbf{Premise:} Start with a learning rate value between $0.01$ for small datasets, and a multiple of $0.1$ for bigger datasets (a rule was defined by dividing $D_i$ by $10000$). Then, experiment with bigger and smaller values of learning rate around the "middle" value.
 
-First it is defined a "middle" learning rate value $\psi_i$ (defined in equation \ref{eq:lr-eq1}). Then the values are generated as a list using $N_{LR}$, with the intention to generate a symmetric pattern of learning rates (the total length of each "side" of the learning rate list is described in \ref{eq:lr-eq2}).
+First it is defined a "middle" learning rate value $\psi_i$ (defined in equation \ref{eq:lr-eq1}). Then the values are generated as a list using $N_{LR}$, to generate a symmetrical pattern of learning rates (the total length of each "side" of the learning rate list is described in \ref{eq:lr-eq2}).
 
 \begin{equation}
     \psi_i = \max\Big(0.01, 0.1 \times \max(1, \frac{D_i}{10000})\Big)
@@ -193,9 +192,9 @@ The symmetric pattern and the final $LR_i$ are generated following the rule desc
     \label{eq:lr-eq3}
 \end{equation}
 
-In this study $5$ unique learning rates are generated.
+In this study, $5$ unique learning rates are generated.
 
-\begin{figure}[!h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{learning_rate_binary.png} 
     \caption{Learning rate distribution, changing $D_i$ and $N_{LR}$. Bigger dataset sizes generate higher learning rates.}
@@ -222,6 +221,13 @@ The definition of this function is a little arbitrary, but the objective is to c
     \label{eq:num-est-2}
 \end{equation}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{num_estimators_binary.png} 
+    \caption{Number of estimators distribution - changing $D_i$, for a fixed $N_{NE} = 20$. Bigger dataset sizes generate higher \textit{num\_estimators} values.}
+    \label{fig:hyperparam-ne1}
+\end{figure}
+
 The final list of number of estimators generated is then a linear interpolation starting at $min_{ne}(D_i) = \min(\frac{D_i}{4}, 50)$ to $max_{ne}(D_i)$, in evenly spaced steps (equation \ref{eq:hyperparam-ne-step}). An example of multiple $NE_i$ distributions is shown in Figure \ref{fig:hyperparam-ne1} for different $D_i$ values, but with a fixed length $N_{NE} = 20$.
 
 $$step = \frac{\Big(max_{ne}(D_i) - min_{ne}(D_i)\Big)}{N_{NE} - 1}$$
@@ -230,14 +236,6 @@ $$step = \frac{\Big(max_{ne}(D_i) - min_{ne}(D_i)\Big)}{N_{NE} - 1}$$
     \label{eq:hyperparam-ne-step}
 \end{equation}
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{num_estimators_binary.png} 
-    \caption{Number of estimators distribution - changing $D_i$, for a fixed $N_{NE} = 20$. Bigger dataset sizes generate higher \textit{num\_estimators} values.}
-    \label{fig:hyperparam-ne1}
-\end{figure}
-
-\newpage
 \section{Final Experiment Pipeline}
 
 For each dataset considered in this study a pipeline is built for it, following the sequence:
@@ -251,8 +249,8 @@ For each dataset considered in this study a pipeline is built for it, following 
     \item Save logs.
 \end{enumerate}
 
-The train test split strategy chosen for all datasets is a random split with train size being 70\% of the data points and 30\% for test (\textbf{70/30}). Given a dataset, the split is fixed, i.e. the train and test is the same in all trained models.
+The train test split strategy chosen for all datasets is a random split with train size being 70\% of the data points and 30\% for the test (\textbf{70/30}). Given a dataset, the split is fixed, i.e. the train and test are the same in all trained models.
 
 \subsection{Label Encoding}
 
-As stated in LightGBM's documentation, the library has a built-in support for categorical features, which uses a specific method from \cite{fisher1958grouping}. However, in order to make the study more general, it was decided to not use this specific feature of LightGBM. When categorical features are detected, a \textbf{label encoding} technique is used on the categorical values of the dataset. The label encoding is just a numeric encoding of the categorical features, i.e. each categorical value is mapped to an integer number. 
+As stated in LightGBM's documentation, the library has built-in support for categorical features, which uses a specific method from \cite{fisher1958grouping}. However, in order to make the study more general, it was decided to not use this specific feature of LightGBM. When categorical features are detected, a \textbf{label encoding} technique is used on the categorical values of the dataset. The label encoding is just a numeric encoding of the categorical features, i.e. each categorical value is mapped to an integer number. 

@@ -122,6 +122,9 @@ framexrightmargin=10pt
 \newcommand{\code}[1]{\texttt{#1}} % make font monospace
 \newcommand{\ok}{ \textcolor{green}{\checkmark}} % show a green checkmark
 \newcommand{\notok}{\textcolor{red}{$\times$}} % show a red X
+\usepackage[maxfloats=256]{morefloats} % add a bunch of figures
+\maxdeadcycles=1000 % do not hang pdflatex !
+
 
 
 % use a better epigraph
@@ -274,8 +277,6 @@ $\ypred$ & Vector of the predictions of the targets, where the $i$-th position i
 \listoffigures
 \listoftables     
 
-
-
 % ---------------------------------------------------------------------------- %
 % Capítulos do trabalho
 \mainmatter 
@@ -284,8 +285,6 @@ $\ypred$ & Vector of the predictions of the targets, where the $i$-th position i
 \fancyhead[RE,LO]{\thesection}
 
 \onehalfspacing            % espaçamento um e meio
-
-1
 
 \input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
 \input cap-ml-fundamentals % what is machine learning; ml as optimization
@@ -305,8 +304,8 @@ $\ypred$ & Vector of the predictions of the targets, where the $i$-th position i
 
 \include{ape-joyplots}
 \include{ape-statistical-pvalues}
-\include{ape-delta-plots}      % associado ao arquivo: 'ape-delta-plots.tex'
-\include{ape-sfm-plots}
+% \include{ape-sfm-plots}
+% \include{ape-delta-plots}      % associado ao arquivo: 'ape-delta-plots.tex'
 
 
 % ---------------------------------------------------------------------------- %
